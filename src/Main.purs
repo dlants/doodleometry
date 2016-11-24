@@ -1,7 +1,7 @@
 module Main where
 
 import App.Routes (match)
-import App.Layout (Action(PageView), State, view, update)
+import App.Layout (Action, State, view, update)
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import DOM (DOM)
@@ -19,14 +19,11 @@ config state = do
   -- | Create a signal of URL changes.
   urlSignal <- sampleUrl
 
-  -- | Map a signal of URL changes to PageView actions.
-  let routeSignal = urlSignal ~> \r -> PageView (match r)
-
   pure
     { initialState: state
     , update: fromSimple update
     , view: view
-    , inputs: [routeSignal] }
+    , inputs: [] }
 
 -- | Entry point for the browser.
 main :: State -> Eff (CoreEffects AppEffects) (App State Action)
