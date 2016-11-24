@@ -1,7 +1,7 @@
 module Main where
 
 import App.Routes (match)
-import App.Layout (Action, State, view, update)
+import App.Strokes (Action, State, view, update)
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import DOM (DOM)

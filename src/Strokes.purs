@@ -1,4 +1,4 @@
-module App.Layout where
+module App.Strokes where
 
 import Prelude
 import App.Counter as Counter
@@ -59,9 +59,8 @@ drawStroke (Line (Tuple p1 p2)) =
        , stroke "black"] []
 drawStroke (Arc _) = line [] []
 
-svgClick :: MouseEvent -> Action
-svgClick {clientX, clientY} = Click {x: clientX, y: clientY}
-
 view :: State -> Html Action
 view state =
-  svg [onClick svgClick] $ fromFoldable $ drawStroke <$> state.strokes
+  svg
+    [ onClick (\{pageX, pageY} -> Click {x: pageX, y: pageY}) ]
+    $ fromFoldable $ drawStroke <$> state.strokes
