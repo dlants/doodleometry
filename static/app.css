@@ -5,3 +5,9 @@ body {
     letter-spacing: .2px;
     text-size-adjust: 100
 }
+
+#app {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
