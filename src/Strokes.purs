@@ -8,7 +8,7 @@ import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Math (pow)
 import Pux.Html (Html, circle, g, line, svg)
-import Pux.Html.Attributes (cx, cy, r, stroke, x1, x2, y1, y2)
+import Pux.Html.Attributes (cx, cy, height, r, stroke, width, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseMove)
 
 data Action
@@ -109,7 +109,10 @@ drawCurrentStroke (Just p1) p2 = drawLine p1 p2
 view :: State -> Html Action
 view state =
   svg [ (onClick \{pageX, pageY} -> Click {x: pageX, y: pageY})
-    , (onMouseMove \{pageX, pageY} -> Move {x: pageX, y: pageY})]
+    , (onMouseMove \{pageX, pageY} -> Move {x: pageX, y: pageY})
+    , width "100%"
+    , height "100%"
+    ]
     [ drawStrokes state.strokes
     , drawSnapPoint state.hover state.poiList
     , drawCurrentStroke state.click state.hover
