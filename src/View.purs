@@ -1,32 +1,37 @@
 module App.View where
 
 import Prelude
-import App.Geometry (Point, distance, getNearestPoint)
-import App.Model (Action(..), Stroke(..), State)
+import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
+import App.Model (Action(..), State)
 import Data.Array (fromFoldable)
-import Data.List (List(..))
+import Data.List (List(..), concatMap)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
-import Pux.Html (Html, line, circle, svg, g)
-import Pux.Html.Attributes (x1, y1, x2, y2, cx, cy, r, stroke, width, height)
+import Pux.Html (Attribute, Html, circle, g, line, svg)
+import Pux.Html.Attributes (cx, cy, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseMove)
 
-drawLine :: Point -> Point -> Html Action
-drawLine p1 p2 = line [ x1 $ show p1.x
+drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
+drawLine strokeStyle (Point p1) (Point p2) =
+  line ([ x1 $ show p1.x
        , y1 $ show p1.y
        , x2 $ show p2.x
        , y2 $ show p2.y
-       , stroke "black"] []
+       ] <> strokeStyle) []
 
-drawStroke :: Stroke -> Html Action
-drawStroke (Line (Tuple p1 p2)) = drawLine p1 p2
+drawStroke :: Array (Attribute Action) -> Stroke -> Html Action
+drawStroke strokeStyle (Line (Tuple p1 p2)) = drawLine strokeStyle p1 p2
 
-drawStrokes :: List Stroke -> Html Action
-drawStrokes strokes =
-  g [] $ fromFoldable $ drawStroke <$> strokes
+drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
+drawStrokes strokeStyle strokes =
+  g [] $ fromFoldable $ (drawStroke strokeStyle) <$> strokes
+
+drawCycles :: List (List Stroke) -> Html Action
+drawCycles cycles =
+  g [] $ fromFoldable $ (drawStrokes [stroke "red"]) <$> cycles
 
 drawPoint :: Point -> Number -> Html Action
-drawPoint p size =
+drawPoint (Point p) size =
   circle [ cx $ show p.x
          , cy $ show p.y
          , r $ show size
@@ -40,16 +45,20 @@ drawSnapPoint p ps =
 
 drawCurrentStroke :: Maybe Point -> Point -> Html Action
 drawCurrentStroke Nothing _ = g [] []
-drawCurrentStroke (Just p1) p2 = drawLine p1 p2
+drawCurrentStroke (Just p1) p2 =
+  drawLine [ stroke "black"
+           , strokeDasharray "5 5"
+           ] p1 p2
 
 view :: State -> Html Action
 view state =
-  svg [ (onClick \{pageX, pageY} -> Click {x: pageX, y: pageY})
-    , (onMouseMove \{pageX, pageY} -> Move {x: pageX, y: pageY})
+  svg [ (onClick \{pageX, pageY} -> Click (Point {x: pageX, y: pageY}))
+    , (onMouseMove \{pageX, pageY} -> Move (Point {x: pageX, y: pageY}))
     , width "100%"
     , height "100%"
     ]
-    [ drawStrokes state.strokes
-    , drawSnapPoint state.hover state.poiList
+    [ drawStrokes [stroke "black"] state.graph.edges
+    , drawCycles state.graph.cycles
+    , drawSnapPoint state.hover state.graph.vertices
     , drawCurrentStroke state.click state.hover
     ]
