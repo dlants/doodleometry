@@ -1,7 +1,7 @@
 module App.View where
 
 import Prelude
-import App.Geometry (Point, getNearestPoint)
+import App.Geometry (Point, distance, getNearestPoint)
 import App.Model (Action(..), Stroke(..), State)
 import Data.Array (fromFoldable)
 import Data.List (List(..))
@@ -25,18 +25,18 @@ drawStrokes :: List Stroke -> Html Action
 drawStrokes strokes =
   g [] $ fromFoldable $ drawStroke <$> strokes
 
-drawPoint :: Point -> Html Action
-drawPoint p =
+drawPoint :: Point -> Number -> Html Action
+drawPoint p size =
   circle [ cx $ show p.x
          , cy $ show p.y
-         , r "3"
+         , r $ show size
          ] []
 
 drawSnapPoint :: Point -> List Point -> Html Action
 drawSnapPoint p ps =
   case getNearestPoint p ps of
     Nothing -> g [] []
-    Just np -> drawPoint np
+    Just np -> drawPoint np (if distance p np < 20.0 then 3.0 else 2.0)
 
 drawCurrentStroke :: Maybe Point -> Point -> Html Action
 drawCurrentStroke Nothing _ = g [] []

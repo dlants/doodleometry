@@ -50,7 +50,7 @@ updateForClick p2 s@{click: Just p1}
 snapToPoint :: Point -> State -> Point
 snapToPoint p s =
   case maybeSnapPoint of
-       Just snapPoint -> if (distance p snapPoint < 10.0) then snapPoint else p
+       Just snapPoint -> if (distance p snapPoint < 20.0) then snapPoint else p
        _ -> p
   where maybeSnapPoint = getNearestPoint p s.poiList
 
