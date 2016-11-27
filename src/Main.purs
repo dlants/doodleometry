@@ -1,6 +1,7 @@
 module Main where
 
-import App.Strokes (Action, State, view, update)
+import App.Model (Action, State, update, init)
+import App.View (view)
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import DOM (DOM)
@@ -23,16 +24,9 @@ config state = do
     , inputs: [] }
 
 -- | Entry point for the browser.
-main :: State -> Eff (CoreEffects AppEffects) (App State Action)
-main state = do
-  app <- start =<< config state
-  renderToDOM "#app" app.html
-  -- | Used by hot-reloading code in support/index.js
-  pure app
-
-debug :: State -> Eff (CoreEffects AppEffects) (App State Action)
-debug state = do
-  app <- start =<< config state
+main :: Eff (CoreEffects AppEffects) (App State Action)
+main = do
+  app <- start =<< config init
   renderToDOM "#app" app.html
   -- | Used by hot-reloading code in support/index.js
   pure app
