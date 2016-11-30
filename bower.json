@@ -11,5 +11,8 @@
     "purescript-pux": "^7.0.0",
     "purescript-pux-devtool": "^4.1.0",
     "purescript-tuples": "^3.0.0"
+  },
+  "devDependencies": {
+    "purescript-spec": "^0.10.0"
   }
 }

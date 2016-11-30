@@ -1,16 +1,29 @@
 module App.Model where
 
 import Prelude
-import App.Geometry (Graph, Point(..), distance, emptyGraph, getNearestPoint, pushStroke)
+import App.Geometry (Point(..), distance, getNearestPoint)
+import App.Graph (Edge(..), Graph, addEdge, emptyGraph)
 import Data.List (List(..), (:))
 import Data.Maybe (Maybe(..))
+import Data.StrMap (StrMap, empty, insert)
 
 data Action
   = Click Point
   | Move Point
 
+data Stroke
+  = Line
+  {--| Arc { center :: Point
+        , radius :: Number
+        , radStart :: Number
+        , radEnd :: Number
+        }--}
+
+type Embedding = StrMap Stroke
+
 type State =
   { graph :: Graph
+  , embedding :: Embedding
   , click :: Maybe Point
   , hover :: Point
   }
@@ -18,16 +31,20 @@ type State =
 init :: State
 init =
   { graph: emptyGraph
+  , embedding: empty
   , click: Nothing
-  , hover: Point {x: 0.0, y: 0.0}
+  , hover: Point 0.0 0.0
   }
 
 updateForClick :: Point -> State -> State
 updateForClick p s@{click: Nothing} = s {click = Just p}
 updateForClick p2 s@{click: Just p1}
   = s { click = Nothing
-      , graph = pushStroke p1 p2 s.graph
+      , graph = addEdge edge s.graph
+      , embedding = insert (show edge) Line s.embedding
       }
+  where
+    edge = Edge p1 p2
 
 snapToPoint :: Point -> State -> Point
 snapToPoint p s =
