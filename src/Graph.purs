@@ -1,39 +1,18 @@
 module App.Graph where
 
-import App.Geometry (Point)
-
 import Prelude
-import Data.List (List(..), elemIndex, filter, foldl, mapMaybe, singleton, (:))
+import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse, secondPoint)
+import Control.MonadZero (guard)
+import Data.List (List(..), dropWhile, elem, elemIndex, head, insert, singleton, (:))
+import Data.Map (Map, alter, empty, lookup, toList)
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..))
 
-type Graph =
-  { vertices :: List Point
-  , edges :: List Edge
-  , cycles :: List Path
-  }
+-- a vertex is a point along with outbound strokes, organized in clockwise order and with the vertexPoint first
+type Graph = Map Point (List Stroke)
 
 emptyGraph :: Graph
-emptyGraph = { vertices: Nil
-             , edges: Nil
-             , cycles: Nil
-             }
-
-type Path = List Point
-
-data Edge = Edge Point Point
-
-instance edgeEq :: Eq Edge where
-  eq (Edge p1 p2) (Edge q1 q2) =
-    (p1 == q1 && p2 == q2)
-    || (p1 == q2 && p2 == q1)
-
--- | important that there's a deterministic order since this is used as a key in
--- | a strmap
-instance edgeShow :: Show Edge where
-  show (Edge p1 p2) | p1 < p2 =
-    "Edge(" <> show p1 <> " -- " <> show p2 <> ")"
-  show (Edge p1 p2) =
-    "Edge(" <> show p2 <> " -- " <> show p1 <> ")"
+emptyGraph = empty
 
 pushUnique :: forall a. (Eq a) => a -> List a -> List a
 pushUnique a as =
@@ -41,43 +20,52 @@ pushUnique a as =
     Nothing -> a : as
     _ -> as
 
--- | find all edges touching point in graph
-nextPoints :: Point -> List Edge -> List Point
-nextPoints p ((Edge p1 p2) : edges) | p == p1 = p2 : nextPoints p edges
-nextPoints p ((Edge p1 p2) : edges) | p == p2 = p1 : nextPoints p edges
-nextPoints p ((Edge p1 p2) : edges) = nextPoints p edges
-nextPoints _ _ = Nil
+-- push an ordered stroke into a graph
+addStroke' :: Stroke -> Graph -> Graph
+addStroke' s@(Line p1 p2) g =
+  alter pushStrokeToPoint p1 g
+    where
+      pushStrokeToPoint Nothing = Just (singleton s)
+      pushStrokeToPoint (Just list) = Just (insert s list)
 
--- | v1 and v2 were not in a cycle before, so now there must be 0 or 1 path connecting them
-findPath' :: Graph -> Point -> Path -> Maybe Path
-findPath' _ _ Nil = Nothing
-findPath' _ target path@(p : _) | p == target = Just path
-findPath' g target path@(p : _) =
-  case searchResults of
-       a : _ -> Just a
+-- push an unordered stroke into a graph
+addStroke :: Stroke -> Graph -> Graph
+addStroke s g =
+  addStroke' (reverse s) $ addStroke' s g
+
+-- get the element after el in list, with wraparound
+nextElement :: forall a. (Eq a) => a -> List a -> Maybe a
+nextElement el list =
+  case dropWhile (\a -> a /= el) list of
+       (a : b : _) -> Just b
+       (a : Nil) -> head list
        _ -> Nothing
+
+getNextRightEdge :: Stroke -> Graph -> Maybe Stroke
+getNextRightEdge stroke g =
+  case lookup p g of -- stroke should be Line p q
+       Nothing -> Nothing
+       (Just strokes) ->
+         case nextElement stroke strokes of
+           Just nextStroke | stroke /= nextStroke -> Just (reverse nextStroke) -- Line _ p
+           _ -> Nothing
   where
-    ps = filter (\p -> elemIndex p path == Nothing) $ nextPoints p g.edges
-    nextPaths = (\p -> p : path) <$> ps
-    searchResults = mapMaybe (findPath' g target) nextPaths
+    p = firstPoint stroke
 
-findPath :: Graph -> Point -> Point -> Maybe Path
-findPath g v1 v2 = findPath' g v1 (singleton v2)
+traverseRight :: List Stroke -> Graph -> List Stroke
+traverseRight path@(stroke: _) g =
+  case getNextRightEdge stroke g of
+    (Just nextStroke) ->
+      if elem nextStroke path then path
+                              else traverseRight (nextStroke : path) g
+    _ -> path
 
-cycleToEdges :: Path -> List Edge
-cycleToEdges (p1 : p2 : rest) = (Edge p1 p2) : (cycleToEdges (p2 : rest))
-cycleToEdges _ = Nil
+traverseRight _ _ = Nil
 
--- | at this point we assume we've checked that there is no existing cycle containing these two points, and resolved
--- | any intersections
-newCycle :: Edge -> Graph -> List Path
-newCycle s@(Edge p1 p2) g =
-  case findPath g p1 p2 of
-     Just path -> path : g.cycles
-     _ -> g.cycles
-
-addEdge :: Edge -> Graph -> Graph
-addEdge edge@(Edge p1 p2) g =
-  { vertices: pushUnique p1 $ pushUnique p2 g.vertices
-  , edges: pushUnique edge g.edges
-  , cycles: newCycle edge g}
+findCycles :: Graph -> List (List Stroke)
+findCycles g = do
+  (Tuple pt strokes) <- toList g
+  startStroke <- strokes
+  let path = traverseRight (singleton startStroke) g
+  guard $ isCycle path
+  pure path

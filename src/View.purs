@@ -1,14 +1,13 @@
 module App.View where
 
 import Prelude
-import App.Geometry (Point(..), distance, getNearestPoint)
-import App.Graph (Edge(..), Path, cycleToEdges)
-import App.Model (Action(..), State, Stroke(..), Embedding)
+import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
+import App.Graph (findCycles)
+import App.Model (Action(..), State)
 import Data.Array (fromFoldable)
-import Data.List (List(..), concatMap)
+import Data.List (List, concat)
+import Data.Map (keys, values)
 import Data.Maybe (Maybe(..))
-import Data.StrMap (lookup)
-import Data.Tuple (Tuple(..))
 import Pux.Html (Attribute, Html, circle, g, line, svg)
 import Pux.Html.Attributes (cx, cy, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseMove)
@@ -21,21 +20,16 @@ drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
        , y2 $ show py2
        ] <> strokeStyle) []
 
-drawEdge :: Array (Attribute Action) -> Embedding -> Edge -> Html Action
-drawEdge strokeStyle embedding edge@(Edge p1 p2) =
-  case lookup (show edge) embedding of
-    Just Line -> drawLine strokeStyle p1 p2
-    Nothing -> g [] []
+drawStroke :: Array (Attribute Action) -> Stroke -> Html Action
+drawStroke strokeStyle (Line p1 p2) = drawLine strokeStyle p1 p2
 
-drawStrokes :: Array (Attribute Action) -> List Edge -> Embedding -> Html Action
-drawStrokes strokeStyle edges embedding =
-    g [] $ fromFoldable $ drawEdge strokeStyle embedding <$> edges
+drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
+drawStrokes strokeStyle strokes =
+    g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
 
-drawCycles :: List Path -> Embedding -> Html Action
-drawCycles cycles embedding =
-  g [] $ fromFoldable $ drawCycle <$> cycles
-    where
-      drawCycle cycle = drawStrokes [stroke "red"] (cycleToEdges cycle) embedding
+drawCycles :: List (List Stroke) -> Html Action
+drawCycles cycles =
+  g [] $ fromFoldable $ drawStrokes [stroke "red"] <$> cycles
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =
@@ -64,8 +58,8 @@ view state =
     , width "100%"
     , height "100%"
     ]
-    [ drawStrokes [stroke "black"] state.graph.edges state.embedding
-    , drawCycles state.graph.cycles state.embedding
-    , drawSnapPoint state.hover state.graph.vertices
+    [ drawStrokes [stroke "black"] (concat (values state.graph))
+    , drawCycles (findCycles state.graph)
+    , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]
