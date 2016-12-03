@@ -3,10 +3,12 @@ module App.Graph where
 import Prelude
 import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse, secondPoint)
 import Control.MonadZero (guard)
-import Data.List (List(..), dropWhile, elem, elemIndex, head, insert, singleton, (:))
+import Data.List (List(..), concat, drop, dropWhile, elem, elemIndex, head, insert, singleton, takeWhile, (:))
+import Data.List.Lazy (filter, head) as Lazy
 import Data.Map (Map, alter, empty, lookup, toList)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
+import Data.Unfoldable (unfoldr)
 
 -- a vertex is a point along with outbound strokes, organized in clockwise order and with the vertexPoint first
 type Graph = Map Point (List Stroke)
@@ -33,39 +35,52 @@ addStroke :: Stroke -> Graph -> Graph
 addStroke s g =
   addStroke' (reverse s) $ addStroke' s g
 
--- get the element after el in list, with wraparound
-nextElement :: forall a. (Eq a) => a -> List a -> Maybe a
-nextElement el list =
-  case dropWhile (\a -> a /= el) list of
-       (a : b : _) -> Just b
-       (a : Nil) -> head list
-       _ -> Nothing
-
-getNextRightEdge :: Stroke -> Graph -> Maybe Stroke
-getNextRightEdge stroke g =
+getNextEdges :: Path -> Graph -> List Stroke
+getNextEdges (stroke : _) g =
   case lookup p g of -- stroke should be Line p q
-       Nothing -> Nothing
+       Nothing -> Nil
        (Just strokes) ->
-         case nextElement stroke strokes of
-           Just nextStroke | stroke /= nextStroke -> Just (reverse nextStroke) -- Line _ p
-           _ -> Nothing
+          let unequal = (\a -> a /= stroke)
+              front = takeWhile unequal strokes
+              back = drop 1 $ dropWhile unequal strokes -- drop stroke itself
+          in
+            reverse <$> (back <> front)
   where
     p = firstPoint stroke
 
-traverseRight :: List Stroke -> Graph -> List Stroke
-traverseRight path@(stroke: _) g =
-  case getNextRightEdge stroke g of
-    (Just nextStroke) ->
-      if elem nextStroke path then path
-                              else traverseRight (nextStroke : path) g
-    _ -> path
+getNextEdges _ _ = Nil
 
-traverseRight _ _ = Nil
+type Path = List Stroke
+data Traversal = Traversal (List Path) Graph
+
+{--
+at each iteration, pop the first path. Put possible extensions at
+the front of the "toexplore" list.
+--}
+traverseRight :: Traversal -> Maybe (Tuple Path Traversal)
+traverseRight (Traversal (path : rest) g) =
+  case path of
+       (stroke : strokes) | not elem stroke strokes ->
+         Just (Tuple path (pushTraversals path rest))
+       -- don't do anything with a path that loops on itself
+       _ -> traverseRight $ Traversal rest g
+  where
+    nextPaths = (\s -> s : path) <$> getNextEdges path g
+    pushTraversals path paths =
+      Traversal (nextPaths <> paths) g
+
+traverseRight _ = Nothing
+
+findCycle :: Stroke -> Graph -> Maybe Path
+findCycle stroke g =
+  Lazy.head
+  $ Lazy.filter isCycle
+  $ unfoldr traverseRight (Traversal (singleton $ singleton stroke) g)
 
 findCycles :: Graph -> List (List Stroke)
 findCycles g = do
   (Tuple pt strokes) <- toList g
   startStroke <- strokes
-  let path = traverseRight (singleton startStroke) g
-  guard $ isCycle path
-  pure path
+  case findCycle startStroke g of
+       Just path -> pure path
+       _ -> Nil

@@ -59,7 +59,7 @@ instance strokeEq :: Eq Stroke where
 -- | a strmap
 instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
-    "Line(" <> show p1 <> " -- " <> show p2 <> ")"
+    "[" <> show p1 <> " --- " <> show p2 <> "]"
 
 instance strokeClockwiseOrd :: Ord Stroke where
   compare s1 s2 =
