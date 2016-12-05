@@ -52,4 +52,4 @@ main = run [consoleReporter] do
   describe "findCycles" do
     it "should find all cycles!" do
       findCycles g `shouldEqual` Nil
-      findCycles g2 `shouldEqual` ((l1: l2 : l3: Nil) : Nil)
+      findCycles g2 `shouldEqual` (Cycle (l1: l2 : l3: Nil) : Nil)

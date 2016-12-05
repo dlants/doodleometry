@@ -1,9 +1,9 @@
 module App.Graph where
 
 import Prelude
-import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse, secondPoint)
+import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse) as G
 import Control.MonadZero (guard)
-import Data.List (List(..), concat, drop, dropWhile, elem, elemIndex, head, insert, singleton, takeWhile, (:))
+import Data.List (List(..), drop, dropWhile, elem, insert, nub, reverse, singleton, takeWhile, (:))
 import Data.List.Lazy (filter, head) as Lazy
 import Data.Map (Map, alter, empty, lookup, toList)
 import Data.Maybe (Maybe(..))
@@ -11,47 +11,56 @@ import Data.Tuple (Tuple(..))
 import Data.Unfoldable (unfoldr)
 
 -- a vertex is a point along with outbound strokes, organized in clockwise order and with the vertexPoint first
-type Graph = Map Point (List Stroke)
+type Graph = Map G.Point (List G.Stroke)
 
 emptyGraph :: Graph
 emptyGraph = empty
 
 pushUnique :: forall a. (Eq a) => a -> List a -> List a
-pushUnique a as =
-  case elemIndex a as of
-    Nothing -> a : as
-    _ -> as
+pushUnique a as = if elem a as then as else a : as
 
 -- push an ordered stroke into a graph
-addStroke' :: Stroke -> Graph -> Graph
-addStroke' s@(Line p1 p2) g =
+addStroke' :: G.Stroke -> Graph -> Graph
+addStroke' s@(G.Line p1 p2) g =
   alter pushStrokeToPoint p1 g
     where
       pushStrokeToPoint Nothing = Just (singleton s)
       pushStrokeToPoint (Just list) = Just (insert s list)
 
 -- push an unordered stroke into a graph
-addStroke :: Stroke -> Graph -> Graph
+addStroke :: G.Stroke -> Graph -> Graph
 addStroke s g =
-  addStroke' (reverse s) $ addStroke' s g
+  addStroke' (G.reverse s) $ addStroke' s g
 
-getNextEdges :: Path -> Graph -> List Stroke
+rotateList :: forall a. (Eq a) => a -> List a -> List a
+rotateList el list =
+  let unequal = (\a -> a /= el)
+      front = takeWhile unequal list
+      back = dropWhile unequal list
+  in back <> front
+
+getNextEdges :: Path -> Graph -> List G.Stroke
 getNextEdges (stroke : _) g =
-  case lookup p g of -- stroke should be Line p q
+  case lookup (G.firstPoint stroke) g of
        Nothing -> Nil
        (Just strokes) ->
-          let unequal = (\a -> a /= stroke)
-              front = takeWhile unequal strokes
-              back = drop 1 $ dropWhile unequal strokes -- drop stroke itself
-          in
-            reverse <$> (back <> front)
-  where
-    p = firstPoint stroke
+          G.reverse <$> (drop 1 $ rotateList stroke strokes) -- drop the stroke itself
 
 getNextEdges _ _ = Nil
 
-type Path = List Stroke
+type Path = List G.Stroke
+newtype Cycle = Cycle Path
 data Traversal = Traversal (List Path) Graph
+
+instance cycleEq :: Eq Cycle where
+  eq (Cycle p1@(a : rest)) (Cycle p2) =
+    (p1 == rotateList a p2)
+    || (p1 == rotateList a (G.reverse <$> reverse p2))
+  eq (Cycle Nil) (Cycle Nil) = true
+  eq _ _ = false
+
+instance cycleShow :: Show Cycle where
+  show (Cycle edges) = show edges
 
 {--
 at each iteration, pop the first path. Put possible extensions at
@@ -71,16 +80,18 @@ traverseRight (Traversal (path : rest) g) =
 
 traverseRight _ = Nothing
 
-findCycle :: Stroke -> Graph -> Maybe Path
+findCycle :: G.Stroke -> Graph -> Maybe Path
 findCycle stroke g =
   Lazy.head
-  $ Lazy.filter isCycle
+  $ Lazy.filter G.isCycle
   $ unfoldr traverseRight (Traversal (singleton $ singleton stroke) g)
 
-findCycles :: Graph -> List (List Stroke)
-findCycles g = do
-  (Tuple pt strokes) <- toList g
-  startStroke <- strokes
-  case findCycle startStroke g of
-       Just path -> pure path
-       _ -> Nil
+findCycles :: Graph -> List Cycle
+findCycles g = nub cycles
+  where
+    cycles = do
+      (Tuple pt strokes) <- toList g
+      startStroke <- strokes
+      case findCycle startStroke g of
+           Just path -> pure (Cycle path)
+           _ -> Nil

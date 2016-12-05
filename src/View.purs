@@ -2,7 +2,7 @@ module App.View where
 
 import Prelude
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
-import App.Graph (findCycles)
+import App.Graph (Cycle(..), findCycles)
 import App.Model (Action(..), State)
 import Data.Array (fromFoldable)
 import Data.List (List, concat)
@@ -27,9 +27,11 @@ drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
 drawStrokes strokeStyle strokes =
     g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
 
-drawCycles :: List (List Stroke) -> Html Action
+drawCycles :: List Cycle -> Html Action
 drawCycles cycles =
-  g [] $ fromFoldable $ drawStrokes [stroke "red"] <$> cycles
+  g [] $ fromFoldable $ drawCycle <$> cycles
+  where
+    drawCycle (Cycle strokes) = drawStrokes [stroke "red"] strokes
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =
