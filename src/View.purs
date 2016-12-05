@@ -5,11 +5,12 @@ import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
 import App.Graph (Cycle(..), findCycles)
 import App.Model (Action(..), State)
 import Data.Array (fromFoldable)
-import Data.List (List, concat)
+import Data.List (List, concat, foldl, (:))
 import Data.Map (keys, values)
 import Data.Maybe (Maybe(..))
 import Pux.Html (Attribute, Html, circle, g, line, svg)
-import Pux.Html.Attributes (cx, cy, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
+import Pux.Html.Attributes (cx, cy, d, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
+import Pux.Html.Elements (path)
 import Pux.Html.Events (onClick, onMouseMove)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
@@ -27,11 +28,21 @@ drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
 drawStrokes strokeStyle strokes =
     g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
 
+drawCycle :: Array (Attribute Action) -> Cycle -> Html Action
+drawCycle attrs (Cycle strokes) =
+  path (pathAttrs strokes <> attrs) []
+
+pathAttrs strokes@((Line (Point x0 y0) _): _) =
+  [ d (foldl append ("M " <> show x0 <> " " <> show y0 <> " ") (dCommand <$> strokes))
+  ]
+
+pathAttrs _ = []
+
+dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
+
 drawCycles :: List Cycle -> Html Action
 drawCycles cycles =
-  g [] $ fromFoldable $ drawCycle <$> cycles
-  where
-    drawCycle (Cycle strokes) = drawStrokes [stroke "red"] strokes
+  g [] $ fromFoldable $ drawCycle [stroke "red"] <$> cycles
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =
