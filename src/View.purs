@@ -3,14 +3,15 @@ module App.View where
 import Prelude
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
 import App.Graph (Cycle(..), findCycles)
-import App.Model (Action(..), State)
+import App.Model (Action(..), State, Tool(..))
+import App.Tool.View (view) as ToolView
 import Data.Array (fromFoldable)
 import Data.List (List, concat, foldl, (:))
 import Data.Map (keys, values)
 import Data.Maybe (Maybe(..))
-import Pux.Html (Attribute, Html, circle, g, line, svg)
+import Pux.CSS (absolute, bottom, left, position, px, right, style, top)
+import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
 import Pux.Html.Attributes (cx, cy, d, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
-import Pux.Html.Elements (path)
 import Pux.Html.Events (onClick, onMouseMove)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
@@ -64,15 +65,24 @@ drawCurrentStroke (Just p1) p2 =
            , strokeDasharray "5 5"
            ] p1 p2
 
-view :: State -> Html Action
-view state =
-  svg [ (onClick \{pageX, pageY} -> Click (Point pageX pageY))
-    , (onMouseMove \{pageX, pageY} -> Move (Point pageX pageY))
-    , width "100%"
-    , height "100%"
-    ]
+svgListeners :: Tool -> Array (Attribute Action)
+svgListeners LineTool =
+  [ (onClick \{pageX, pageY} -> Click (Point pageX pageY))
+  , (onMouseMove \{pageX, pageY} -> Move (Point pageX pageY))
+  ]
+svgListeners _ = []
+
+drawing :: State -> Html Action
+drawing state =
+  svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawStrokes [stroke "black"] (concat (values state.graph))
     , drawCycles (findCycles state.graph)
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]
+
+view :: State -> Html Action
+view state =
+  div [] [ (drawing state)
+         , (ToolView.view state.tool)
+         ]
