@@ -2,7 +2,8 @@ module App.Model where
 
 import Prelude
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
-import App.Graph (Graph, addStroke, emptyGraph)
+import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles)
+import Data.List (List(..))
 import Data.Map (keys)
 import Data.Maybe (Maybe(..))
 import Pux.CSS (Color, blue, green, red)
@@ -11,7 +12,6 @@ data Action
   = Click Point
   | Move Point
   | Select Tool
-
 
 data ColorScheme
   = Red
@@ -45,6 +45,7 @@ instance eqTool :: Eq Tool where
 
 type State =
   { graph :: Graph
+  , cycles :: List Cycle
   , click :: Maybe Point
   , hover :: Point
   , tool :: Tool
@@ -53,6 +54,7 @@ type State =
 init :: State
 init =
   { graph: emptyGraph
+  , cycles: Nil
   , click: Nothing
   , hover: Point 0.0 0.0
   , tool: LineTool
@@ -62,10 +64,12 @@ updateForClick :: Point -> State -> State
 updateForClick p s@{click: Nothing} = s {click = Just p}
 updateForClick p2 s@{click: Just p1}
   = s { click = Nothing
-      , graph = addStroke stroke s.graph
+      , graph = newGraph
+      , cycles = findCycles newGraph
       }
   where
     stroke = Line p1 p2
+    newGraph = addStroke stroke s.graph
 
 snapToPoint :: Point -> State -> Point
 snapToPoint p s =

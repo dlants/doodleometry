@@ -76,7 +76,7 @@ drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawStrokes [stroke "black"] (concat (values state.graph))
-    , drawCycles (findCycles state.graph)
+    , drawCycles state.cycles
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]
