@@ -2,7 +2,7 @@ module App.Model where
 
 import Prelude
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
-import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles)
+import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles, updateCycles)
 import Data.List (List(..))
 import Data.Map (keys)
 import Data.Maybe (Maybe(..))
@@ -65,7 +65,7 @@ updateForClick p s@{click: Nothing} = s {click = Just p}
 updateForClick p2 s@{click: Just p1}
   = s { click = Nothing
       , graph = newGraph
-      , cycles = findCycles newGraph
+      , cycles = updateCycles s.cycles newGraph stroke
       }
   where
     stroke = Line p1 p2

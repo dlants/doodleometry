@@ -1,9 +1,10 @@
 module App.Graph where
 
 import Prelude
+import App.Geometry (orderedEq)
 import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse) as G
 import Control.MonadZero (guard)
-import Data.List (List(..), drop, dropWhile, elem, insert, nub, reverse, singleton, takeWhile, (:))
+import Data.List (List(..), any, drop, dropWhile, elem, filter, insert, mapMaybe, nub, reverse, singleton, takeWhile, (:))
 import Data.List.Lazy (filter, head) as Lazy
 import Data.Map (Map, alter, empty, lookup, toList)
 import Data.Maybe (Maybe(..))
@@ -32,6 +33,7 @@ addStroke :: G.Stroke -> Graph -> Graph
 addStroke s g =
   addStroke' (G.reverse s) $ addStroke' s g
 
+-- rotate a list so that el is first
 rotateList :: forall a. (Eq a) => a -> List a -> List a
 rotateList el list =
   let unequal = (\a -> a /= el)
@@ -80,11 +82,14 @@ traverseRight (Traversal (path : rest) g) =
 
 traverseRight _ = Nothing
 
-findCycle :: G.Stroke -> Graph -> Maybe Path
-findCycle stroke g =
-  Lazy.head
-  $ Lazy.filter G.isCycle
-  $ unfoldr traverseRight (Traversal (singleton $ singleton stroke) g)
+findCycle :: Graph -> G.Stroke -> Maybe Cycle
+findCycle g stroke =
+  Cycle
+  <$> (
+    Lazy.head
+    $ Lazy.filter G.isCycle
+    $ unfoldr traverseRight (Traversal (singleton $ singleton stroke) g)
+  )
 
 findCycles :: Graph -> List Cycle
 findCycles g = nub cycles
@@ -92,6 +97,42 @@ findCycles g = nub cycles
     cycles = do
       (Tuple pt strokes) <- toList g
       startStroke <- strokes
-      case findCycle startStroke g of
-           Just path -> pure (Cycle path)
+      case findCycle g startStroke of
+           Just cycle -> pure cycle
            _ -> Nil
+
+cut :: Cycle -> G.Stroke -> Path
+cut (Cycle edges) edge =
+  let
+    hasEdge = any (orderedEq edge) edges
+  in
+    if hasEdge then drop 1 $ rotateList edge edges
+               else drop 1 $ rotateList edge (reverse $ G.reverse <$> edges)
+
+-- TODO: make this work with multiple shared edges
+-- for now, assumes a single shared edge
+joinCycles :: Cycle -> Cycle -> G.Stroke -> Cycle
+joinCycles c1 c2 stroke =
+  let
+    path1 = cut c1 stroke -- if stroke is p1p2, path1 takes from p2 to p1
+    path2 = cut c2 (G.reverse stroke) -- if stroke is p1p2, path2 takes from p1 to p2
+  in
+    Cycle (path1 <> path2)
+
+-- find new cycles in both directions, nub them
+-- if there is 1 cycle, we haven't split any existing cycles - just add it
+-- if there are 2 cycles, we split an existing cycle. joinCycles the 2 new cycles,
+-- find the existing cycle and remove it.
+updateCycles :: List Cycle -> Graph -> G.Stroke -> List Cycle
+updateCycles cycles g stroke =
+  let
+    newCycles = nub $ mapMaybe (findCycle g) $ stroke : (G.reverse stroke) : Nil
+  in
+    case newCycles of
+         Nil -> cycles -- no new cycles, just return old cycles
+         (c : Nil) -> c : cycles -- one new cycle - push it on the front
+         (c1 : c2 : _) -> -- two new cycles. They must have split an existing cycle
+            let
+              joined = joinCycles c1 c2 stroke
+            in -- TODO: copy the color/style from the existing cycle to the new cycles
+              c1 : c2 : filter (\cycle -> cycle /= joined) cycles
