@@ -57,18 +57,17 @@ orderedEq (Line p1 p2) (Line q1 q2) =
 instance strokeEq :: Eq Stroke where
   eq s1 s2 = (orderedEq s1 s2) || (orderedEq s1 (reverse s2))
 
--- | important that there's a deterministic order since this is used as a key in
--- | a strmap
 instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
     "[" <> show p1 <> " --- " <> show p2 <> "]"
 
-instance strokeClockwiseOrd :: Ord Stroke where
-  compare s1 s2 =
-    if p1 /= p2
-       then compare p1 p2
-       else compare (angle s1) (angle s2)
-       -- TODO - if a line and arc have the same angle, sort based on arc curvature
-    where
-      p1 = firstPoint s1
-      p2 = firstPoint s2
+instance strokeOrd :: Ord Stroke where
+  compare (Line p1 p2) (Line q1 q2) =
+    case compare (min p1 p2) (min q1 q2) of
+         EQ -> compare (max p1 p2) (max q1 q2)
+         ord -> ord
+
+compareClockwise :: Stroke -> Stroke -> Ordering
+compareClockwise s1 s2 =
+  compare (angle s1) (angle s2)
+  -- TODO - if a line and arc have the same angle, sort based on arc curvature

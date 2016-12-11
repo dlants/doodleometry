@@ -2,9 +2,10 @@ module Test.Main where
 
 import Prelude
 import App.Graph
+import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Point(..), Stroke(..), reverse)
 import Data.List (List(..), singleton, (:))
-import Data.Map (keys, lookup, showTree)
+import Data.Map (empty, insert, keys, lookup, showTree)
 import Data.Maybe (Maybe(..))
 import Data.Unfoldable (unfoldr)
 import Test.Spec (describe, it)
@@ -49,6 +50,8 @@ g3 = addStroke l12
    $ addStroke l13
    $ emptyGraph
 
+cycles = insert c1234 Red $ empty
+
 main = run [consoleReporter] do
   describe "addStroke" do
     it "should insert strokes in both directions and in correct order" do
@@ -88,4 +91,4 @@ main = run [consoleReporter] do
 
   describe "updateCycles" do
     it "should split a cycle" do
-      updateCycles (c1234 : Nil) g3 l13 `shouldEqual` (c123 : c134 : Nil)
+      updateCycles cycles g3 l13 `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)

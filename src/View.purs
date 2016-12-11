@@ -31,9 +31,15 @@ drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
 drawStrokes strokeStyle strokes =
     g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
 
-drawCycle :: Tuple Cycle ColorScheme -> Html Action
-drawCycle (Tuple (Cycle strokes) colorScheme) =
-  path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme]) []
+drawCycle :: Tool -> Tuple Cycle ColorScheme -> Html Action
+drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
+  let
+    listeners = case tool of
+                     ColorTool newColorScheme ->
+                       [(onClick \_ -> Color cycle newColorScheme)]
+                     _ -> []
+  in
+    path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme] <> listeners) []
 
 pathAttrs strokes@((Line (Point x0 y0) _): _) =
   [ d (foldl append ("M " <> show x0 <> " " <> show y0 <> " ") (dCommand <$> strokes))
@@ -43,9 +49,9 @@ pathAttrs _ = []
 
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
 
-drawCycles :: Map Cycle ColorScheme -> Html Action
-drawCycles cycles =
-  g [] $ fromFoldable $ drawCycle <$> toList cycles
+drawCycles :: Tool -> Map Cycle ColorScheme -> Html Action
+drawCycles tool cycles =
+  g [] $ fromFoldable $ drawCycle tool <$> toList cycles
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =
@@ -78,7 +84,7 @@ drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawStrokes [stroke "black"] (concat (values state.graph))
-    , drawCycles state.cycles
+    , drawCycles state.tool state.cycles
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]

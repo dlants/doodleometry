@@ -2,10 +2,10 @@ module App.Graph where
 
 import Prelude
 import App.ColorScheme (ColorScheme(..))
-import App.Geometry (orderedEq)
+import App.Geometry (compareClockwise, orderedEq)
 import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse) as G
 import Control.MonadZero (guard)
-import Data.List (List(..), any, drop, dropWhile, elem, filter, insert, mapMaybe, nub, reverse, singleton, sort, takeWhile, (:))
+import Data.List (List(..), any, drop, dropWhile, elem, filter, insert, insertBy, mapMaybe, nub, reverse, singleton, sort, takeWhile, (:))
 import Data.List.Lazy (filter, head) as Lazy
 import Data.Map (insert) as Map
 import Data.Map (Map, alter, empty, lookup, pop, toList)
@@ -29,7 +29,7 @@ addStroke' s@(G.Line p1 p2) g =
   alter pushStrokeToPoint p1 g
     where
       pushStrokeToPoint Nothing = Just (singleton s)
-      pushStrokeToPoint (Just list) = Just (insert s list)
+      pushStrokeToPoint (Just list) = Just (insertBy compareClockwise s list)
 
 -- push an unordered stroke into a graph
 addStroke :: G.Stroke -> Graph -> Graph
@@ -143,6 +143,6 @@ updateCycles cycles g stroke =
               joined = joinCycles c1 c2 stroke
             in
               case pop joined cycles of
-                   Just (Tuple newColor newCycles) ->
-                     Map.insert c1 newColor $ Map.insert c2 newColor $ newCycles
+                   Just (Tuple previousColor newCycles) ->
+                     Map.insert c1 previousColor $ Map.insert c2 previousColor $ newCycles
                    _ -> Map.insert c1 White $ Map.insert c2 White $ cycles

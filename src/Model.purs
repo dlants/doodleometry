@@ -6,12 +6,14 @@ import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
 import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles, updateCycles)
 import Data.List (List(..))
 import Data.Map (Map, empty, keys)
+import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 
 data Action
   = Click Point
   | Move Point
   | Select Tool
+  | Color Cycle ColorScheme
 
 data Tool
   = LineTool
@@ -61,3 +63,5 @@ update :: Action -> State -> State
 update (Click p) s = updateForClick (snapToPoint p s) s
 update (Move p) s = s {hover = p}
 update (Select t) s = s {tool = t, click = Nothing}
+update (Color cycle colorScheme) s =
+  s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
