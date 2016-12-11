@@ -1,7 +1,8 @@
 module App.Tool.View where
 
 import Prelude
-import App.Model (Action(..), ColorScheme(..), State, Tool(..))
+import App.ColorScheme (ColorScheme(..))
+import App.Model (Action(..), State, Tool(..))
 import Pux.CSS (Color, absolute, black, border, fromHexString, gray, left, position, px, solid, style, top)
 import Pux.Html (Html, div, text)
 import Pux.Html.Events (onClick)

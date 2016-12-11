@@ -1,17 +1,19 @@
 module App.View where
 
 import Prelude
+import App.ColorScheme (ColorScheme, toColor)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
 import App.Graph (Cycle(..), findCycles)
 import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
 import Data.Array (fromFoldable)
 import Data.List (List, concat, foldl, (:))
-import Data.Map (keys, values)
+import Data.Map (Map, keys, toList, values)
 import Data.Maybe (Maybe(..))
-import Pux.CSS (absolute, bottom, left, position, px, right, style, top)
+import Data.Tuple (Tuple(..))
+import Pux.CSS (absolute, bottom, left, position, px, right, style, toHexString, top)
 import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
-import Pux.Html.Attributes (cx, cy, d, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
+import Pux.Html.Attributes (cx, cy, d, fill, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseMove)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
@@ -29,9 +31,9 @@ drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
 drawStrokes strokeStyle strokes =
     g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
 
-drawCycle :: Array (Attribute Action) -> Cycle -> Html Action
-drawCycle attrs (Cycle strokes) =
-  path (pathAttrs strokes <> attrs) []
+drawCycle :: Tuple Cycle ColorScheme -> Html Action
+drawCycle (Tuple (Cycle strokes) colorScheme) =
+  path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme]) []
 
 pathAttrs strokes@((Line (Point x0 y0) _): _) =
   [ d (foldl append ("M " <> show x0 <> " " <> show y0 <> " ") (dCommand <$> strokes))
@@ -41,9 +43,9 @@ pathAttrs _ = []
 
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
 
-drawCycles :: List Cycle -> Html Action
+drawCycles :: Map Cycle ColorScheme -> Html Action
 drawCycles cycles =
-  g [] $ fromFoldable $ drawCycle [stroke "red"] <$> cycles
+  g [] $ fromFoldable $ drawCycle <$> toList cycles
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =

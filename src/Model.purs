@@ -1,38 +1,17 @@
 module App.Model where
 
 import Prelude
+import App.ColorScheme (ColorScheme)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
 import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles, updateCycles)
 import Data.List (List(..))
-import Data.Map (keys)
+import Data.Map (Map, empty, keys)
 import Data.Maybe (Maybe(..))
-import Pux.CSS (Color, blue, green, red)
 
 data Action
   = Click Point
   | Move Point
   | Select Tool
-
-data ColorScheme
-  = Red
-  | Green
-  | Blue
-
-instance eqColorScheme :: Eq ColorScheme where
-  eq Red Red = true
-  eq Green Green = true
-  eq Blue Blue = true
-  eq _ _ = false
-
-instance showScheme :: Show ColorScheme where
-  show Red = "red"
-  show Green = "green"
-  show Blue = "blue"
-
-toColor :: ColorScheme -> Color
-toColor Red = red
-toColor Green = green
-toColor Blue = blue
 
 data Tool
   = LineTool
@@ -45,7 +24,7 @@ instance eqTool :: Eq Tool where
 
 type State =
   { graph :: Graph
-  , cycles :: List Cycle
+  , cycles :: Map Cycle ColorScheme
   , click :: Maybe Point
   , hover :: Point
   , tool :: Tool
@@ -54,7 +33,7 @@ type State =
 init :: State
 init =
   { graph: emptyGraph
-  , cycles: Nil
+  , cycles: empty
   , click: Nothing
   , hover: Point 0.0 0.0
   , tool: LineTool

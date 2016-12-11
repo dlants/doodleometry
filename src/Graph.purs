@@ -1,13 +1,16 @@
 module App.Graph where
 
 import Prelude
+import App.ColorScheme (ColorScheme(..))
 import App.Geometry (orderedEq)
 import App.Geometry (Point, Stroke(..), firstPoint, isCycle, reverse) as G
 import Control.MonadZero (guard)
-import Data.List (List(..), any, drop, dropWhile, elem, filter, insert, mapMaybe, nub, reverse, singleton, takeWhile, (:))
+import Data.List (List(..), any, drop, dropWhile, elem, filter, insert, mapMaybe, nub, reverse, singleton, sort, takeWhile, (:))
 import Data.List.Lazy (filter, head) as Lazy
-import Data.Map (Map, alter, empty, lookup, toList)
+import Data.Map (insert) as Map
+import Data.Map (Map, alter, empty, lookup, pop, toList)
 import Data.Maybe (Maybe(..))
+import Data.Ord (Ordering(..))
 import Data.Tuple (Tuple(..))
 import Data.Unfoldable (unfoldr)
 
@@ -63,6 +66,10 @@ instance cycleEq :: Eq Cycle where
 
 instance cycleShow :: Show Cycle where
   show (Cycle edges) = show edges
+
+instance cycleOrd :: Ord Cycle where
+  compare (Cycle p1) (Cycle p2) =
+    compare (sort p1) (sort p2)
 
 {--
 at each iteration, pop the first path. Put possible extensions at
@@ -123,16 +130,19 @@ joinCycles c1 c2 stroke =
 -- if there is 1 cycle, we haven't split any existing cycles - just add it
 -- if there are 2 cycles, we split an existing cycle. joinCycles the 2 new cycles,
 -- find the existing cycle and remove it.
-updateCycles :: List Cycle -> Graph -> G.Stroke -> List Cycle
+updateCycles :: Map Cycle ColorScheme -> Graph -> G.Stroke -> Map Cycle ColorScheme
 updateCycles cycles g stroke =
   let
     newCycles = nub $ mapMaybe (findCycle g) $ stroke : (G.reverse stroke) : Nil
   in
     case newCycles of
          Nil -> cycles -- no new cycles, just return old cycles
-         (c : Nil) -> c : cycles -- one new cycle - push it on the front
+         (c : Nil) -> Map.insert c White cycles -- one new cycle - push it on the front
          (c1 : c2 : _) -> -- two new cycles. They must have split an existing cycle
             let
               joined = joinCycles c1 c2 stroke
-            in -- TODO: copy the color/style from the existing cycle to the new cycles
-              c1 : c2 : filter (\cycle -> cycle /= joined) cycles
+            in
+              case pop joined cycles of
+                   Just (Tuple newColor newCycles) ->
+                     Map.insert c1 newColor $ Map.insert c2 newColor $ newCycles
+                   _ -> Map.insert c1 White $ Map.insert c2 White $ cycles
