@@ -1,7 +1,7 @@
 module App.Geometry where
 
 import Prelude
-import Data.List (List(..), foldl, head, last)
+import Data.List (List(..), foldl, head, last, singleton)
 import Data.Maybe (Maybe(..))
 import Math (pow, Radians, atan2)
 
@@ -13,6 +13,18 @@ instance ptEq :: Eq Point where
 instance ptShow :: Show Point where
   show (Point x y) = "(" <> show x <> ", " <> show y <> ")"
 
+instance ptRing :: Ring Point where
+  sub (Point x1 y1) (Point x2 y2) = Point (x1 - x2) (y1 - y2)
+
+instance ptSemiring :: Semiring Point where
+  add (Point x1 y1) (Point x2 y2) = Point (x1 + x2) (y1 + y2)
+  mul (Point x1 y1) (Point x2 y2) = Point (x1 * x2) (y1 * y2)
+  zero = Point 0.0 0.0
+  one = Point 1.0 1.0
+
+mapPt :: (Number -> Number) -> Point -> Point
+mapPt f (Point x y) = Point (f x) (f y)
+
 -- | arbitrarily compare xs first then ys
 instance ptOrd :: Ord Point where
   compare (Point x1 y1) (Point x2 y2) | x1 == x2 = compare y1 y2
@@ -20,6 +32,12 @@ instance ptOrd :: Ord Point where
 
 distance :: Point -> Point -> Number
 distance (Point x1 y1) (Point x2 y2) = pow (x1 - x2) 2.0 + pow (y1 - y2) 2.0
+
+crossProduct :: Point -> Point -> Number
+crossProduct (Point x1 y1) (Point x2 y2) = x1 * y2 - x2 * y1
+
+dotProduct :: Point -> Point -> Number
+dotProduct (Point x1 y1) (Point x2 y2) = x1*x2 + y1*y2
 
 getNearestPoint :: Point -> List Point -> Maybe Point
 getNearestPoint _ Nil = Nothing
@@ -71,3 +89,31 @@ compareClockwise :: Stroke -> Stroke -> Ordering
 compareClockwise s1 s2 =
   compare (angle s1) (angle s2)
   -- TODO - if a line and arc have the same angle, sort based on arc curvature
+
+intersect :: Stroke -> Stroke -> List Point
+intersect (Line p p') (Line q q') =
+  let
+    r = p' - p
+    s = q' - q
+    rxs = r `crossProduct` s
+    qp = q - p
+    qpxs = qp `crossProduct` s
+    qpxr = qp `crossProduct` r
+  in
+    if rxs == 0.0 then
+      if qpxr == 0.0 then -- segments are colinear
+        let
+          rr = (r `dotProduct` r)
+          t0 = (qp `dotProduct` r) / rr
+          t1 = ((qp + s) `dotProduct` r) / rr
+          s1 = min t0 t1
+          s2 = max t0 t1
+        in Nil -- TODO: segments are colinear and overlapping
+      else Nil -- segments are parallel and not colinear
+    else
+      let
+        t = qpxs / rxs
+        u = qpxr / rxs
+      in
+        if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
+                                                        else Nil

@@ -20,6 +20,10 @@ type Graph = Map G.Point (List G.Stroke)
 emptyGraph :: Graph
 emptyGraph = empty
 
+edges :: Graph -> List G.Stroke
+edges g =
+  nub $ concat $ values g
+
 pushUnique :: forall a. (Eq a) => a -> List a -> List a
 pushUnique a as = if elem a as then as else a : as
 
@@ -146,3 +150,11 @@ updateCycles cycles g stroke =
                    Just (Tuple previousColor newCycles) ->
                      Map.insert c1 previousColor $ Map.insert c2 previousColor $ newCycles
                    _ -> Map.insert c1 White $ Map.insert c2 White $ cycles
+
+intersect :: Graph -> G.Stroke -> List (Tuple G.Stroke G.Point)
+intersect g stroke =
+  do
+    edge <- edges g
+    let intersections = intersect stroke edge
+    guard $ intersections /= Nil
+    pure Tuple edge intersections
