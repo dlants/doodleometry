@@ -1,4 +1,4 @@
-module Test.Main where
+module Test.Graph where
 
 import Prelude
 import App.Graph
@@ -12,8 +12,6 @@ import Data.Maybe (Maybe(..))
 import Data.Unfoldable (unfoldr)
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
-import Test.Spec.Reporter.Console (consoleReporter)
-import Test.Spec.Runner (run)
 
 p1 = Point 1.0 0.0
 p2 = Point 2.0 0.0
@@ -54,43 +52,44 @@ g3 = addStroke l12
 
 cycles = insert c1234 Red $ empty
 
-main = run [consoleReporter] do
-  describe "addStroke" do
-    it "should insert strokes in both directions and in correct order" do
-      keys g `shouldEqual` (p1 : p2 : p3 : Nil)
-      lookup p2 g `shouldEqual` Just (flip l12 : l23 : Nil)
+spec = do
+  describe "App.Graph" do
+    describe "addStroke" do
+      it "should insert strokes in both directions and in correct order" do
+        keys g `shouldEqual` (p1 : p2 : p3 : Nil)
+        lookup p2 g `shouldEqual` Just (flip l12 : l23 : Nil)
 
-  describe "getNextEdges" do
-    it "should generate the list of next edges to follow" do
-      getNextEdges (singleton l12) g `shouldEqual` Nil
-      getNextEdges (singleton l23) g `shouldEqual` (singleton $ flip l12)
+    describe "getNextEdges" do
+      it "should generate the list of next edges to follow" do
+        getNextEdges (singleton l12) g `shouldEqual` Nil
+        getNextEdges (singleton l23) g `shouldEqual` (singleton $ flip l12)
 
-  describe "unfoldr traverseRight" do
-    it "should generate all traversals" do
-      (unfoldr traverseRight $ Traversal (singleton $ singleton l23) g)
-        `shouldEqual` ((singleton l23) : (l12 : l23 : Nil) : Nil)
-      (unfoldr traverseRight $ Traversal (singleton $ singleton l12) g2)
-        `shouldEqual` ((l12 : Nil) : (l31 : l12 : Nil) : (l23 : l31 : l12 : Nil) : Nil)
+    describe "unfoldr traverseRight" do
+      it "should generate all traversals" do
+        (unfoldr traverseRight $ Traversal (singleton $ singleton l23) g)
+          `shouldEqual` ((singleton l23) : (l12 : l23 : Nil) : Nil)
+        (unfoldr traverseRight $ Traversal (singleton $ singleton l12) g2)
+          `shouldEqual` ((l12 : Nil) : (l31 : l12 : Nil) : (l23 : l31 : l12 : Nil) : Nil)
 
-  describe "cutCycle" do
-    it "should cut the cycle and orient it the right way" do
-      cut c123 l13 `shouldEqual` (l32 : l21 : Nil)
-      cut c134 (flip l13) `shouldEqual` (l14 : l43 : Nil)
+    describe "cutCycle" do
+      it "should cut the cycle and orient it the right way" do
+        cut c123 l13 `shouldEqual` (l32 : l21 : Nil)
+        cut c134 (flip l13) `shouldEqual` (l14 : l43 : Nil)
 
-  describe "joinCycles" do
-    it "should join two cycles that share an edge" do
-      joinCycles c123 c134 l13 `shouldEqual` c1234
+    describe "joinCycles" do
+      it "should join two cycles that share an edge" do
+        joinCycles c123 c134 l13 `shouldEqual` c1234
 
-  describe "findCycle" do
-    it "should find the cycle!" do
-      findCycle g l12 `shouldEqual` Nothing
-      findCycle g2 l31 `shouldEqual` Just (Cycle (l12 : l23 : l31 : Nil))
+    describe "findCycle" do
+      it "should find the cycle!" do
+        findCycle g l12 `shouldEqual` Nothing
+        findCycle g2 l31 `shouldEqual` Just (Cycle (l12 : l23 : l31 : Nil))
 
-  describe "findCycles" do
-    it "should find all cycles!" do
-      findCycles g `shouldEqual` Nil
-      findCycles g2 `shouldEqual` (Cycle (l12 : l23 : l31 : Nil) : Nil)
+    describe "findCycles" do
+      it "should find all cycles!" do
+        findCycles g `shouldEqual` Nil
+        findCycles g2 `shouldEqual` (Cycle (l12 : l23 : l31 : Nil) : Nil)
 
-  describe "updateCycles" do
-    it "should split a cycle" do
-      updateCycles cycles g3 empty (singleton l13) `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)
+    describe "updateCycles" do
+      it "should split a cycle" do
+        updateCycles cycles g3 empty (singleton l13) `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)

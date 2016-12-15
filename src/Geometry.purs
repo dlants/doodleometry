@@ -151,6 +151,6 @@ split (Line p1 p2) points =
        _ -> reversePath lines
   where
     sortedPoints = sort $ nub $ p1 : p2 : points
-    makeLines (p : q : rest) = (Line p q) : (makeLines rest)
+    makeLines (p : q : rest) = (Line p q) : (makeLines (q : rest))
     makeLines _ = Nil
     lines = makeLines sortedPoints
