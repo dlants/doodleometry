@@ -3,7 +3,9 @@ module Test.Main where
 import Prelude
 import App.Graph
 import App.ColorScheme (ColorScheme(..))
-import App.Geometry (Point(..), Stroke(..), reverse)
+import App.Cycle (Cycle(..), cut, joinCycles)
+import App.Geometry (Point(..), Stroke(..), flip)
+import App.Update (updateCycles)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, keys, lookup, showTree)
 import Data.Maybe (Maybe(..))
@@ -56,12 +58,12 @@ main = run [consoleReporter] do
   describe "addStroke" do
     it "should insert strokes in both directions and in correct order" do
       keys g `shouldEqual` (p1 : p2 : p3 : Nil)
-      lookup p2 g `shouldEqual` Just (reverse l12 : l23 : Nil)
+      lookup p2 g `shouldEqual` Just (flip l12 : l23 : Nil)
 
   describe "getNextEdges" do
     it "should generate the list of next edges to follow" do
       getNextEdges (singleton l12) g `shouldEqual` Nil
-      getNextEdges (singleton l23) g `shouldEqual` (singleton $ reverse l12)
+      getNextEdges (singleton l23) g `shouldEqual` (singleton $ flip l12)
 
   describe "unfoldr traverseRight" do
     it "should generate all traversals" do
@@ -73,7 +75,7 @@ main = run [consoleReporter] do
   describe "cutCycle" do
     it "should cut the cycle and orient it the right way" do
       cut c123 l13 `shouldEqual` (l32 : l21 : Nil)
-      cut c134 (reverse l13) `shouldEqual` (l14 : l43 : Nil)
+      cut c134 (flip l13) `shouldEqual` (l14 : l43 : Nil)
 
   describe "joinCycles" do
     it "should join two cycles that share an edge" do
@@ -91,4 +93,4 @@ main = run [consoleReporter] do
 
   describe "updateCycles" do
     it "should split a cycle" do
-      updateCycles cycles g3 l13 `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)
+      updateCycles cycles g3 empty (singleton l13) `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)
