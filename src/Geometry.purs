@@ -1,8 +1,10 @@
 module App.Geometry where
 
 import Prelude
-import Data.List (List(..), foldl, head, last, singleton)
+import Data.List (List(..), foldl, foldr, head, last, nub, reverse, singleton, sort, (:))
+import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..), fst, snd)
 import Math (pow, Radians, atan2)
 
 data Point = Point Number Number
@@ -59,21 +61,15 @@ angle :: Stroke -> Radians
 angle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (x2 - x1) (y2 - y1)
 
-reverse :: Stroke -> Stroke
-reverse (Line p1 p2) = Line p2 p1
-
-isCycle :: List Stroke -> Boolean
-isCycle strokes = compareFirstLast (head strokes) (last strokes)
-  where
-    compareFirstLast (Just (Line p1 _)) (Just (Line _ p4)) = p1 == p4
-    compareFirstLast _ _ = false
+flip :: Stroke -> Stroke
+flip (Line p1 p2) = Line p2 p1
 
 orderedEq :: Stroke -> Stroke -> Boolean
 orderedEq (Line p1 p2) (Line q1 q2) =
   p1 == q1 && p2 == q2
 
 instance strokeEq :: Eq Stroke where
-  eq s1 s2 = (orderedEq s1 s2) || (orderedEq s1 (reverse s2))
+  eq s1 s2 = (orderedEq s1 s2) || (orderedEq s1 (flip s2))
 
 instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
@@ -85,12 +81,26 @@ instance strokeOrd :: Ord Stroke where
          EQ -> compare (max p1 p2) (max q1 q2)
          ord -> ord
 
+type Path = List Stroke
+type Intersections = Map Stroke (List Stroke)
+
+reversePath :: Path -> Path
+reversePath path =
+  flip <$> reverse path
+
+swapEdge :: Path -> Stroke -> Path -> Path
+swapEdge (c : cs) s ss
+  | c == s = ss <> cs
+  | c == (flip s) = (reversePath ss) <> cs
+  | otherwise = c : (swapEdge cs s ss)
+swapEdge Nil _ _ = Nil
+
 compareClockwise :: Stroke -> Stroke -> Ordering
 compareClockwise s1 s2 =
   compare (angle s1) (angle s2)
   -- TODO - if a line and arc have the same angle, sort based on arc curvature
 
-intersect :: Stroke -> Stroke -> List Point
+intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =
   let
     r = p' - p
@@ -117,3 +127,30 @@ intersect (Line p p') (Line q q') =
       in
         if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
                                                         else Nil
+
+intersectMultiple :: Stroke -> List Stroke -> Intersections
+intersectMultiple stroke strokes =
+  let
+    insertIntersection edge result@(Tuple allPoints intersections) =
+      case intersect stroke edge of
+           Nil -> result
+           newPoints -> Tuple (nub $ newPoints <> allPoints) (insert edge (split edge newPoints) intersections)
+    results = foldr insertIntersection (Tuple Nil empty) strokes
+    allPoints = fst results
+    intersections = snd results
+  in
+    insert stroke (split stroke allPoints) intersections
+
+-- given a stroke and a list of intersections, return a list of strokes
+-- TODO: currently relies on sorting points since the result will be correct for lines
+-- ... need to sort 'along the arc' for arcs
+split :: Stroke -> List Point -> List Stroke
+split (Line p1 p2) points =
+  case head lines of -- ensure we still go from p1 to p2
+       Just (Line p _) | p == p1 -> lines
+       _ -> reversePath lines
+  where
+    sortedPoints = sort $ nub $ p1 : p2 : points
+    makeLines (p : q : rest) = (Line p q) : (makeLines rest)
+    makeLines _ = Nil
+    lines = makeLines sortedPoints

@@ -1,13 +1,16 @@
 module App.Model where
 
 import Prelude
-import App.ColorScheme (ColorScheme)
-import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
-import App.Graph (Cycle(..), Graph, addStroke, emptyGraph, findCycles, updateCycles)
-import Data.List (List(..))
-import Data.Map (Map, empty, keys)
+import App.ColorScheme (ColorScheme(..))
+import App.Cycle (Cycle(..), joinCycles)
+import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
+import App.Graph (Graph, addStroke, addStrokes, applyIntersections, emptyGraph, findCycle, findCycles, findIntersections)
+import App.Update (updateCycles)
+import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
+import Data.Map (Map, empty, insert, keys, lookup, pop)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..), snd)
 
 data Action
   = Click Point
@@ -41,17 +44,6 @@ init =
   , tool: LineTool
   }
 
-updateForClick :: Point -> State -> State
-updateForClick p s@{click: Nothing} = s {click = Just p}
-updateForClick p2 s@{click: Just p1}
-  = s { click = Nothing
-      , graph = newGraph
-      , cycles = updateCycles s.cycles newGraph stroke
-      }
-  where
-    stroke = Line p1 p2
-    newGraph = addStroke stroke s.graph
-
 snapToPoint :: Point -> State -> Point
 snapToPoint p s =
   case maybeSnapPoint of
@@ -65,3 +57,19 @@ update (Move p) s = s {hover = p}
 update (Select t) s = s {tool = t, click = Nothing}
 update (Color cycle colorScheme) s =
   s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
+
+updateForClick :: Point -> State -> State
+updateForClick p s@{click: Nothing} = s {click = Just p}
+updateForClick p2 s@{click: Just p1}
+  = s { click = Nothing
+      , graph = newGraph
+      , cycles = newCycles
+      }
+  where
+    stroke = Line p1 p2
+    intersections = findIntersections stroke s.graph
+    splitStroke = case lookup stroke intersections of
+                       Just ss -> ss
+                       _ -> singleton stroke
+    newGraph = addStrokes splitStroke $ applyIntersections intersections s.graph
+    newCycles = updateCycles s.cycles newGraph intersections splitStroke

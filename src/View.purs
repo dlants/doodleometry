@@ -2,8 +2,8 @@ module App.View where
 
 import Prelude
 import App.ColorScheme (ColorScheme, toColor)
+import App.Cycle (Cycle(..))
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
-import App.Graph (Cycle(..), findCycles)
 import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
 import Data.Array (fromFoldable)
@@ -83,8 +83,8 @@ svgListeners _ = []
 drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
-    [ drawStrokes [stroke "black"] (concat (values state.graph))
-    , drawCycles state.tool state.cycles
+    [ drawCycles state.tool state.cycles
+    , drawStrokes [stroke "black"] (concat (values state.graph))
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]
