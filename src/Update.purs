@@ -4,7 +4,7 @@ import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), joinCycles)
 import App.Geometry (Intersections, Path, Point(..), Stroke(..), distance, flip, getNearestPoint, split, swapEdge)
-import App.Graph (Graph, addStroke, addStrokes, applyIntersections, emptyGraph, findCycle, findCycles, findIntersections)
+import App.Graph (Graph, addStroke, addStrokes, applyIntersections, emptyGraph, findCycle, findIntersections)
 import Data.List (List(..), concat, foldr, mapMaybe, nub, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop, toList)
 import Data.Map (update) as Map

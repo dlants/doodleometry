@@ -4,7 +4,7 @@ import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), joinCycles)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
-import App.Graph (Graph, addStroke, addStrokes, applyIntersections, emptyGraph, findCycle, findCycles, findIntersections)
+import App.Graph (Graph, addStrokes, applyIntersections, emptyGraph, findIntersections)
 import App.Update (updateCycles)
 import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop)
@@ -31,7 +31,7 @@ type State =
   { graph :: Graph
   , cycles :: Map Cycle ColorScheme
   , click :: Maybe Point
-  , hover :: Point
+  , hover :: Maybe Point
   , tool :: Tool
   }
 
@@ -40,7 +40,7 @@ init =
   { graph: emptyGraph
   , cycles: empty
   , click: Nothing
-  , hover: Point 0.0 0.0
+  , hover: Nothing
   , tool: LineTool
   }
 
@@ -53,8 +53,8 @@ snapToPoint p s =
 
 update :: Action -> State -> State
 update (Click p) s = updateForClick (snapToPoint p s) s
-update (Move p) s = s {hover = p}
-update (Select t) s = s {tool = t, click = Nothing}
+update (Move p) s = s {hover = Just p}
+update (Select t) s = s {tool = t, click = Nothing, hover = Nothing}
 update (Color cycle colorScheme) s =
   s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
 

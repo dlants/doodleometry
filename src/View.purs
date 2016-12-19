@@ -4,10 +4,11 @@ import Prelude
 import App.ColorScheme (ColorScheme, toColor)
 import App.Cycle (Cycle(..))
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
+import App.Graph (edges)
 import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
 import Data.Array (fromFoldable)
-import Data.List (List, concat, foldl, (:))
+import Data.List (List, foldl, (:))
 import Data.Map (Map, keys, toList, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
@@ -60,18 +61,19 @@ drawPoint (Point x y) size =
          , r $ show size
          ] []
 
-drawSnapPoint :: Point -> List Point -> Html Action
-drawSnapPoint p ps =
+drawSnapPoint :: Maybe Point -> List Point -> Html Action
+drawSnapPoint Nothing _ = g [] []
+drawSnapPoint (Just p) ps =
   case getNearestPoint p ps of
     Nothing -> g [] []
     Just np -> drawPoint np (if distance p np < 20.0 then 3.0 else 2.0)
 
-drawCurrentStroke :: Maybe Point -> Point -> Html Action
-drawCurrentStroke Nothing _ = g [] []
-drawCurrentStroke (Just p1) p2 =
+drawCurrentStroke :: Maybe Point -> Maybe Point -> Html Action
+drawCurrentStroke (Just p1) (Just p2) =
   drawLine [ stroke "black"
            , strokeDasharray "5 5"
            ] p1 p2
+drawCurrentStroke _ _ = g [] []
 
 svgListeners :: Tool -> Array (Attribute Action)
 svgListeners LineTool =
@@ -84,7 +86,7 @@ drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawCycles state.tool state.cycles
-    , drawStrokes [stroke "black"] (concat (values state.graph))
+    , drawStrokes [stroke "black"] (edges state.graph)
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.click state.hover
     ]

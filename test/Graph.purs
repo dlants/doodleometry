@@ -9,6 +9,7 @@ import App.Update (updateCycles)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, keys, lookup, showTree)
 import Data.Maybe (Maybe(..))
+import Data.Tuple (Tuple(..))
 import Data.Unfoldable (unfoldr)
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
@@ -59,17 +60,10 @@ spec = do
         keys g `shouldEqual` (p1 : p2 : p3 : Nil)
         lookup p2 g `shouldEqual` Just (flip l12 : l23 : Nil)
 
-    describe "getNextEdges" do
+    describe "getNextEdge" do
       it "should generate the list of next edges to follow" do
-        getNextEdges (singleton l12) g `shouldEqual` Nil
-        getNextEdges (singleton l23) g `shouldEqual` (singleton $ flip l12)
-
-    describe "unfoldr traverseRight" do
-      it "should generate all traversals" do
-        (unfoldr traverseRight $ Traversal (singleton $ singleton l23) g)
-          `shouldEqual` ((singleton l23) : (l12 : l23 : Nil) : Nil)
-        (unfoldr traverseRight $ Traversal (singleton $ singleton l12) g2)
-          `shouldEqual` ((l12 : Nil) : (l31 : l12 : Nil) : (l23 : l31 : l12 : Nil) : Nil)
+        getNextEdge l12 g `shouldEqual` Nothing
+        getNextEdge l23 g `shouldEqual` Just l21
 
     describe "cutCycle" do
       it "should cut the cycle and orient it the right way" do
@@ -83,12 +77,8 @@ spec = do
     describe "findCycle" do
       it "should find the cycle!" do
         findCycle g l12 `shouldEqual` Nothing
+        findCycle g l31 `shouldEqual` Nothing
         findCycle g2 l31 `shouldEqual` Just (Cycle (l12 : l23 : l31 : Nil))
-
-    describe "findCycles" do
-      it "should find all cycles!" do
-        findCycles g `shouldEqual` Nil
-        findCycles g2 `shouldEqual` (Cycle (l12 : l23 : l31 : Nil) : Nil)
 
     describe "updateCycles" do
       it "should split a cycle" do

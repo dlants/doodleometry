@@ -1,11 +1,11 @@
 module App.Geometry where
 
 import Prelude
-import Data.List (List(..), foldl, foldr, head, last, nub, reverse, singleton, sort, (:))
+import Data.List (List(..), foldl, foldr, head, last, nub, reverse, singleton, sort, zipWith, (:))
 import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), fst, snd)
-import Math (pow, Radians, atan2)
+import Math (Radians, atan2, pi, pow)
 
 data Point = Point Number Number
 
@@ -60,6 +60,19 @@ secondPoint (Line _ p2) = p2
 angle :: Stroke -> Radians
 angle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (x2 - x1) (y2 - y1)
+
+findWrap :: Path -> Radians
+findWrap Nil = 0.0
+findWrap path@(_ : rest) =
+  foldl (+) 0.0 angles
+  where
+    angleDiff strokeFrom strokeTo =
+      let diff = angle strokeFrom - angle strokeTo
+       in if diff > 2.0 * pi then diff - 2.0 * pi
+          else if diff < -2.0 * pi then diff + 2.0 * pi
+          else diff
+
+    angles = zipWith angleDiff path rest
 
 flip :: Stroke -> Stroke
 flip (Line p1 p2) = Line p2 p1

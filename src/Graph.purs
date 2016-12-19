@@ -3,11 +3,11 @@ module App.Graph where
 import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), isCycle)
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareClockwise, firstPoint, flip, intersect, intersectMultiple, orderedEq, split)
+import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareClockwise, firstPoint, flip, intersect, intersectMultiple, orderedEq, secondPoint, split, findWrap)
 import App.Helpers (rotateList)
 import Control.MonadPlus (guard)
 import Data.Foldable (foldr)
-import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, insertBy, mapMaybe, nub, reverse, singleton, sort, takeWhile, (:))
+import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, head, insertBy, mapMaybe, nub, reverse, singleton, sort, takeWhile, (:))
 import Data.List.Lazy (filter, head) as Lazy
 import Data.Map (Map, alter, empty, insert, keys, lookup, pop, toList, update, values)
 import Data.Maybe (Maybe(..))
@@ -61,53 +61,27 @@ removeStroke :: Stroke -> Graph -> Graph
 removeStroke stroke g =
   removeStroke' stroke $ removeStroke' (flip stroke) $ g
 
-getNextEdges :: Path -> Graph -> List Stroke
-getNextEdges (stroke : _) g =
+getNextEdge :: Stroke -> Graph -> Maybe Stroke
+getNextEdge stroke g =
   case lookup (firstPoint stroke) g of
-       Nothing -> Nil
+       Nothing -> Nothing
        (Just strokes) ->
-          flip <$> (drop 1 $ rotateList stroke strokes) -- drop the stroke itself
-
-getNextEdges _ _ = Nil
-
-data Traversal = Traversal (List Path) Graph
-
-{--
-at each iteration, pop the first path. Put possible extensions at
-the front of the "toexplore" list.
---}
-traverseRight :: Traversal -> Maybe (Tuple Path Traversal)
-traverseRight (Traversal (path : rest) g) =
-  case path of
-       (stroke : strokes) | not elem stroke strokes ->
-         Just (Tuple path (pushTraversals path rest))
-       -- don't do anything with a path that loops on itself
-       _ -> traverseRight $ Traversal rest g
-  where
-    nextPaths = (\s -> s : path) <$> getNextEdges path g
-    pushTraversals path paths =
-      Traversal (nextPaths <> paths) g
-
-traverseRight _ = Nothing
+          head $ flip <$> (drop 1 $ rotateList stroke strokes) -- drop the stroke itself
 
 findCycle :: Graph -> Stroke -> Maybe Cycle
 findCycle g stroke =
-  Cycle
-  <$> (
-    Lazy.head
-    $ Lazy.filter isCycle
-    $ unfoldr traverseRight (Traversal (singleton $ singleton stroke) g)
-  )
-
-findCycles :: Graph -> List Cycle
-findCycles g = nub cycles
+  if (findWrap path > 0.0) then Just (Cycle path) else Nothing
   where
-    cycles = do
-      (Tuple pt strokes) <- toList g
-      startStroke <- strokes
-      case findCycle g startStroke of
-           Just cycle -> pure cycle
-           _ -> Nil
+    beginning = secondPoint stroke
+    notAtBeginning nextStroke = secondPoint nextStroke /= beginning
+
+    traverseRight s =
+      case (getNextEdge s g) of
+           Just nextEdge -> Just (Tuple nextEdge nextEdge)
+           _ -> Nothing
+
+    -- path is (p1, _) : ... : (_, p1)
+    path = stroke : (takeWhile notAtBeginning $ unfoldr traverseRight stroke)
 
 findIntersections :: Stroke -> Graph -> Intersections
 findIntersections stroke g =
