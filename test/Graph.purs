@@ -2,10 +2,10 @@ module Test.Graph where
 
 import Prelude
 import App.Graph
+import Test.Fixtures
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), cut, joinCycles)
-import App.Geometry (Point(..), Stroke(..), flip)
-import App.Update (updateCycles)
+import App.Geometry (Point(..), Stroke(..), flipStroke)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, keys, lookup, showTree)
 import Data.Maybe (Maybe(..))
@@ -14,72 +14,24 @@ import Data.Unfoldable (unfoldr)
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
 
-p1 = Point 1.0 0.0
-p2 = Point 2.0 0.0
-p3 = Point 3.0 0.0
-p4 = Point 4.0 0.0
-
-l12 = Line p1 p2
-l23 = Line p2 p3
-l34 = Line p3 p4
-l41 = Line p4 p1
-
-l21 = Line p2 p1
-l32 = Line p3 p2
-l43 = Line p4 p3
-l14 = Line p1 p4
-
-l31 = Line p3 p1
-l13 = Line p1 p3
-l42 = Line p4 p2
-l24 = Line p2 p4
-
-c1234 = Cycle $ l12 : l23 : l34 : l41 : Nil
-c123 = Cycle $ l12 : l23 : l31 : Nil
-c134 = Cycle $ l13 : l34 : l41 : Nil
-
-g = addStroke l12
-  $ addStroke l23
-  $ emptyGraph
-
-g2 = addStroke l31 g
-
-g3 = addStroke l12
-   $ addStroke l23
-   $ addStroke l34
-   $ addStroke l41
-   $ addStroke l13
-   $ emptyGraph
-
-cycles = insert c1234 Red $ empty
 
 spec = do
   describe "App.Graph" do
     describe "addStroke" do
       it "should insert strokes in both directions and in correct order" do
         keys g `shouldEqual` (p1 : p2 : p3 : Nil)
-        lookup p2 g `shouldEqual` Just (flip l12 : l23 : Nil)
+        lookup p2 g `shouldEqual` Just (flipStroke l12 : l23 : Nil)
 
     describe "getNextEdge" do
       it "should generate the list of next edges to follow" do
-        getNextEdge l12 g `shouldEqual` Nothing
-        getNextEdge l23 g `shouldEqual` Just l21
+        getNextEdge l12 g `shouldEqual` Just l23
+        getNextEdge l23 g `shouldEqual` Just l32
 
-    describe "cutCycle" do
-      it "should cut the cycle and orient it the right way" do
-        cut c123 l13 `shouldEqual` (l32 : l21 : Nil)
-        cut c134 (flip l13) `shouldEqual` (l14 : l43 : Nil)
+      it "should pick the next edge in ascending radiant order" do
+        -- top right of the x inbound, top left of the x outbound
+        getNextEdge (Line (Point 1.0 0.0) (Point 0.5 0.5)) g4 `shouldEqual`
+          Just (Line (Point 0.5 0.5) (Point 0.0 0.0))
 
-    describe "joinCycles" do
-      it "should join two cycles that share an edge" do
-        joinCycles c123 c134 l13 `shouldEqual` c1234
-
-    describe "findCycle" do
-      it "should find the cycle!" do
-        findCycle g l12 `shouldEqual` Nothing
-        findCycle g l31 `shouldEqual` Nothing
-        findCycle g2 l31 `shouldEqual` Just (Cycle (l12 : l23 : l31 : Nil))
-
-    describe "updateCycles" do
-      it "should split a cycle" do
-        updateCycles cycles g3 empty (singleton l13) `shouldEqual` (insert c123 Red $ insert c134 Red $ empty)
+        -- top left of the x inbound, bottom left of the x outbound
+        getNextEdge (Line (Point 0.0 0.0) (Point 0.5 0.5)) g4 `shouldEqual`
+          Just (Line (Point 0.5 0.5) (Point 0.0 1.0))

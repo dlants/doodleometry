@@ -51,6 +51,22 @@ getNearestPoint p ps = foldl updateMax Nothing ps
 
 data Stroke = Line Point Point
 
+instance strokeEq :: Eq Stroke where
+  eq (Line p1 p2) (Line q1 q2) = p1 == q1 && p2 == q2
+
+unorderedEq :: Stroke -> Stroke -> Boolean
+unorderedEq s1 s2 = s1 == s2 || (flipStroke s1) == s2
+
+instance strokeShow :: Show Stroke where
+  show (Line p1 p2) =
+    "[" <> show p1 <> " --- " <> show p2 <> "]"
+
+instance strokeOrd :: Ord Stroke where
+  compare (Line p1 p2) (Line q1 q2) =
+    case compare p1 q1 of
+         EQ -> compare p2 q2
+         ord -> ord
+
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
 
@@ -61,55 +77,43 @@ angle :: Stroke -> Radians
 angle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (x2 - x1) (y2 - y1)
 
+-- clockwise rotation -> positive angle
+-- ->/ == negative
+-- ->\ == positive
+-- TODO: what if we do a 180? (currently should never happen due to simplify)
+angleDiff :: Stroke -> Stroke -> Radians
+angleDiff strokeFrom strokeTo =
+  let diff = angle strokeFrom - angle strokeTo
+   in if diff > pi then diff - pi
+      else if diff < - pi then diff + pi
+      else diff
+
 findWrap :: Path -> Radians
 findWrap Nil = 0.0
 findWrap path@(_ : rest) =
   foldl (+) 0.0 angles
   where
-    angleDiff strokeFrom strokeTo =
-      let diff = angle strokeFrom - angle strokeTo
-       in if diff > 2.0 * pi then diff - 2.0 * pi
-          else if diff < -2.0 * pi then diff + 2.0 * pi
-          else diff
-
     angles = zipWith angleDiff path rest
 
-flip :: Stroke -> Stroke
-flip (Line p1 p2) = Line p2 p1
-
-orderedEq :: Stroke -> Stroke -> Boolean
-orderedEq (Line p1 p2) (Line q1 q2) =
-  p1 == q1 && p2 == q2
-
-instance strokeEq :: Eq Stroke where
-  eq s1 s2 = (orderedEq s1 s2) || (orderedEq s1 (flip s2))
-
-instance strokeShow :: Show Stroke where
-  show (Line p1 p2) =
-    "[" <> show p1 <> " --- " <> show p2 <> "]"
-
-instance strokeOrd :: Ord Stroke where
-  compare (Line p1 p2) (Line q1 q2) =
-    case compare (min p1 p2) (min q1 q2) of
-         EQ -> compare (max p1 p2) (max q1 q2)
-         ord -> ord
+flipStroke :: Stroke -> Stroke
+flipStroke (Line p1 p2) = Line p2 p1
 
 type Path = List Stroke
 type Intersections = Map Stroke (List Stroke)
 
 reversePath :: Path -> Path
 reversePath path =
-  flip <$> reverse path
+  flipStroke <$> reverse path
 
 swapEdge :: Path -> Stroke -> Path -> Path
 swapEdge (c : cs) s ss
   | c == s = ss <> cs
-  | c == (flip s) = (reversePath ss) <> cs
+  | c == (flipStroke s) = (reversePath ss) <> cs
   | otherwise = c : (swapEdge cs s ss)
 swapEdge Nil _ _ = Nil
 
-compareClockwise :: Stroke -> Stroke -> Ordering
-compareClockwise s1 s2 =
+compareAngle :: Stroke -> Stroke -> Ordering
+compareAngle s1 s2 =
   compare (angle s1) (angle s2)
   -- TODO - if a line and arc have the same angle, sort based on arc curvature
 

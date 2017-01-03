@@ -1,13 +1,23 @@
 module App.Helpers where
 
 import Prelude
-import Data.List (List, dropWhile, takeWhile)
+import Data.List (List, drop, dropWhile, elemIndex, span, take, takeWhile)
+import Data.Maybe (Maybe(..))
+
+rotateListN :: forall a. Int -> List a -> List a
+rotateListN n list =
+  (drop n list) <> (take n list)
 
 -- rotate a list so that el is first
 rotateList :: forall a. (Eq a) => a -> List a -> List a
 rotateList el list =
-  let unequal = (\a -> a /= el)
-      front = takeWhile unequal list
-      back = dropWhile unequal list
-  in back <> front
+  case elemIndex el list of
+       Just n -> rotateListN n list
+       _ -> list
 
+-- rotate a list 1 past el
+rotatePast :: forall a. (Eq a) => a -> List a -> List a
+rotatePast el list =
+  case elemIndex el list of
+       Just n -> rotateListN (n+1) list
+       _ -> list

@@ -2,10 +2,9 @@ module App.Model where
 
 import Prelude
 import App.ColorScheme (ColorScheme(..))
-import App.Cycle (Cycle(..), joinCycles)
+import App.Cycle (Cycle(..), updateCycles)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
-import App.Graph (Graph, addStrokes, applyIntersections, emptyGraph, findIntersections)
-import App.Update (updateCycles)
+import App.Graph (Graph, applyIntersections, emptyGraph, findIntersections)
 import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop)
 import Data.Map (update) as Map
@@ -71,5 +70,5 @@ updateForClick p2 s@{click: Just p1}
     splitStroke = case lookup stroke intersections of
                        Just ss -> ss
                        _ -> singleton stroke
-    newGraph = addStrokes splitStroke $ applyIntersections intersections s.graph
+    newGraph = applyIntersections intersections s.graph
     newCycles = updateCycles s.cycles newGraph intersections splitStroke
