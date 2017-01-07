@@ -8,7 +8,6 @@ import App.Helpers (rotateList)
 import Data.List (List(..), delete, drop, elem, foldr, head, last, mapMaybe, nub, reverse, sort, (:))
 import Data.Map (Map, empty, insert, lookup, pop, toList)
 import Data.Maybe (Maybe(..))
-import Data.Set (Set)
 import Data.Set (empty) as Set
 import Data.Tuple (Tuple(..))
 
@@ -26,7 +25,10 @@ instance cycleShow :: Show Cycle where
 
 instance cycleOrd :: Ord Cycle where
   compare (Cycle p1) (Cycle p2) =
-    compare (sort p1) (sort p2)
+    compare (sort $ sortOrder <$> p1) (sort $ sortOrder <$> p2)
+      where
+        sortOrder :: Stroke -> Stroke
+        sortOrder s = min s (flipStroke s)
 
 cut :: Cycle -> Stroke -> Path
 cut (Cycle edges) edge =
@@ -73,14 +75,11 @@ splitCycles cMap intersections =
 
 splitCycle :: Intersections -> Cycle -> Cycle
 splitCycle intersections (Cycle path) =
-  let
-    maybeSwapEdge edge path =
-      case lookup edge intersections of
-           Just newEdges -> swapEdge path edge newEdges
-           _ -> path
-  in
-    Cycle (foldr maybeSwapEdge path path)
-
+  Cycle do
+    edge <- path
+    case lookup edge intersections of
+         Just newEdges -> newEdges
+         _ -> pure edge
 
 -- find new cycles in both directions, nub them
 -- if there is 1 cycle, we haven't split any existing cycles - just add it

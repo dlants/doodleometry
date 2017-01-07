@@ -30,7 +30,7 @@ addStroke' s@(Line p1 p2) g =
   alter pushStrokeToPoint p1 g
     where
       pushStrokeToPoint Nothing = Just (singleton s)
-      pushStrokeToPoint (Just list) = Just (insertBy compareAngle s list)
+      pushStrokeToPoint (Just list) = Just (nub $ insertBy compareAngle s list)
 
 -- push an unordered stroke into a graph
 addStroke :: Stroke -> Graph -> Graph

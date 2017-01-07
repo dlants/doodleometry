@@ -1,7 +1,7 @@
 module App.Geometry where
 
 import Prelude
-import Data.List (List(..), foldl, foldr, head, last, nub, reverse, singleton, sort, zipWith, (:))
+import Data.List (List(..), concatMap, foldl, foldr, head, last, nub, reverse, singleton, sort, zipWith, (:))
 import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), fst, snd)
@@ -145,18 +145,26 @@ intersect (Line p p') (Line q q') =
         if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
                                                         else Nil
 
+insertSplitStroke ::  Stroke -> Path -> Intersections -> Intersections
+insertSplitStroke  stroke splitStroke intersections =
+  insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
+
 intersectMultiple :: Stroke -> List Stroke -> Intersections
 intersectMultiple stroke strokes =
   let
-    insertIntersection edge result@(Tuple allPoints intersections) =
-      case intersect stroke edge of
-           Nil -> result
-           newPoints -> Tuple (nub $ newPoints <> allPoints) (insert edge (split edge newPoints) intersections)
-    results = foldr insertIntersection (Tuple Nil empty) strokes
-    allPoints = fst results
-    intersections = snd results
+    intersectionPoints = do
+      toIntersect <- strokes
+      case intersect stroke toIntersect of
+           Nil -> Nil
+           newPoints -> pure $ Tuple toIntersect newPoints
+
+    allPoints = concatMap snd intersectionPoints
+    insertPoints i (Tuple edge points) =
+      insertSplitStroke edge (split edge points) i
+
+    intersections = foldl insertPoints empty intersectionPoints
   in
-    insert stroke (split stroke allPoints) intersections
+    insertSplitStroke stroke (split stroke allPoints) intersections
 
 -- given a stroke and a list of intersections, return a list of strokes
 -- TODO: currently relies on sorting points since the result will be correct for lines

@@ -13,6 +13,37 @@ import Test.Spec.Assertions (shouldEqual)
 
 spec = do
   describe "App.Cycle" do
+    describe "cycleOrd" do
+      it "should not depend on edge order" do
+        shouldEqual
+          (Cycle ( Line (Point 0.0 0.0) (Point 0.5 0.0)
+                 : Line (Point 0.5 0.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
+                 : Nil
+                 )
+          )
+          (Cycle ( Line (Point 0.5 0.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
+                 : Line (Point 0.0 0.0) (Point 0.5 0.0)
+                 : Nil
+                 )
+          )
+
+      it "hould not depend on edge orientation" do
+        shouldEqual
+          (Cycle ( Line (Point 0.0 0.0) (Point 0.5 0.0)
+                 : Line (Point 0.5 0.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
+                 : Nil
+                 )
+          )
+          (Cycle ( Line (Point 0.5 0.0) (Point 0.0 0.0)
+                 : Line (Point 0.0 0.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.5 0.0)
+                 : Nil
+                 )
+          )
+
     describe "simplify" do
       it "should prune excess edges from path" do
         simplify ((Line p1 p2) : (Line p2 p3) : (Line p3 p2) : (Line p2 p4) : Nil) `shouldEqual`
@@ -37,6 +68,33 @@ spec = do
     describe "joinCycles" do
       it "should join two cycles that share an edge" do
         joinCycles c123 c134 l13 `shouldEqual` c1234
+        joinCycles c123 c134 l31 `shouldEqual` c1234
+
+      it "should join two cycles that form a triangle" do
+        joinCycles
+          (Cycle ( Line (Point 0.0 0.0) (Point 0.5 0.0)
+                 : Line (Point 0.5 0.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
+                 : Nil
+                 )
+          )
+          (Cycle ( Line (Point 0.5 0.0) (Point 1.0 0.0)
+                 : Line (Point 1.0 0.0) (Point 0.0 1.0)
+                 : Line (Point 0.0 1.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.5 0.0)
+                 : Nil
+                 )
+          )
+          (Line (Point 0.0 0.5) (Point 0.5 0.0))
+          `shouldEqual`
+          (Cycle ( Line (Point 0.5 0.0) (Point 1.0 0.0)
+                 : Line (Point 1.0 0.0) (Point 0.0 1.0)
+                 : Line (Point 0.0 1.0) (Point 0.0 0.5)
+                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
+                 : Line (Point 0.0 0.0) (Point 0.5 0.0)
+                 : Nil
+                 )
+          )
 
     describe "findCycle" do
       it "should not find cycles in two segments" do
