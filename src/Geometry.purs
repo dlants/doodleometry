@@ -1,11 +1,11 @@
 module App.Geometry where
 
 import Prelude
-import Data.List (List(..), concatMap, foldl, foldr, head, last, nub, reverse, singleton, sort, zipWith, (:))
+import Data.List (List(..), concatMap, foldl, head, mapMaybe, nub, reverse, singleton, sort, zipWith, (:))
 import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..), fst, snd)
-import Math (Radians, atan2, pi, pow)
+import Data.Tuple (Tuple(..), snd)
+import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt)
 
 data Point = Point Number Number
 
@@ -50,9 +50,12 @@ getNearestPoint p ps = foldl updateMax Nothing ps
     updateMax (Just p1) p2 = if (distance p p1) < (distance p p2) then Just p1 else Just p2
 
 data Stroke = Line Point Point
+            | Arc Point Number Number Number
 
 instance strokeEq :: Eq Stroke where
   eq (Line p1 p2) (Line q1 q2) = p1 == q1 && p2 == q2
+  eq (Arc c r a s) (Arc c' r' a' s') = c == c' && r == r' && a == a' && s == s'
+  eq _ _ = false
 
 unorderedEq :: Stroke -> Stroke -> Boolean
 unorderedEq s1 s2 = s1 == s2 || (flipStroke s1) == s2
@@ -61,21 +64,49 @@ instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
     "[" <> show p1 <> " --- " <> show p2 <> "]"
 
+  show (Arc c r a s) =
+    "(" <> show c <> ", radius: " <> show r <> ", angle: " <> show a <> ", sweep: " <> show s <> ")"
+
+compareMap :: (Ord a) => List (Stroke -> a) -> Ordering
+compareMap (fn : rest) s1 s2= case compare (fn s1) (fn s2) of
+                                      EQ -> compareMap rest
+                                      ord -> ord
+compareMap Nil _ _ = EQ
+
 instance strokeOrd :: Ord Stroke where
-  compare (Line p1 p2) (Line q1 q2) =
-    case compare p1 q1 of
-         EQ -> compare p2 q2
-         ord -> ord
+  compare = compareMap (firstPoint : outboundAngle : curvature : length : Nil)
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
+firstPoint (Arc c r a _) = c + (Point (r * (cos a)) (r * (sin a)))
 
 secondPoint :: Stroke -> Point
 secondPoint (Line _ p2) = p2
+secondPoint (Arc c r a s) = c + (Point (r * (cos a + s)) (r * (sin a + s)))
 
-angle :: Stroke -> Radians
-angle (Line (Point x1 y1) (Point x2 y2)) =
+outboundAngle :: Stroke -> Radians
+outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (x2 - x1) (y2 - y1)
+outboundAngle (Arc _ _ a s) =
+  a + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
+
+inboundAngle :: Stroke -> Radians
+inboundAngle s@(Line _ _) = outboundAngle s
+inboundAngle (Arc _ _ a s) =
+  a + s + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
+
+
+-- communicates how aggressively the curve turns. Lines don't turn at all, so have curvature 0
+-- arcs, when sorted by curvature will go from small-radii counterclockwise arcs, to large-radii ones (with a limit
+-- of a line at 0), then large-radii clockwise arcs (which are negative) and finally small-radii counterclockwise
+-- arcs (which are the most negative).
+curvature :: Stroke -> Number
+curvature (Line _ _) = 0.0
+curvature (Arc _ r _ s) = if s > 0.0 then (1.0 / r) else (- 1.0 / r)
+
+length :: Stroke -> Number
+length (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
+length (Arc _ r _ s) = (abs s) * 2.0 * pi * r
 
 -- clockwise rotation -> positive angle
 -- ->/ == negative
@@ -83,20 +114,40 @@ angle (Line (Point x1 y1) (Point x2 y2)) =
 -- TODO: what if we do a 180? (currently should never happen due to simplify)
 angleDiff :: Stroke -> Stroke -> Radians
 angleDiff strokeFrom strokeTo =
-  let diff = angle strokeFrom - angle strokeTo
-   in if diff > pi then diff - pi
-      else if diff < - pi then diff + pi
-      else diff
+  atan2Radians (inboundAngle strokeFrom - outboundAngle strokeTo)
+
+sweep :: Stroke -> Radians
+sweep (Line _ _) = 0.0
+sweep (Arc _ _ _ s) = atan2Radians s
 
 findWrap :: Path -> Radians
 findWrap Nil = 0.0
 findWrap path@(_ : rest) =
-  foldl (+) 0.0 angles
+  foldl (+) 0.0 (angles <> sweep <$> path)
   where
     angles = zipWith angleDiff path rest
 
 flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1
+flipStroke (Arc c r a s) = (Arc c r (positiveRadians $ a + s) (-s))
+
+positiveRadians :: Radians -> Radians
+positiveRadians a
+  | a < 0.0 = a + 2.0 * pi
+  | a > 2.0 * pi = a - 2.0 * pi
+  | otherwise = a
+
+atan2Radians :: Radians -> Radians
+atan2Radians a
+  | a > pi = (mod a 2.0*pi) - pi
+  | a < pi = (mod a 2.0*pi) + pi
+  | otherwise = a
+
+getAngleDiff :: Point -> Radians -> Radians -> Radians
+getAngleDiff (Point x y) a s =
+  case (atan2 y x) - a of diff | diff >= 0.0 && s >= 0.0 -> diff
+                               | diff <= 0.0 && s <= 0.0 -> diff
+                               | otherwise -> -diff
 
 type Path = List Stroke
 type Intersections = Map Stroke (List Stroke)
@@ -111,11 +162,6 @@ swapEdge (c : cs) s ss
   | c == (flipStroke s) = (reversePath ss) <> cs
   | otherwise = c : (swapEdge cs s ss)
 swapEdge Nil _ _ = Nil
-
-compareAngle :: Stroke -> Stroke -> Ordering
-compareAngle s1 s2 =
-  compare (angle s1) (angle s2)
-  -- TODO - if a line and arc have the same angle, sort based on arc curvature
 
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =
@@ -145,6 +191,40 @@ intersect (Line p p') (Line q q') =
         if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
                                                         else Nil
 
+intersect (Line (Point lx1 ly1) (Point lx2 ly2)) (Arc c@(Point cx cy) r a s) =
+  let m = (ly2 - ly1) / (lx2 - lx1) -- TODO : what if line is vertical
+      b = ly1 - (m * lx1)
+      cA = m * m + 1.0
+      cB = 2.0 * (m * b - m * cy - cx)
+      cC = cy * cy - r * r + cx * cx - 2.0 * b * cy + b * b
+      disc = cB*cB - 4.0 * cA * cC
+
+      -- check if a potential solution is inside our segment and arc
+      withinBounds p@(Point x y) =
+        let adiff = getAngleDiff (p - c) a s
+            minx = min lx1 lx2
+            maxx = max lx1 lx2
+            miny = min ly1 ly2
+            maxy = max ly1 ly2
+         in x >= minx && x <= maxx && y >= miny && y <= maxy && adiff <= s
+
+      -- plug in a value for the determinant
+      getSolution d =
+        let x = (-cB + d) / (2.0 * cA)
+            y = m * x + b
+            solution = Point x y
+         in if withinBounds solution then Just solution
+                                     else Nothing
+
+   in case disc of
+           _ | disc < 0.0 -> Nil
+             | disc == 0.0 -> mapMaybe getSolution (0.0 : Nil)
+             | otherwise -> mapMaybe getSolution (sqrt disc : -(sqrt disc) : Nil)
+
+intersect (Arc c r a s) (Arc c' r' a' s') = Nil
+
+intersect a@(Arc _ _ _ _) l@(Line _ _) = intersect l a
+
 insertSplitStroke ::  Stroke -> Path -> Intersections -> Intersections
 insertSplitStroke  stroke splitStroke intersections =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
@@ -167,8 +247,6 @@ intersectMultiple stroke strokes =
     insertSplitStroke stroke (split stroke allPoints) intersections
 
 -- given a stroke and a list of intersections, return a list of strokes
--- TODO: currently relies on sorting points since the result will be correct for lines
--- ... need to sort 'along the arc' for arcs
 split :: Stroke -> List Point -> List Stroke
 split (Line p1 p2) points =
   case head lines of -- ensure we still go from p1 to p2
@@ -176,6 +254,15 @@ split (Line p1 p2) points =
        _ -> reversePath lines
   where
     sortedPoints = sort $ nub $ p1 : p2 : points
-    makeLines (p : q : rest) = (Line p q) : (makeLines (q : rest))
-    makeLines _ = Nil
-    lines = makeLines sortedPoints
+    zipPointPairs (p : q : rest) = (Line p q) : (zipPointPairs (q : rest))
+    zipPointPairs _ = Nil
+    lines = zipPointPairs sortedPoints
+
+split (Arc c r a s) points =
+  let angles = sort $ nub $ a : (a + s) : ((\p -> getAngleDiff (p - c) a s) <$> points)
+      orderedAngles = if s > 0.0 then angles else reverse angles
+      zipAnglePairs (a1 : a2 : rest) =
+        (Arc c r (atan2Radians a1) (a2 - a1)) : zipAnglePairs (a2 : rest)
+      zipAnglePairs _ = Nil
+
+   in zipAnglePairs orderedAngles
