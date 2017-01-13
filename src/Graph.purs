@@ -1,14 +1,14 @@
 module App.Graph where
 
 import Prelude
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareAngle, findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
+import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
 import App.Helpers (rotatePast)
 import Data.Foldable (foldr)
-import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insertBy, last, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
+import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insert, insertBy, last, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
 import Data.Map (Map, alter, empty, lookup, toList, update, values)
 import Data.Maybe (Maybe(..))
-import Data.Set (Set, insert, member)
-import Data.Set (empty) as Set
+import Data.Set (Set, member)
+import Data.Set (insert, empty) as Set
 import Data.Tuple (Tuple(..))
 
 -- a vertex is a point along with outbound strokes, organized in clockwise order and with the vertexPoint first
@@ -26,11 +26,11 @@ pushUnique a as = if elem a as then as else a : as
 
 -- push an ordered stroke into a graph
 addStroke' :: Stroke -> Graph -> Graph
-addStroke' s@(Line p1 p2) g =
-  alter pushStrokeToPoint p1 g
+addStroke' s g =
+  alter pushStrokeToPoint (firstPoint s) g
     where
       pushStrokeToPoint Nothing = Just (singleton s)
-      pushStrokeToPoint (Just list) = Just (nub $ insertBy compareAngle s list)
+      pushStrokeToPoint (Just list) = Just (nub $ insert s list)
 
 -- push an unordered stroke into a graph
 addStroke :: Stroke -> Graph -> Graph
@@ -69,7 +69,7 @@ traverseLeftWall :: Stroke -> Graph -> Set Stroke -> Path
 traverseLeftWall s g visited =
   if member s visited then Nil
                       else s :
-                        case getNextEdge s g of Just nextEdge -> traverseLeftWall nextEdge g (insert s visited)
+                        case getNextEdge s g of Just nextEdge -> traverseLeftWall nextEdge g (Set.insert s visited)
                                                 _ -> Nil
 
 findIntersections :: Stroke -> Graph -> Intersections

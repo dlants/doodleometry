@@ -1,7 +1,7 @@
 module App.Helpers where
 
 import Prelude
-import Data.List (List, drop, dropWhile, elemIndex, span, take, takeWhile)
+import Data.List (List, drop, elemIndex, take)
 import Data.Maybe (Maybe(..))
 
 rotateListN :: forall a. Int -> List a -> List a

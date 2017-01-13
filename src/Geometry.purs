@@ -1,6 +1,7 @@
 module App.Geometry where
 
 import Prelude
+import Data.Function (on)
 import Data.List (List(..), concatMap, foldl, head, mapMaybe, nub, reverse, singleton, sort, zipWith, (:))
 import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
@@ -9,8 +10,18 @@ import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt)
 
 data Point = Point Number Number
 
+approxEq :: Number -> Number -> Boolean
+approxEq a b =
+  abs (a - b) < 1.0
+
+instance ptOrd :: Ord Point where
+  compare (Point x1 y1) (Point x2 y2) =
+    if x1 `approxEq` x2 then if y1 `approxEq` y2 then EQ
+                                                 else compare y1 y2
+                        else compare x1 x2
+
 instance ptEq :: Eq Point where
-  eq (Point x1 y1) (Point x2 y2) = x1 == x2 && y1 == y2
+  eq (Point x1 y1) (Point x2 y2) = x1 `approxEq` x2 && y1 `approxEq` y2
 
 instance ptShow :: Show Point where
   show (Point x y) = "(" <> show x <> ", " <> show y <> ")"
@@ -26,11 +37,6 @@ instance ptSemiring :: Semiring Point where
 
 mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
-
--- | arbitrarily compare xs first then ys
-instance ptOrd :: Ord Point where
-  compare (Point x1 y1) (Point x2 y2) | x1 == x2 = compare y1 y2
-  compare (Point x1 _ ) (Point x2 _) = compare x1 x2
 
 distance :: Point -> Point -> Number
 distance (Point x1 y1) (Point x2 y2) = pow (x1 - x2) 2.0 + pow (y1 - y2) 2.0
@@ -67,14 +73,17 @@ instance strokeShow :: Show Stroke where
   show (Arc c r a s) =
     "(" <> show c <> ", radius: " <> show r <> ", angle: " <> show a <> ", sweep: " <> show s <> ")"
 
-compareMap :: (Ord a) => List (Stroke -> a) -> Ordering
-compareMap (fn : rest) s1 s2= case compare (fn s1) (fn s2) of
-                                      EQ -> compareMap rest
-                                      ord -> ord
+compareMap :: forall a. (Ord a) => List (Stroke -> a) -> Stroke -> Stroke -> Ordering
+compareMap (fn : rest) s1 s2 = case compare (fn s1) (fn s2) of
+                                    EQ -> compareMap rest s1 s2
+                                    ord -> ord
 compareMap Nil _ _ = EQ
 
 instance strokeOrd :: Ord Stroke where
-  compare = compareMap (firstPoint : outboundAngle : curvature : length : Nil)
+  compare =  (compare `on` firstPoint)
+          <> (compare `on` outboundAngle)
+          <> (compare `on` curvature)
+          <> (compare `on` length)
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
@@ -123,7 +132,7 @@ sweep (Arc _ _ _ s) = atan2Radians s
 findWrap :: Path -> Radians
 findWrap Nil = 0.0
 findWrap path@(_ : rest) =
-  foldl (+) 0.0 (angles <> sweep <$> path)
+  foldl (+) 0.0 (angles <> (sweep <$> path))
   where
     angles = zipWith angleDiff path rest
 
