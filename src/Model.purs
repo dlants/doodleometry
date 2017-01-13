@@ -19,10 +19,12 @@ data Action
 
 data Tool
   = LineTool
+  | ArcTool
   | ColorTool ColorScheme
 
 instance eqTool :: Eq Tool where
   eq LineTool LineTool = true
+  eq ArcTool ArcTool = true
   eq (ColorTool c1) (ColorTool c2) = c1 == c2
   eq _ _ = false
 

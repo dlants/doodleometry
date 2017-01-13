@@ -10,6 +10,7 @@ import Pux.Html.Events (onClick)
 toolBelt :: Array Tool
 toolBelt =
   [ LineTool
+  , ArcTool
   , ColorTool Red
   , ColorTool Green
   , ColorTool Blue
@@ -25,6 +26,7 @@ drawTool selected tool =
     ]
     [ case tool of
          LineTool -> div [] [text "Line"]
+         ArcTool -> div [] [text "Arc"]
          ColorTool color -> div [] [text ("Color: " <> show color)]
     ]
 

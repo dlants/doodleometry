@@ -3,7 +3,7 @@ module App.View where
 import Prelude
 import App.ColorScheme (ColorScheme, toColor)
 import App.Cycle (Cycle(..))
-import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
+import App.Geometry (Point(..), Stroke(..), distance, firstPoint, getNearestPoint, ptX, ptY)
 import App.Graph (edges)
 import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
@@ -27,6 +27,7 @@ drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
 
 drawStroke :: Array (Attribute Action) -> Stroke -> Html Action
 drawStroke strokeStyle (Line p1 p2) = drawLine strokeStyle p1 p2
+drawStroke strokeStyle (Arc c r a s) = g [] []
 
 drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
 drawStrokes strokeStyle strokes =
@@ -42,13 +43,14 @@ drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
   in
     path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme] <> listeners) []
 
-pathAttrs strokes@((Line (Point x0 y0) _): _) =
-  [ d (foldl append ("M " <> show x0 <> " " <> show y0 <> " ") (dCommand <$> strokes))
-  ]
+pathAttrs strokes@(s1 : _) =
+  let p = firstPoint s1
+   in [ d (foldl append ("M " <> (show $ ptX p) <> " " <> (show $ ptY p) <> " ") (dCommand <$> strokes))]
 
 pathAttrs _ = []
 
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
+dCommand (Arc _ _ _ _) = ""
 
 drawCycles :: Tool -> Map Cycle ColorScheme -> Html Action
 drawCycles tool cycles =

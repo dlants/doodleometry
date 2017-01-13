@@ -35,6 +35,12 @@ instance ptSemiring :: Semiring Point where
   zero = Point 0.0 0.0
   one = Point 1.0 1.0
 
+ptX :: Point -> Number
+ptX (Point x _) = x
+
+ptY :: Point -> Number
+ptY (Point _ y) = y
+
 mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
 
