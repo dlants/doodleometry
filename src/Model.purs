@@ -3,7 +3,7 @@ module App.Model where
 import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), updateCycles)
-import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
+import App.Geometry (Point(..), Stroke(..), constructArc, distance, getNearestPoint, split)
 import App.Graph (Graph, applyIntersections, emptyGraph, findIntersections)
 import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop)
@@ -33,6 +33,7 @@ type State =
   , cycles :: Map Cycle ColorScheme
   , click :: Maybe Point
   , hover :: Maybe Point
+  , currentStroke :: Maybe Stroke
   , tool :: Tool
   }
 
@@ -42,6 +43,7 @@ init =
   , cycles: empty
   , click: Nothing
   , hover: Nothing
+  , currentStroke: Nothing
   , tool: LineTool
   }
 
@@ -52,22 +54,42 @@ snapToPoint p s =
        _ -> p
   where maybeSnapPoint = getNearestPoint p (keys s.graph)
 
+drawStroke :: State -> Point -> Maybe Stroke
+drawStroke s p =
+  case s.click of
+       Just c ->
+         let snappedPoint = snapToPoint p s
+          in case s.tool of
+                  ArcTool -> Just $ constructArc c snappedPoint
+                  LineTool -> Just $ Line c snappedPoint
+                  _ -> Nothing
+
+       Nothing -> Nothing
+
 update :: Action -> State -> State
-update (Click p) s = updateForClick (snapToPoint p s) s
-update (Move p) s = s {hover = Just p}
-update (Select t) s = s {tool = t, click = Nothing, hover = Nothing}
+update (Click p) s =
+  case s.click of
+       Nothing -> s {click = Just $ snapToPoint p s}
+       Just c ->
+         case drawStroke s p of
+              Nothing -> s
+              Just stroke -> updateForStroke s stroke
+
+update (Move p) s = s {hover = Just p, currentStroke = drawStroke s p}
+
+update (Select t) s = s {tool = t, click = Nothing, hover = Nothing, currentStroke = Nothing}
+
 update (Color cycle colorScheme) s =
   s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
 
-updateForClick :: Point -> State -> State
-updateForClick p s@{click: Nothing} = s {click = Just p}
-updateForClick p2 s@{click: Just p1}
+updateForStroke :: State -> Stroke -> State
+updateForStroke s stroke
   = s { click = Nothing
+      , currentStroke = Nothing
       , graph = newGraph
       , cycles = newCycles
       }
   where
-    stroke = Line p1 p2
     intersections = findIntersections stroke s.graph
     splitStroke = case lookup stroke intersections of
                        Just ss -> ss

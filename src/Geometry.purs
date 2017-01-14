@@ -97,7 +97,7 @@ firstPoint (Arc c r a _) = c + (Point (r * (cos a)) (r * (sin a)))
 
 secondPoint :: Stroke -> Point
 secondPoint (Line _ p2) = p2
-secondPoint (Arc c r a s) = c + (Point (r * (cos a + s)) (r * (sin a + s)))
+secondPoint (Arc c r a s) = c + (Point (r * (cos $ a + s)) (r * (sin $ a + s)))
 
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
@@ -109,7 +109,6 @@ inboundAngle :: Stroke -> Radians
 inboundAngle s@(Line _ _) = outboundAngle s
 inboundAngle (Arc _ _ a s) =
   a + s + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
-
 
 -- communicates how aggressively the curve turns. Lines don't turn at all, so have curvature 0
 -- arcs, when sorted by curvature will go from small-radii counterclockwise arcs, to large-radii ones (with a limit
@@ -163,6 +162,13 @@ getAngleDiff (Point x y) a s =
   case (atan2 y x) - a of diff | diff >= 0.0 && s >= 0.0 -> diff
                                | diff <= 0.0 && s <= 0.0 -> diff
                                | otherwise -> -diff
+
+constructArc :: Point -> Point -> Stroke
+constructArc c@(Point cx cy) p@(Point x y) =
+  let r = distance c p
+      a = atan2 (x - cx) (y - cy)
+      s = 2.0 * pi
+   in Arc c r a s
 
 type Path = List Stroke
 type Intersections = Map Stroke (List Stroke)
