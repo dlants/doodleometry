@@ -54,8 +54,8 @@ snapToPoint p s =
        _ -> p
   where maybeSnapPoint = getNearestPoint p (keys s.graph)
 
-drawStroke :: State -> Point -> Maybe Stroke
-drawStroke s p =
+newStroke :: State -> Point -> Maybe Stroke
+newStroke s p =
   case s.click of
        Just c ->
          let snappedPoint = snapToPoint p s
@@ -71,11 +71,11 @@ update (Click p) s =
   case s.click of
        Nothing -> s {click = Just $ snapToPoint p s}
        Just c ->
-         case drawStroke s p of
+         case newStroke s p of
               Nothing -> s
               Just stroke -> updateForStroke s stroke
 
-update (Move p) s = s {hover = Just p, currentStroke = drawStroke s p}
+update (Move p) s = s {hover = Just p, currentStroke = newStroke s p}
 
 update (Select t) s = s {tool = t, click = Nothing, hover = Nothing, currentStroke = Nothing}
 

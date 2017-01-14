@@ -45,7 +45,7 @@ mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
 
 distance :: Point -> Point -> Number
-distance (Point x1 y1) (Point x2 y2) = pow (x1 - x2) 2.0 + pow (y1 - y2) 2.0
+distance (Point x1 y1) (Point x2 y2) = sqrt (pow (x1 - x2) 2.0 + pow (y1 - y2) 2.0)
 
 crossProduct :: Point -> Point -> Number
 crossProduct (Point x1 y1) (Point x2 y2) = x1 * y2 - x2 * y1

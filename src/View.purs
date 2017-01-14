@@ -46,16 +46,24 @@ drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
   in
     path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme] <> listeners) []
 
+pathAttrs :: List Stroke -> Array (Attribute Action)
 pathAttrs strokes@(s1 : _) =
   let p = firstPoint s1
    in [ d (foldl append (mCommand p) (dCommand <$> strokes))]
 
 pathAttrs _ = []
 
+mCommand :: Point -> String
 mCommand (Point x y) = "M " <> (show $ x) <> " " <> (show $ y) <> " "
 
+dCommand :: Stroke -> String
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
-dCommand arc@(Arc (Point cx cy) r a s) =
+dCommand arc@(Arc c r a s) =
+  if s < 1.99 * pi then dArc arc
+                  else dArc (Arc c r a (1.99 * pi)) <> "Z "
+
+dArc :: Stroke -> String
+dArc arc@(Arc (Point cx cy) r a s) =
   let endPoint = secondPoint arc
    in "A "
       <> show r <> " " -- rx
@@ -66,7 +74,9 @@ dCommand arc@(Arc (Point cx cy) r a s) =
       <> show (if s > 0.0 then 1 else 0) -- sweep flag (sweep starts positive or negative)
       <> " "
       <> show (ptX endPoint) <> " "
-      <> show (ptY endPoint)
+      <> show (ptY endPoint) <> " "
+
+dArc _ = ""
 
 drawCycles :: Tool -> Map Cycle ColorScheme -> Html Action
 drawCycles tool cycles =
@@ -104,7 +114,7 @@ drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawCycles state.tool state.cycles
-    , drawStrokes [stroke "black"] (edges state.graph)
+    , drawStrokes [stroke "black", fill "transparent"] (edges state.graph)
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.currentStroke
     ]
