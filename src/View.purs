@@ -13,6 +13,7 @@ import Data.List (List, foldl, (:))
 import Data.Map (Map, keys, toList, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
+import Debug.Trace (spy)
 import Math (abs, pi)
 import Pux.CSS (absolute, bottom, left, position, px, right, style, toHexString, top)
 import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
@@ -44,7 +45,7 @@ drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
                        [(onClick \_ -> Color cycle newColorScheme)]
                      _ -> []
   in
-    path (pathAttrs strokes <> [fill $ toHexString $ toColor colorScheme] <> listeners) []
+    path (pathAttrs strokes <> [stroke "black", fill $ toHexString $ toColor colorScheme] <> listeners) []
 
 pathAttrs :: List Stroke -> Array (Attribute Action)
 pathAttrs strokes@(s1 : _) =
@@ -59,7 +60,7 @@ mCommand (Point x y) = "M " <> (show $ x) <> " " <> (show $ y) <> " "
 dCommand :: Stroke -> String
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
 dCommand arc@(Arc c r a s) =
-  if s < 1.99 * pi then dArc arc
+  if (abs s) < 1.99 * pi then dArc arc
                   else dArc (Arc c r a (1.99 * pi)) <> "Z "
 
 dArc :: Stroke -> String
@@ -113,8 +114,8 @@ svgListeners tool =
 drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
-    [ drawCycles state.tool state.cycles
-    , drawStrokes [stroke "black", fill "transparent"] (edges state.graph)
+    [ drawStrokes [stroke "black", fill "transparent"] (edges state.graph)
+    , drawCycles state.tool state.cycles
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.currentStroke
     ]

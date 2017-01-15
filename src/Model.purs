@@ -10,6 +10,7 @@ import Data.Map (Map, empty, insert, keys, lookup, pop)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
+import Debug.Trace (spy)
 
 data Action
   = Click Point
@@ -73,7 +74,7 @@ update (Click p) s =
        Just c ->
          case newStroke s p of
               Nothing -> s
-              Just stroke -> updateForStroke s stroke
+              Just stroke -> updateForStroke s (spy stroke)
 
 update (Move p) s = s {hover = Just p, currentStroke = newStroke s p}
 

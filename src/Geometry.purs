@@ -101,7 +101,7 @@ secondPoint (Arc c r a s) = c + (Point (r * (cos $ a + s)) (r * (sin $ a + s)))
 
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
-  atan2 (x2 - x1) (y2 - y1)
+  atan2 (y2 - y1) (x2 - x1)
 outboundAngle (Arc _ _ a s) =
   a + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
 
@@ -166,7 +166,7 @@ getAngleDiff (Point x y) a s =
 constructArc :: Point -> Point -> Stroke
 constructArc c@(Point cx cy) p@(Point x y) =
   let r = distance c p
-      a = atan2 (x - cx) (y - cy)
+      a = atan2 (y - cy) (x - cx)
       s = 2.0 * pi
    in Arc c r a s
 

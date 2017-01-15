@@ -84,7 +84,7 @@ var EventListener = {
 
 module.exports = EventListener;
 }).call(this,require('_process'))
-},{"./emptyFunction":8,"_process":389}],2:[function(require,module,exports){
+},{"./emptyFunction":8,"_process":391}],2:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -361,7 +361,7 @@ function createArrayFromMixed(obj) {
 
 module.exports = createArrayFromMixed;
 }).call(this,require('_process'))
-},{"./invariant":16,"_process":389}],7:[function(require,module,exports){
+},{"./invariant":16,"_process":391}],7:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -447,7 +447,7 @@ function createNodesFromMarkup(markup, handleScript) {
 
 module.exports = createNodesFromMarkup;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":2,"./createArrayFromMixed":6,"./getMarkupWrap":12,"./invariant":16,"_process":389}],8:[function(require,module,exports){
+},{"./ExecutionEnvironment":2,"./createArrayFromMixed":6,"./getMarkupWrap":12,"./invariant":16,"_process":391}],8:[function(require,module,exports){
 "use strict";
 
 /**
@@ -508,7 +508,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = emptyObject;
 }).call(this,require('_process'))
-},{"_process":389}],10:[function(require,module,exports){
+},{"_process":391}],10:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -667,7 +667,7 @@ function getMarkupWrap(nodeName) {
 
 module.exports = getMarkupWrap;
 }).call(this,require('_process'))
-},{"./ExecutionEnvironment":2,"./invariant":16,"_process":389}],13:[function(require,module,exports){
+},{"./ExecutionEnvironment":2,"./invariant":16,"_process":391}],13:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -830,7 +830,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 
 module.exports = invariant;
 }).call(this,require('_process'))
-},{"_process":389}],17:[function(require,module,exports){
+},{"_process":391}],17:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1102,7 +1102,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = warning;
 }).call(this,require('_process'))
-},{"./emptyFunction":8,"_process":389}],24:[function(require,module,exports){
+},{"./emptyFunction":8,"_process":391}],24:[function(require,module,exports){
 'use strict';
 /* eslint-disable no-unused-vars */
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -2034,7 +2034,7 @@ var CSSPropertyOperations = {
 
 module.exports = CSSPropertyOperations;
 }).call(this,require('_process'))
-},{"./CSSProperty":29,"./ReactInstrumentation":88,"./dangerousStyleValue":129,"_process":389,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/camelizeStyleName":4,"fbjs/lib/hyphenateStyleName":15,"fbjs/lib/memoizeStringOnly":19,"fbjs/lib/warning":23}],31:[function(require,module,exports){
+},{"./CSSProperty":29,"./ReactInstrumentation":88,"./dangerousStyleValue":129,"_process":391,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/camelizeStyleName":4,"fbjs/lib/hyphenateStyleName":15,"fbjs/lib/memoizeStringOnly":19,"fbjs/lib/warning":23}],31:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -2155,7 +2155,7 @@ var CallbackQueue = function () {
 
 module.exports = PooledClass.addPoolingTo(CallbackQueue);
 }).call(this,require('_process'))
-},{"./PooledClass":49,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],32:[function(require,module,exports){
+},{"./PooledClass":49,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],32:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -2703,7 +2703,7 @@ var DOMChildrenOperations = {
 
 module.exports = DOMChildrenOperations;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":34,"./Danger":38,"./ReactDOMComponentTree":58,"./ReactInstrumentation":88,"./createMicrosoftUnsafeLocalFunction":128,"./setInnerHTML":150,"./setTextContent":151,"_process":389}],34:[function(require,module,exports){
+},{"./DOMLazyTree":34,"./Danger":38,"./ReactDOMComponentTree":58,"./ReactInstrumentation":88,"./createMicrosoftUnsafeLocalFunction":128,"./setInnerHTML":150,"./setTextContent":151,"_process":391}],34:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -3053,7 +3053,7 @@ var DOMProperty = {
 
 module.exports = DOMProperty;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],37:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],37:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -3292,7 +3292,7 @@ var DOMPropertyOperations = {
 
 module.exports = DOMPropertyOperations;
 }).call(this,require('_process'))
-},{"./DOMProperty":36,"./ReactDOMComponentTree":58,"./ReactInstrumentation":88,"./quoteAttributeValueForBrowser":147,"_process":389,"fbjs/lib/warning":23}],38:[function(require,module,exports){
+},{"./DOMProperty":36,"./ReactDOMComponentTree":58,"./ReactInstrumentation":88,"./quoteAttributeValueForBrowser":147,"_process":391,"fbjs/lib/warning":23}],38:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -3342,7 +3342,7 @@ var Danger = {
 
 module.exports = Danger;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":34,"./reactProdInvariant":148,"_process":389,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/createNodesFromMarkup":7,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16}],39:[function(require,module,exports){
+},{"./DOMLazyTree":34,"./reactProdInvariant":148,"_process":391,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/createNodesFromMarkup":7,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16}],39:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -3748,7 +3748,7 @@ var EventPluginHub = {
 
 module.exports = EventPluginHub;
 }).call(this,require('_process'))
-},{"./EventPluginRegistry":42,"./EventPluginUtils":43,"./ReactErrorUtils":79,"./accumulateInto":125,"./forEachAccumulated":133,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],42:[function(require,module,exports){
+},{"./EventPluginRegistry":42,"./EventPluginUtils":43,"./ReactErrorUtils":79,"./accumulateInto":125,"./forEachAccumulated":133,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],42:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4005,7 +4005,7 @@ var EventPluginRegistry = {
 
 module.exports = EventPluginRegistry;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],43:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],43:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4233,7 +4233,7 @@ var EventPluginUtils = {
 
 module.exports = EventPluginUtils;
 }).call(this,require('_process'))
-},{"./ReactErrorUtils":79,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],44:[function(require,module,exports){
+},{"./ReactErrorUtils":79,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],44:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4369,7 +4369,7 @@ var EventPropagators = {
 
 module.exports = EventPropagators;
 }).call(this,require('_process'))
-},{"./EventPluginHub":41,"./EventPluginUtils":43,"./accumulateInto":125,"./forEachAccumulated":133,"_process":389,"fbjs/lib/warning":23}],45:[function(require,module,exports){
+},{"./EventPluginHub":41,"./EventPluginUtils":43,"./accumulateInto":125,"./forEachAccumulated":133,"_process":391,"fbjs/lib/warning":23}],45:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -4872,7 +4872,7 @@ var LinkedValueUtils = {
 
 module.exports = LinkedValueUtils;
 }).call(this,require('_process'))
-},{"./ReactPropTypesSecret":96,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/React":158}],49:[function(require,module,exports){
+},{"./ReactPropTypesSecret":96,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/React":158}],49:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -4998,7 +4998,7 @@ var PooledClass = {
 
 module.exports = PooledClass;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],50:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],50:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -5482,7 +5482,7 @@ var ReactChildReconciler = {
 
 module.exports = ReactChildReconciler;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":47,"./ReactReconciler":98,"./instantiateReactComponent":144,"./shouldUpdateReactComponent":152,"./traverseAllChildren":153,"_process":389,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],52:[function(require,module,exports){
+},{"./KeyEscapeUtils":47,"./ReactReconciler":98,"./instantiateReactComponent":144,"./shouldUpdateReactComponent":152,"./traverseAllChildren":153,"_process":391,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],52:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -5560,7 +5560,7 @@ var ReactComponentEnvironment = {
 
 module.exports = ReactComponentEnvironment;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],54:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],54:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -6464,7 +6464,7 @@ var ReactCompositeComponent = {
 
 module.exports = ReactCompositeComponent;
 }).call(this,require('_process'))
-},{"./ReactComponentEnvironment":53,"./ReactErrorUtils":79,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactNodeTypes":93,"./ReactReconciler":98,"./checkReactTypeSpec":127,"./reactProdInvariant":148,"./shouldUpdateReactComponent":152,"_process":389,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/shallowEqual":22,"fbjs/lib/warning":23,"object-assign":24,"react/lib/React":158,"react/lib/ReactCurrentOwner":163}],55:[function(require,module,exports){
+},{"./ReactComponentEnvironment":53,"./ReactErrorUtils":79,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactNodeTypes":93,"./ReactReconciler":98,"./checkReactTypeSpec":127,"./reactProdInvariant":148,"./shouldUpdateReactComponent":152,"_process":391,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/shallowEqual":22,"fbjs/lib/warning":23,"object-assign":24,"react/lib/React":158,"react/lib/ReactCurrentOwner":163}],55:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -6577,7 +6577,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactDOM;
 }).call(this,require('_process'))
-},{"./ReactDOMComponentTree":58,"./ReactDOMInvalidARIAHook":64,"./ReactDOMNullInputValuePropHook":65,"./ReactDOMUnknownPropertyHook":73,"./ReactDefaultInjection":76,"./ReactInstrumentation":88,"./ReactMount":91,"./ReactReconciler":98,"./ReactUpdates":105,"./ReactVersion":106,"./findDOMNode":131,"./getHostComponentFromComposite":138,"./renderSubtreeIntoContainer":149,"_process":389,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/warning":23}],56:[function(require,module,exports){
+},{"./ReactDOMComponentTree":58,"./ReactDOMInvalidARIAHook":64,"./ReactDOMNullInputValuePropHook":65,"./ReactDOMUnknownPropertyHook":73,"./ReactDefaultInjection":76,"./ReactInstrumentation":88,"./ReactMount":91,"./ReactReconciler":98,"./ReactUpdates":105,"./ReactVersion":106,"./findDOMNode":131,"./getHostComponentFromComposite":138,"./renderSubtreeIntoContainer":149,"_process":391,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/warning":23}],56:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -7574,7 +7574,7 @@ _assign(ReactDOMComponent.prototype, ReactDOMComponent.Mixin, ReactMultiChild.Mi
 
 module.exports = ReactDOMComponent;
 }).call(this,require('_process'))
-},{"./AutoFocusUtils":27,"./CSSPropertyOperations":30,"./DOMLazyTree":34,"./DOMNamespaces":35,"./DOMProperty":36,"./DOMPropertyOperations":37,"./EventPluginHub":41,"./EventPluginRegistry":42,"./ReactBrowserEventEmitter":50,"./ReactDOMComponentFlags":57,"./ReactDOMComponentTree":58,"./ReactDOMInput":63,"./ReactDOMOption":66,"./ReactDOMSelect":67,"./ReactDOMTextarea":71,"./ReactInstrumentation":88,"./ReactMultiChild":92,"./ReactServerRenderingTransaction":102,"./escapeTextContentForBrowser":130,"./isEventSupported":145,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":389,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16,"fbjs/lib/shallowEqual":22,"fbjs/lib/warning":23,"object-assign":24}],57:[function(require,module,exports){
+},{"./AutoFocusUtils":27,"./CSSPropertyOperations":30,"./DOMLazyTree":34,"./DOMNamespaces":35,"./DOMProperty":36,"./DOMPropertyOperations":37,"./EventPluginHub":41,"./EventPluginRegistry":42,"./ReactBrowserEventEmitter":50,"./ReactDOMComponentFlags":57,"./ReactDOMComponentTree":58,"./ReactDOMInput":63,"./ReactDOMOption":66,"./ReactDOMSelect":67,"./ReactDOMTextarea":71,"./ReactInstrumentation":88,"./ReactMultiChild":92,"./ReactServerRenderingTransaction":102,"./escapeTextContentForBrowser":130,"./isEventSupported":145,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":391,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16,"fbjs/lib/shallowEqual":22,"fbjs/lib/warning":23,"object-assign":24}],57:[function(require,module,exports){
 /**
  * Copyright 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -7782,7 +7782,7 @@ var ReactDOMComponentTree = {
 
 module.exports = ReactDOMComponentTree;
 }).call(this,require('_process'))
-},{"./DOMProperty":36,"./ReactDOMComponentFlags":57,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],59:[function(require,module,exports){
+},{"./DOMProperty":36,"./ReactDOMComponentFlags":57,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],59:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -7817,7 +7817,7 @@ function ReactDOMContainerInfo(topLevelWrapper, node) {
 
 module.exports = ReactDOMContainerInfo;
 }).call(this,require('_process'))
-},{"./validateDOMNesting":154,"_process":389}],60:[function(require,module,exports){
+},{"./validateDOMNesting":154,"_process":391}],60:[function(require,module,exports){
 /**
  * Copyright 2014-present, Facebook, Inc.
  * All rights reserved.
@@ -8200,7 +8200,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMInput;
 }).call(this,require('_process'))
-},{"./DOMPropertyOperations":37,"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],64:[function(require,module,exports){
+},{"./DOMPropertyOperations":37,"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],64:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8295,7 +8295,7 @@ var ReactDOMInvalidARIAHook = {
 
 module.exports = ReactDOMInvalidARIAHook;
 }).call(this,require('_process'))
-},{"./DOMProperty":36,"_process":389,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],65:[function(require,module,exports){
+},{"./DOMProperty":36,"_process":391,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],65:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8340,7 +8340,7 @@ var ReactDOMNullInputValuePropHook = {
 
 module.exports = ReactDOMNullInputValuePropHook;
 }).call(this,require('_process'))
-},{"_process":389,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],66:[function(require,module,exports){
+},{"_process":391,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],66:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8465,7 +8465,7 @@ var ReactDOMOption = {
 
 module.exports = ReactDOMOption;
 }).call(this,require('_process'))
-},{"./ReactDOMComponentTree":58,"./ReactDOMSelect":67,"_process":389,"fbjs/lib/warning":23,"object-assign":24,"react/lib/React":158}],67:[function(require,module,exports){
+},{"./ReactDOMComponentTree":58,"./ReactDOMSelect":67,"_process":391,"fbjs/lib/warning":23,"object-assign":24,"react/lib/React":158}],67:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -8667,7 +8667,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMSelect;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"_process":389,"fbjs/lib/warning":23,"object-assign":24}],68:[function(require,module,exports){
+},{"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"_process":391,"fbjs/lib/warning":23,"object-assign":24}],68:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -9071,7 +9071,7 @@ _assign(ReactDOMTextComponent.prototype, {
 
 module.exports = ReactDOMTextComponent;
 }).call(this,require('_process'))
-},{"./DOMChildrenOperations":33,"./DOMLazyTree":34,"./ReactDOMComponentTree":58,"./escapeTextContentForBrowser":130,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":389,"fbjs/lib/invariant":16,"object-assign":24}],71:[function(require,module,exports){
+},{"./DOMChildrenOperations":33,"./DOMLazyTree":34,"./ReactDOMComponentTree":58,"./escapeTextContentForBrowser":130,"./reactProdInvariant":148,"./validateDOMNesting":154,"_process":391,"fbjs/lib/invariant":16,"object-assign":24}],71:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9227,7 +9227,7 @@ function _handleChange(event) {
 
 module.exports = ReactDOMTextarea;
 }).call(this,require('_process'))
-},{"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],72:[function(require,module,exports){
+},{"./LinkedValueUtils":48,"./ReactDOMComponentTree":58,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],72:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -9365,7 +9365,7 @@ module.exports = {
   traverseEnterLeave: traverseEnterLeave
 };
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],73:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],73:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -9479,7 +9479,7 @@ var ReactDOMUnknownPropertyHook = {
 
 module.exports = ReactDOMUnknownPropertyHook;
 }).call(this,require('_process'))
-},{"./DOMProperty":36,"./EventPluginRegistry":42,"_process":389,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],74:[function(require,module,exports){
+},{"./DOMProperty":36,"./EventPluginRegistry":42,"_process":391,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],74:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -9842,7 +9842,7 @@ if (/[?&]react_perf\b/.test(url)) {
 
 module.exports = ReactDebugTool;
 }).call(this,require('_process'))
-},{"./ReactHostOperationHistoryHook":84,"./ReactInvalidSetStateWarningHook":89,"_process":389,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/performanceNow":21,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],75:[function(require,module,exports){
+},{"./ReactHostOperationHistoryHook":84,"./ReactInvalidSetStateWarningHook":89,"_process":391,"fbjs/lib/ExecutionEnvironment":2,"fbjs/lib/performanceNow":21,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],75:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -10125,7 +10125,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactErrorUtils;
 }).call(this,require('_process'))
-},{"_process":389}],80:[function(require,module,exports){
+},{"_process":391}],80:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -10413,7 +10413,7 @@ var ReactHostComponent = {
 
 module.exports = ReactHostComponent;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"object-assign":24}],84:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"object-assign":24}],84:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -10679,7 +10679,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = { debugTool: debugTool };
 }).call(this,require('_process'))
-},{"./ReactDebugTool":74,"_process":389}],89:[function(require,module,exports){
+},{"./ReactDebugTool":74,"_process":391}],89:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -10718,7 +10718,7 @@ var ReactInvalidSetStateWarningHook = {
 
 module.exports = ReactInvalidSetStateWarningHook;
 }).call(this,require('_process'))
-},{"_process":389,"fbjs/lib/warning":23}],90:[function(require,module,exports){
+},{"_process":391,"fbjs/lib/warning":23}],90:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -11308,7 +11308,7 @@ var ReactMount = {
 
 module.exports = ReactMount;
 }).call(this,require('_process'))
-},{"./DOMLazyTree":34,"./DOMProperty":36,"./ReactBrowserEventEmitter":50,"./ReactDOMComponentTree":58,"./ReactDOMContainerInfo":59,"./ReactDOMFeatureFlags":61,"./ReactFeatureFlags":82,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactMarkupChecksum":90,"./ReactReconciler":98,"./ReactUpdateQueue":104,"./ReactUpdates":105,"./instantiateReactComponent":144,"./reactProdInvariant":148,"./setInnerHTML":150,"./shouldUpdateReactComponent":152,"_process":389,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/React":158,"react/lib/ReactCurrentOwner":163}],92:[function(require,module,exports){
+},{"./DOMLazyTree":34,"./DOMProperty":36,"./ReactBrowserEventEmitter":50,"./ReactDOMComponentTree":58,"./ReactDOMContainerInfo":59,"./ReactDOMFeatureFlags":61,"./ReactFeatureFlags":82,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactMarkupChecksum":90,"./ReactReconciler":98,"./ReactUpdateQueue":104,"./ReactUpdates":105,"./instantiateReactComponent":144,"./reactProdInvariant":148,"./setInnerHTML":150,"./shouldUpdateReactComponent":152,"_process":391,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/React":158,"react/lib/ReactCurrentOwner":163}],92:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11760,7 +11760,7 @@ var ReactMultiChild = {
 
 module.exports = ReactMultiChild;
 }).call(this,require('_process'))
-},{"./ReactChildReconciler":51,"./ReactComponentEnvironment":53,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactReconciler":98,"./flattenChildren":132,"./reactProdInvariant":148,"_process":389,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16,"react/lib/ReactCurrentOwner":163}],93:[function(require,module,exports){
+},{"./ReactChildReconciler":51,"./ReactComponentEnvironment":53,"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactReconciler":98,"./flattenChildren":132,"./reactProdInvariant":148,"_process":391,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16,"react/lib/ReactCurrentOwner":163}],93:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11802,7 +11802,7 @@ var ReactNodeTypes = {
 
 module.exports = ReactNodeTypes;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"react/lib/React":158}],94:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"react/lib/React":158}],94:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11898,7 +11898,7 @@ var ReactOwner = {
 
 module.exports = ReactOwner;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],95:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],95:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -11925,7 +11925,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactPropTypeLocationNames;
 }).call(this,require('_process'))
-},{"_process":389}],96:[function(require,module,exports){
+},{"_process":391}],96:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -12122,7 +12122,7 @@ PooledClass.addPoolingTo(ReactReconcileTransaction);
 
 module.exports = ReactReconcileTransaction;
 }).call(this,require('_process'))
-},{"./CallbackQueue":31,"./PooledClass":49,"./ReactBrowserEventEmitter":50,"./ReactInputSelection":86,"./ReactInstrumentation":88,"./ReactUpdateQueue":104,"./Transaction":123,"_process":389,"object-assign":24}],98:[function(require,module,exports){
+},{"./CallbackQueue":31,"./PooledClass":49,"./ReactBrowserEventEmitter":50,"./ReactInputSelection":86,"./ReactInstrumentation":88,"./ReactUpdateQueue":104,"./Transaction":123,"_process":391,"object-assign":24}],98:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -12292,7 +12292,7 @@ var ReactReconciler = {
 
 module.exports = ReactReconciler;
 }).call(this,require('_process'))
-},{"./ReactInstrumentation":88,"./ReactRef":99,"_process":389,"fbjs/lib/warning":23}],99:[function(require,module,exports){
+},{"./ReactInstrumentation":88,"./ReactRef":99,"_process":391,"fbjs/lib/warning":23}],99:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -12495,7 +12495,7 @@ module.exports = {
   renderToStaticMarkup: renderToStaticMarkup
 };
 }).call(this,require('_process'))
-},{"./ReactDOMContainerInfo":59,"./ReactDefaultBatchingStrategy":75,"./ReactInstrumentation":88,"./ReactMarkupChecksum":90,"./ReactReconciler":98,"./ReactServerBatchingStrategy":100,"./ReactServerRenderingTransaction":102,"./ReactUpdates":105,"./instantiateReactComponent":144,"./reactProdInvariant":148,"_process":389,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"react/lib/React":158}],102:[function(require,module,exports){
+},{"./ReactDOMContainerInfo":59,"./ReactDefaultBatchingStrategy":75,"./ReactInstrumentation":88,"./ReactMarkupChecksum":90,"./ReactReconciler":98,"./ReactServerBatchingStrategy":100,"./ReactServerRenderingTransaction":102,"./ReactUpdates":105,"./instantiateReactComponent":144,"./reactProdInvariant":148,"_process":391,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"react/lib/React":158}],102:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -12587,7 +12587,7 @@ PooledClass.addPoolingTo(ReactServerRenderingTransaction);
 
 module.exports = ReactServerRenderingTransaction;
 }).call(this,require('_process'))
-},{"./PooledClass":49,"./ReactInstrumentation":88,"./ReactServerUpdateQueue":103,"./Transaction":123,"_process":389,"object-assign":24}],103:[function(require,module,exports){
+},{"./PooledClass":49,"./ReactInstrumentation":88,"./ReactServerUpdateQueue":103,"./Transaction":123,"_process":391,"object-assign":24}],103:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -12728,7 +12728,7 @@ var ReactServerUpdateQueue = function () {
 
 module.exports = ReactServerUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactUpdateQueue":104,"_process":389,"fbjs/lib/warning":23}],104:[function(require,module,exports){
+},{"./ReactUpdateQueue":104,"_process":391,"fbjs/lib/warning":23}],104:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -12956,7 +12956,7 @@ var ReactUpdateQueue = {
 
 module.exports = ReactUpdateQueue;
 }).call(this,require('_process'))
-},{"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],105:[function(require,module,exports){
+},{"./ReactInstanceMap":87,"./ReactInstrumentation":88,"./ReactUpdates":105,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],105:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -13209,7 +13209,7 @@ var ReactUpdates = {
 
 module.exports = ReactUpdates;
 }).call(this,require('_process'))
-},{"./CallbackQueue":31,"./PooledClass":49,"./ReactFeatureFlags":82,"./ReactReconciler":98,"./Transaction":123,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"object-assign":24}],106:[function(require,module,exports){
+},{"./CallbackQueue":31,"./PooledClass":49,"./ReactFeatureFlags":82,"./ReactReconciler":98,"./Transaction":123,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"object-assign":24}],106:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -13946,7 +13946,7 @@ var SimpleEventPlugin = {
 
 module.exports = SimpleEventPlugin;
 }).call(this,require('_process'))
-},{"./EventPropagators":44,"./ReactDOMComponentTree":58,"./SyntheticAnimationEvent":110,"./SyntheticClipboardEvent":111,"./SyntheticDragEvent":113,"./SyntheticEvent":114,"./SyntheticFocusEvent":115,"./SyntheticKeyboardEvent":117,"./SyntheticMouseEvent":118,"./SyntheticTouchEvent":119,"./SyntheticTransitionEvent":120,"./SyntheticUIEvent":121,"./SyntheticWheelEvent":122,"./getEventCharCode":134,"./reactProdInvariant":148,"_process":389,"fbjs/lib/EventListener":1,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16}],110:[function(require,module,exports){
+},{"./EventPropagators":44,"./ReactDOMComponentTree":58,"./SyntheticAnimationEvent":110,"./SyntheticClipboardEvent":111,"./SyntheticDragEvent":113,"./SyntheticEvent":114,"./SyntheticFocusEvent":115,"./SyntheticKeyboardEvent":117,"./SyntheticMouseEvent":118,"./SyntheticTouchEvent":119,"./SyntheticTransitionEvent":120,"./SyntheticUIEvent":121,"./SyntheticWheelEvent":122,"./getEventCharCode":134,"./reactProdInvariant":148,"_process":391,"fbjs/lib/EventListener":1,"fbjs/lib/emptyFunction":8,"fbjs/lib/invariant":16}],110:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -14365,7 +14365,7 @@ function getPooledWarningPropertyDefinition(propName, getVal) {
   }
 }
 }).call(this,require('_process'))
-},{"./PooledClass":49,"_process":389,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23,"object-assign":24}],115:[function(require,module,exports){
+},{"./PooledClass":49,"_process":391,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23,"object-assign":24}],115:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15018,7 +15018,7 @@ var TransactionImpl = {
 
 module.exports = TransactionImpl;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],124:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],124:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15105,7 +15105,7 @@ function accumulateInto(current, next) {
 
 module.exports = accumulateInto;
 }).call(this,require('_process'))
-},{"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16}],126:[function(require,module,exports){
+},{"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16}],126:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15238,7 +15238,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 
 module.exports = checkReactTypeSpec;
 }).call(this,require('_process'))
-},{"./ReactPropTypeLocationNames":95,"./ReactPropTypesSecret":96,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],128:[function(require,module,exports){
+},{"./ReactPropTypeLocationNames":95,"./ReactPropTypesSecret":96,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],128:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -15351,7 +15351,7 @@ function dangerousStyleValue(name, value, component) {
 
 module.exports = dangerousStyleValue;
 }).call(this,require('_process'))
-},{"./CSSProperty":29,"_process":389,"fbjs/lib/warning":23}],130:[function(require,module,exports){
+},{"./CSSProperty":29,"_process":391,"fbjs/lib/warning":23}],130:[function(require,module,exports){
 /**
  * Copyright 2016-present, Facebook, Inc.
  * All rights reserved.
@@ -15536,7 +15536,7 @@ function findDOMNode(componentOrElement) {
 
 module.exports = findDOMNode;
 }).call(this,require('_process'))
-},{"./ReactDOMComponentTree":58,"./ReactInstanceMap":87,"./getHostComponentFromComposite":138,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],132:[function(require,module,exports){
+},{"./ReactDOMComponentTree":58,"./ReactInstanceMap":87,"./getHostComponentFromComposite":138,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],132:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -15614,7 +15614,7 @@ function flattenChildren(children, selfDebugID) {
 
 module.exports = flattenChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":47,"./traverseAllChildren":153,"_process":389,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],133:[function(require,module,exports){
+},{"./KeyEscapeUtils":47,"./traverseAllChildren":153,"_process":391,"fbjs/lib/warning":23,"react/lib/ReactComponentTreeHook":162}],133:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -16295,7 +16295,7 @@ function instantiateReactComponent(node, shouldHaveDebugID) {
 
 module.exports = instantiateReactComponent;
 }).call(this,require('_process'))
-},{"./ReactCompositeComponent":54,"./ReactEmptyComponent":78,"./ReactHostComponent":83,"./getNextDebugID":140,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],145:[function(require,module,exports){
+},{"./ReactCompositeComponent":54,"./ReactEmptyComponent":78,"./ReactHostComponent":83,"./getNextDebugID":140,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],145:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -16857,7 +16857,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":47,"./ReactElementSymbol":77,"./getIteratorFn":139,"./reactProdInvariant":148,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],154:[function(require,module,exports){
+},{"./KeyEscapeUtils":47,"./ReactElementSymbol":77,"./getIteratorFn":139,"./reactProdInvariant":148,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"react/lib/ReactCurrentOwner":163}],154:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -17241,7 +17241,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = validateDOMNesting;
 }).call(this,require('_process'))
-},{"_process":389,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23,"object-assign":24}],155:[function(require,module,exports){
+},{"_process":391,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23,"object-assign":24}],155:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/ReactDOMServer');
@@ -17250,7 +17250,7 @@ module.exports = require('./lib/ReactDOMServer');
 arguments[4][47][0].apply(exports,arguments)
 },{"dup":47}],157:[function(require,module,exports){
 arguments[4][49][0].apply(exports,arguments)
-},{"./reactProdInvariant":178,"_process":389,"dup":49,"fbjs/lib/invariant":16}],158:[function(require,module,exports){
+},{"./reactProdInvariant":178,"_process":391,"dup":49,"fbjs/lib/invariant":16}],158:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -17341,7 +17341,7 @@ var React = {
 
 module.exports = React;
 }).call(this,require('_process'))
-},{"./ReactChildren":159,"./ReactClass":160,"./ReactComponent":161,"./ReactDOMFactories":164,"./ReactElement":165,"./ReactElementValidator":167,"./ReactPropTypes":170,"./ReactPureComponent":172,"./ReactVersion":173,"./onlyChild":177,"_process":389,"fbjs/lib/warning":23,"object-assign":24}],159:[function(require,module,exports){
+},{"./ReactChildren":159,"./ReactClass":160,"./ReactComponent":161,"./ReactDOMFactories":164,"./ReactElement":165,"./ReactElementValidator":167,"./ReactPropTypes":170,"./ReactPureComponent":172,"./ReactVersion":173,"./onlyChild":177,"_process":391,"fbjs/lib/warning":23,"object-assign":24}],159:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18251,7 +18251,7 @@ var ReactClass = {
 
 module.exports = ReactClass;
 }).call(this,require('_process'))
-},{"./ReactComponent":161,"./ReactElement":165,"./ReactNoopUpdateQueue":168,"./ReactPropTypeLocationNames":169,"./reactProdInvariant":178,"_process":389,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],161:[function(require,module,exports){
+},{"./ReactComponent":161,"./ReactElement":165,"./ReactNoopUpdateQueue":168,"./ReactPropTypeLocationNames":169,"./reactProdInvariant":178,"_process":391,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23,"object-assign":24}],161:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -18371,7 +18371,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = ReactComponent;
 }).call(this,require('_process'))
-},{"./ReactNoopUpdateQueue":168,"./canDefineProperty":174,"./reactProdInvariant":178,"_process":389,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],162:[function(require,module,exports){
+},{"./ReactNoopUpdateQueue":168,"./canDefineProperty":174,"./reactProdInvariant":178,"_process":391,"fbjs/lib/emptyObject":9,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],162:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2016-present, Facebook, Inc.
@@ -18707,7 +18707,7 @@ var ReactComponentTreeHook = {
 
 module.exports = ReactComponentTreeHook;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":163,"./reactProdInvariant":178,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],163:[function(require,module,exports){
+},{"./ReactCurrentOwner":163,"./reactProdInvariant":178,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],163:[function(require,module,exports){
 /**
  * Copyright 2013-present, Facebook, Inc.
  * All rights reserved.
@@ -18910,7 +18910,7 @@ var ReactDOMFactories = {
 
 module.exports = ReactDOMFactories;
 }).call(this,require('_process'))
-},{"./ReactElement":165,"./ReactElementValidator":167,"_process":389}],165:[function(require,module,exports){
+},{"./ReactElement":165,"./ReactElementValidator":167,"_process":391}],165:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -19253,7 +19253,7 @@ ReactElement.isValidElement = function (object) {
 
 module.exports = ReactElement;
 }).call(this,require('_process'))
-},{"./ReactCurrentOwner":163,"./ReactElementSymbol":166,"./canDefineProperty":174,"_process":389,"fbjs/lib/warning":23,"object-assign":24}],166:[function(require,module,exports){
+},{"./ReactCurrentOwner":163,"./ReactElementSymbol":166,"./canDefineProperty":174,"_process":391,"fbjs/lib/warning":23,"object-assign":24}],166:[function(require,module,exports){
 arguments[4][77][0].apply(exports,arguments)
 },{"dup":77}],167:[function(require,module,exports){
 (function (process){
@@ -19484,7 +19484,7 @@ var ReactElementValidator = {
 
 module.exports = ReactElementValidator;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":162,"./ReactCurrentOwner":163,"./ReactElement":165,"./canDefineProperty":174,"./checkReactTypeSpec":175,"./getIteratorFn":176,"_process":389,"fbjs/lib/warning":23}],168:[function(require,module,exports){
+},{"./ReactComponentTreeHook":162,"./ReactCurrentOwner":163,"./ReactElement":165,"./canDefineProperty":174,"./checkReactTypeSpec":175,"./getIteratorFn":176,"_process":391,"fbjs/lib/warning":23}],168:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2015-present, Facebook, Inc.
@@ -19582,9 +19582,9 @@ var ReactNoopUpdateQueue = {
 
 module.exports = ReactNoopUpdateQueue;
 }).call(this,require('_process'))
-},{"_process":389,"fbjs/lib/warning":23}],169:[function(require,module,exports){
+},{"_process":391,"fbjs/lib/warning":23}],169:[function(require,module,exports){
 arguments[4][95][0].apply(exports,arguments)
-},{"_process":389,"dup":95}],170:[function(require,module,exports){
+},{"_process":391,"dup":95}],170:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -20020,7 +20020,7 @@ function getClassName(propValue) {
 
 module.exports = ReactPropTypes;
 }).call(this,require('_process'))
-},{"./ReactElement":165,"./ReactPropTypeLocationNames":169,"./ReactPropTypesSecret":171,"./getIteratorFn":176,"_process":389,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23}],171:[function(require,module,exports){
+},{"./ReactElement":165,"./ReactPropTypeLocationNames":169,"./ReactPropTypesSecret":171,"./getIteratorFn":176,"_process":391,"fbjs/lib/emptyFunction":8,"fbjs/lib/warning":23}],171:[function(require,module,exports){
 arguments[4][96][0].apply(exports,arguments)
 },{"dup":96}],172:[function(require,module,exports){
 /**
@@ -20094,7 +20094,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 module.exports = canDefineProperty;
 }).call(this,require('_process'))
-},{"_process":389}],175:[function(require,module,exports){
+},{"_process":391}],175:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-present, Facebook, Inc.
@@ -20183,7 +20183,7 @@ function checkReactTypeSpec(typeSpecs, values, location, componentName, element,
 
 module.exports = checkReactTypeSpec;
 }).call(this,require('_process'))
-},{"./ReactComponentTreeHook":162,"./ReactPropTypeLocationNames":169,"./ReactPropTypesSecret":171,"./reactProdInvariant":178,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],176:[function(require,module,exports){
+},{"./ReactComponentTreeHook":162,"./ReactPropTypeLocationNames":169,"./ReactPropTypesSecret":171,"./reactProdInvariant":178,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],176:[function(require,module,exports){
 arguments[4][139][0].apply(exports,arguments)
 },{"dup":139}],177:[function(require,module,exports){
 (function (process){
@@ -20225,7 +20225,7 @@ function onlyChild(children) {
 
 module.exports = onlyChild;
 }).call(this,require('_process'))
-},{"./ReactElement":165,"./reactProdInvariant":178,"_process":389,"fbjs/lib/invariant":16}],178:[function(require,module,exports){
+},{"./ReactElement":165,"./reactProdInvariant":178,"_process":391,"fbjs/lib/invariant":16}],178:[function(require,module,exports){
 arguments[4][148][0].apply(exports,arguments)
 },{"dup":148}],179:[function(require,module,exports){
 (function (process){
@@ -20405,7 +20405,7 @@ function traverseAllChildren(children, callback, traverseContext) {
 
 module.exports = traverseAllChildren;
 }).call(this,require('_process'))
-},{"./KeyEscapeUtils":156,"./ReactCurrentOwner":163,"./ReactElementSymbol":166,"./getIteratorFn":176,"./reactProdInvariant":178,"_process":389,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],180:[function(require,module,exports){
+},{"./KeyEscapeUtils":156,"./ReactCurrentOwner":163,"./ReactElementSymbol":166,"./getIteratorFn":176,"./reactProdInvariant":178,"_process":391,"fbjs/lib/invariant":16,"fbjs/lib/warning":23}],180:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/React');
@@ -20504,7 +20504,7 @@ module.exports = {
     showScheme: showScheme
 };
 
-},{"../Color":218,"../Color.Scheme.X11":217,"../Data.Eq":286,"../Data.Show":339,"../Prelude":366,"../Pux.CSS":367}],182:[function(require,module,exports){
+},{"../Color":218,"../Color.Scheme.X11":217,"../Data.Eq":286,"../Data.Show":339,"../Prelude":368,"../Pux.CSS":369}],182:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -20687,7 +20687,8 @@ module.exports = {
     cycleOrd: cycleOrd
 };
 
-},{"../App.ColorScheme":181,"../App.Geometry":183,"../App.Graph":184,"../App.Helpers":185,"../Control.Applicative":221,"../Control.Bind":227,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Set":337,"../Data.Show":339,"../Data.Tuple":351,"../Prelude":366}],183:[function(require,module,exports){
+},{"../App.ColorScheme":181,"../App.Geometry":183,"../App.Graph":184,"../App.Helpers":185,"../Control.Applicative":221,"../Control.Bind":227,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Set":337,"../Data.Show":339,"../Data.Tuple":351,"../Prelude":368}],183:[function(require,module,exports){
+// Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
 var Data_Function = require("../Data.Function");
@@ -20810,7 +20811,7 @@ var positiveRadians = function (a) {
 };
 var outboundAngle = function (v) {
     if (v instanceof Line) {
-        return $$Math.atan2(v.value1.value0 - v.value0.value0)(v.value1.value1 - v.value0.value1);
+        return $$Math.atan2(v.value1.value1 - v.value0.value1)(v.value1.value0 - v.value0.value0);
     };
     if (v instanceof Arc) {
         return v.value2 + (function () {
@@ -20932,13 +20933,6 @@ var getNearestPoint = function (v) {
         return Data_Foldable.foldl(Data_List_Types.foldableList)(updateMax)(Data_Maybe.Nothing.value)(v1);
     };
 };
-
-/**
- *  communicates how aggressively the curve turns. Lines don't turn at all, so have curvature 0
- *  arcs, when sorted by curvature will go from small-radii counterclockwise arcs, to large-radii ones (with a limit
- *  of a line at 0), then large-radii clockwise arcs (which are negative) and finally small-radii counterclockwise
- *  arcs (which are the most negative).
- */
 var curvature = function (v) {
     if (v instanceof Line) {
         return 0.0;
@@ -21003,12 +20997,6 @@ var intersect = function (__copy_v) {
                 throw new Error("Failed pattern match at App.Geometry line 197, column 5 - line 213, column 65: " + [ $185.constructor.name ]);
             };
             if (v instanceof Line && v1 instanceof Arc) {
-                
-                /**
-                 *  check if a potential solution is inside our segment and arc
-                 *  TODO : what if line is vertical
-                 *  plug in a value for the determinant
-                 */
                 var withinBounds = function (v2) {
                     var miny = Data_Ord.min(Data_Ord.ordNumber)(v.value0.value1)(v.value1.value1);
                     var minx = Data_Ord.min(Data_Ord.ordNumber)(v.value0.value0)(v.value1.value0);
@@ -21065,7 +21053,7 @@ var constructArc = function (v) {
     return function (v1) {
         var s = 2.0 * $$Math.pi;
         var r = distance(v)(v1);
-        var a = $$Math.atan2(v1.value0 - v.value0)(v1.value1 - v.value1);
+        var a = $$Math.atan2(v1.value1 - v.value1)(v1.value0 - v.value0);
         return new Arc(v, r, a, s);
     };
 };
@@ -21191,10 +21179,6 @@ var ptOrd = new Data_Ord.Ord(function () {
         throw new Error("Failed pattern match at App.Geometry line 19, column 5 - line 21, column 43: " + [ $270.constructor.name ]);
     };
 });
-
-/**
- *  given a stroke and a list of intersections, return a list of strokes
- */
 var split = function (v) {
     return function (points) {
         if (v instanceof Line) {
@@ -21266,13 +21250,6 @@ var intersectMultiple = function (stroke) {
         return insertSplitStroke(stroke)(split(stroke)(allPoints))(intersections);
     };
 };
-
-/**
- *  clockwise rotation -> positive angle
- *  ->/ == negative
- *  ->\ == positive
- *  TODO: what if we do a 180? (currently should never happen due to simplify)
- */
 var angleDiff = function (strokeFrom) {
     return function (strokeTo) {
         return atan2Radians(inboundAngle(strokeFrom) - outboundAngle(strokeTo));
@@ -21332,7 +21309,7 @@ module.exports = {
     strokeOrd: strokeOrd
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Data.Boolean":278,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Tuple":351,"../Math":361,"../Prelude":366}],184:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Data.Boolean":278,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Tuple":351,"../Math":363,"../Prelude":368}],184:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -21471,7 +21448,7 @@ module.exports = {
     traverseLeftWall: traverseLeftWall
 };
 
-},{"../App.Geometry":183,"../App.Helpers":185,"../Data.Foldable":291,"../Data.Function":294,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Set":337,"../Data.Tuple":351,"../Prelude":366}],185:[function(require,module,exports){
+},{"../App.Geometry":183,"../App.Helpers":185,"../Data.Foldable":291,"../Data.Function":294,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Set":337,"../Data.Tuple":351,"../Prelude":368}],185:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -21513,7 +21490,7 @@ module.exports = {
     rotatePast: rotatePast
 };
 
-},{"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.Semigroup":334,"../Data.Semiring":336,"../Prelude":366}],186:[function(require,module,exports){
+},{"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.Semigroup":334,"../Data.Semiring":336,"../Prelude":368}],186:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -21525,6 +21502,7 @@ var Data_List = require("../Data.List");
 var Data_Map = require("../Data.Map");
 var Data_Maybe = require("../Data.Maybe");
 var Data_Tuple = require("../Data.Tuple");
+var Debug_Trace = require("../Debug.Trace");
 var Data_Eq = require("../Data.Eq");
 var Data_Ord = require("../Data.Ord");
 var Data_Function = require("../Data.Function");
@@ -21626,7 +21604,7 @@ var snapToPoint = function (p) {
             if (!$9) {
                 return p;
             };
-            throw new Error("Failed pattern match at App.Model line 53, column 26 - line 53, column 80: " + [ $9.constructor.name ]);
+            throw new Error("Failed pattern match at App.Model line 54, column 26 - line 54, column 80: " + [ $9.constructor.name ]);
         };
         return p;
     };
@@ -21646,7 +21624,7 @@ var newStroke = function (s) {
         if (s.click instanceof Data_Maybe.Nothing) {
             return Data_Maybe.Nothing.value;
         };
-        throw new Error("Failed pattern match at App.Model line 59, column 3 - line 67, column 26: " + [ s.click.constructor.name ]);
+        throw new Error("Failed pattern match at App.Model line 60, column 3 - line 68, column 26: " + [ s.click.constructor.name ]);
     };
 };
 var update = function (v) {
@@ -21668,11 +21646,11 @@ var update = function (v) {
                     return s;
                 };
                 if ($20 instanceof Data_Maybe.Just) {
-                    return updateForStroke(s)($20.value0);
+                    return updateForStroke(s)(Debug_Trace.spy($20.value0));
                 };
-                throw new Error("Failed pattern match at App.Model line 74, column 10 - line 76, column 54: " + [ $20.constructor.name ]);
+                throw new Error("Failed pattern match at App.Model line 75, column 10 - line 77, column 60: " + [ $20.constructor.name ]);
             };
-            throw new Error("Failed pattern match at App.Model line 71, column 3 - line 76, column 54: " + [ s.click.constructor.name ]);
+            throw new Error("Failed pattern match at App.Model line 72, column 3 - line 77, column 60: " + [ s.click.constructor.name ]);
         };
         if (v instanceof Move) {
             var $24 = {};
@@ -21710,7 +21688,7 @@ var update = function (v) {
             })(v.value0)(s.cycles);
             return $32;
         };
-        throw new Error("Failed pattern match at App.Model line 70, column 1 - line 76, column 54: " + [ v.constructor.name, s.constructor.name ]);
+        throw new Error("Failed pattern match at App.Model line 71, column 1 - line 77, column 60: " + [ v.constructor.name, s.constructor.name ]);
     };
 };
 var init = {
@@ -21751,7 +21729,7 @@ module.exports = {
     eqTool: eqTool
 };
 
-},{"../App.ColorScheme":181,"../App.Cycle":182,"../App.Geometry":183,"../App.Graph":184,"../Data.Eq":286,"../Data.Function":294,"../Data.List":309,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple":351,"../Prelude":366}],187:[function(require,module,exports){
+},{"../App.ColorScheme":181,"../App.Cycle":182,"../App.Geometry":183,"../App.Graph":184,"../Data.Eq":286,"../Data.Function":294,"../Data.List":309,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple":351,"../Debug.Trace":358,"../Prelude":368}],187:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -21815,7 +21793,7 @@ module.exports = {
     view: view
 };
 
-},{"../App.ColorScheme":181,"../App.Model":186,"../CSS.Border":191,"../CSS.Display":195,"../CSS.Geometry":200,"../CSS.Size":207,"../CSS.Stylesheet":209,"../Color":218,"../Color.Scheme.X11":217,"../Control.Bind":227,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":366,"../Pux.CSS":367,"../Pux.Html":374,"../Pux.Html.Elements":371,"../Pux.Html.Events":373}],188:[function(require,module,exports){
+},{"../App.ColorScheme":181,"../App.Model":186,"../CSS.Border":191,"../CSS.Display":195,"../CSS.Geometry":200,"../CSS.Size":207,"../CSS.Stylesheet":209,"../Color":218,"../Color.Scheme.X11":217,"../Control.Bind":227,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":368,"../Pux.CSS":369,"../Pux.Html":376,"../Pux.Html.Elements":373,"../Pux.Html.Events":375}],188:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -21831,6 +21809,7 @@ var Data_List = require("../Data.List");
 var Data_Map = require("../Data.Map");
 var Data_Maybe = require("../Data.Maybe");
 var Data_Tuple = require("../Data.Tuple");
+var Debug_Trace = require("../Debug.Trace");
 var $$Math = require("../Math");
 var Pux_CSS = require("../Pux.CSS");
 var Pux_Html = require("../Pux.Html");
@@ -21857,7 +21836,7 @@ var svgListeners = function (tool) {
     if (!$14) {
         return [  ];
     };
-    throw new Error("Failed pattern match at App.View line 106, column 3 - line 110, column 10: " + [ $14.constructor.name ]);
+    throw new Error("Failed pattern match at App.View line 107, column 3 - line 111, column 10: " + [ $14.constructor.name ]);
 };
 var mCommand = function (v) {
     return "M " + (Data_Show.show(Data_Show.showNumber)(v.value0) + (" " + (Data_Show.show(Data_Show.showNumber)(v.value1) + " ")));
@@ -21886,12 +21865,12 @@ var drawSnapPoint = function (v) {
                     if (!$31) {
                         return 2.0;
                     };
-                    throw new Error("Failed pattern match at App.View line 97, column 30 - line 97, column 71: " + [ $31.constructor.name ]);
+                    throw new Error("Failed pattern match at App.View line 98, column 30 - line 98, column 71: " + [ $31.constructor.name ]);
                 })());
             };
-            throw new Error("Failed pattern match at App.View line 95, column 3 - line 97, column 72: " + [ $30.constructor.name ]);
+            throw new Error("Failed pattern match at App.View line 96, column 3 - line 98, column 72: " + [ $30.constructor.name ]);
         };
-        throw new Error("Failed pattern match at App.View line 93, column 1 - line 93, column 34: " + [ v.constructor.name, v1.constructor.name ]);
+        throw new Error("Failed pattern match at App.View line 94, column 1 - line 94, column 34: " + [ v.constructor.name, v1.constructor.name ]);
     };
 };
 var drawLine = function (strokeStyle) {
@@ -21912,7 +21891,7 @@ var dArc = function (v) {
             if (!$42) {
                 return 0;
             };
-            throw new Error("Failed pattern match at App.View line 72, column 16 - line 72, column 43: " + [ $42.constructor.name ]);
+            throw new Error("Failed pattern match at App.View line 73, column 16 - line 73, column 43: " + [ $42.constructor.name ]);
         })()) + (" " + (Data_Show.show(Data_Show.showInt)((function () {
             var $43 = v.value3 > 0.0;
             if ($43) {
@@ -21921,7 +21900,7 @@ var dArc = function (v) {
             if (!$43) {
                 return 0;
             };
-            throw new Error("Failed pattern match at App.View line 74, column 16 - line 74, column 40: " + [ $43.constructor.name ]);
+            throw new Error("Failed pattern match at App.View line 75, column 16 - line 75, column 40: " + [ $43.constructor.name ]);
         })()) + (" " + (Data_Show.show(Data_Show.showNumber)(App_Geometry.ptX(endPoint)) + (" " + (Data_Show.show(Data_Show.showNumber)(App_Geometry.ptY(endPoint)) + " ")))))))))));
     };
     return "";
@@ -21931,16 +21910,16 @@ var dCommand = function (v) {
         return "L " + (Data_Show.show(Data_Show.showNumber)(v.value1.value0) + (" " + (Data_Show.show(Data_Show.showNumber)(v.value1.value1) + " ")));
     };
     if (v instanceof App_Geometry.Arc) {
-        var $55 = v.value3 < 1.99 * $$Math.pi;
+        var $55 = $$Math.abs(v.value3) < 1.99 * $$Math.pi;
         if ($55) {
             return dArc(v);
         };
         if (!$55) {
             return dArc(new App_Geometry.Arc(v.value0, v.value1, v.value2, 1.99 * $$Math.pi)) + "Z ";
         };
-        throw new Error("Failed pattern match at App.View line 62, column 3 - line 65, column 1: " + [ $55.constructor.name ]);
+        throw new Error("Failed pattern match at App.View line 63, column 3 - line 66, column 1: " + [ $55.constructor.name ]);
     };
-    throw new Error("Failed pattern match at App.View line 60, column 1 - line 61, column 1: " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at App.View line 61, column 1 - line 62, column 1: " + [ v.constructor.name ]);
 };
 var drawStroke = function (strokeStyle) {
     return function (s) {
@@ -21955,7 +21934,7 @@ var drawCurrentStroke = function (v) {
     if (v instanceof Data_Maybe.Just) {
         return drawStroke([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.strokeDasharray("5 5"), Pux_Html_Attributes.fill("transparent") ])(v.value0);
     };
-    throw new Error("Failed pattern match at App.View line 100, column 1 - line 100, column 36: " + [ v.constructor.name ]);
+    throw new Error("Failed pattern match at App.View line 101, column 1 - line 101, column 36: " + [ v.constructor.name ]);
 };
 var drawStrokes = function (strokeStyle) {
     return function (strokes) {
@@ -21979,7 +21958,7 @@ var drawCycle = function (tool) {
             };
             return [  ];
         })();
-        return Pux_Html_Elements.path(Data_Semigroup.append(Data_Semigroup.semigroupArray)(pathAttrs(v.value0))(Data_Semigroup.append(Data_Semigroup.semigroupArray)([ Pux_Html_Attributes.fill(Color.toHexString(App_ColorScheme.toColor(v.value1))) ])(listeners)))([  ]);
+        return Pux_Html_Elements.path(Data_Semigroup.append(Data_Semigroup.semigroupArray)(pathAttrs(v.value0))(Data_Semigroup.append(Data_Semigroup.semigroupArray)([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.fill(Color.toHexString(App_ColorScheme.toColor(v.value1))) ])(listeners)))([  ]);
     };
 };
 var drawCycles = function (tool) {
@@ -21988,7 +21967,7 @@ var drawCycles = function (tool) {
     };
 };
 var drawing = function (state) {
-    return Pux_Html_Elements.svg(Data_Semigroup.append(Data_Semigroup.semigroupArray)(svgListeners(state.tool))([ Pux_Html_Attributes.width("800px"), Pux_Html_Attributes.height("400px") ]))([ drawCycles(state.tool)(state.cycles), drawStrokes([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.fill("transparent") ])(App_Graph.edges(state.graph)), drawSnapPoint(state.hover)(Data_Map.keys(state.graph)), drawCurrentStroke(state.currentStroke) ]);
+    return Pux_Html_Elements.svg(Data_Semigroup.append(Data_Semigroup.semigroupArray)(svgListeners(state.tool))([ Pux_Html_Attributes.width("800px"), Pux_Html_Attributes.height("400px") ]))([ drawStrokes([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.fill("transparent") ])(App_Graph.edges(state.graph)), drawCycles(state.tool)(state.cycles), drawSnapPoint(state.hover)(Data_Map.keys(state.graph)), drawCurrentStroke(state.currentStroke) ]);
 };
 var view = function (state) {
     return Pux_Html_Elements.div([  ])([ drawing(state), App_Tool_View.view(state.tool) ]);
@@ -22011,7 +21990,7 @@ module.exports = {
     view: view
 };
 
-},{"../App.ColorScheme":181,"../App.Cycle":182,"../App.Geometry":183,"../App.Graph":184,"../App.Model":186,"../App.Tool.View":187,"../Color":218,"../Data.Array":274,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Tuple":351,"../Math":361,"../Prelude":366,"../Pux.CSS":367,"../Pux.Html":374,"../Pux.Html.Attributes":369,"../Pux.Html.Elements":371,"../Pux.Html.Events":373}],189:[function(require,module,exports){
+},{"../App.ColorScheme":181,"../App.Cycle":182,"../App.Geometry":183,"../App.Graph":184,"../App.Model":186,"../App.Tool.View":187,"../Color":218,"../Data.Array":274,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Tuple":351,"../Debug.Trace":358,"../Math":363,"../Prelude":368,"../Pux.CSS":369,"../Pux.Html":376,"../Pux.Html.Attributes":371,"../Pux.Html.Elements":373,"../Pux.Html.Events":375}],189:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -22234,7 +22213,7 @@ module.exports = {
     isStringAnimationName: isStringAnimationName
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../CSS.Time":213,"../CSS.Transition":215,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple.Nested":350,"../Data.Unit":355,"../Prelude":366}],190:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../CSS.Time":213,"../CSS.Transition":215,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple.Nested":350,"../Data.Unit":355,"../Prelude":368}],190:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -22914,7 +22893,7 @@ module.exports = {
     locTuple: locTuple
 };
 
-},{"../CSS.Box":192,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],191:[function(require,module,exports){
+},{"../CSS.Box":192,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],191:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -23012,7 +22991,7 @@ module.exports = {
     valStroke: valStroke
 };
 
-},{"../CSS.Color":193,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple.Nested":350,"../Data.Unit":355,"../Prelude":366}],192:[function(require,module,exports){
+},{"../CSS.Color":193,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Tuple.Nested":350,"../Data.Unit":355,"../Prelude":368}],192:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -23111,7 +23090,7 @@ module.exports = {
     inheritBoxType: inheritBoxType
 };
 
-},{"../CSS.Border":191,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],193:[function(require,module,exports){
+},{"../CSS.Border":191,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],193:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Color = require("../Color");
@@ -23263,7 +23242,7 @@ module.exports = {
     unsetValue: unsetValue
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../Control.Category":228,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":366}],195:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../Control.Category":228,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":368}],195:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -23414,7 +23393,7 @@ module.exports = {
     valDisplay: valDisplay
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],196:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],196:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var CSS_Selector = require("../CSS.Selector");
@@ -24038,7 +24017,7 @@ module.exports = {
     spaceBetweenJustifyContentValue: spaceBetweenJustifyContentValue
 };
 
-},{"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Show":339,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],198:[function(require,module,exports){
+},{"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Show":339,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],198:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -24168,7 +24147,7 @@ module.exports = {
     valFontWeight: valFontWeight
 };
 
-},{"../CSS.Color":193,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],199:[function(require,module,exports){
+},{"../CSS.Color":193,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],199:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -24520,7 +24499,7 @@ module.exports = {
     valFontFaceSrc: valFontFaceSrc
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],200:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],200:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Data_Function = require("../Data.Function");
@@ -24783,7 +24762,7 @@ module.exports = {
     otherExtend: otherExtend
 };
 
-},{"../CSS.Background":190,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],202:[function(require,module,exports){
+},{"../CSS.Background":190,"../CSS.Color":193,"../CSS.Common":194,"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],202:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -24856,7 +24835,7 @@ module.exports = {
     valOverflow: valOverflow
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],203:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],203:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -25206,7 +25185,7 @@ module.exports = {
     valColor: valColor
 };
 
-},{"../CSS.String":208,"../Color":218,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Profunctor.Strong":329,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],204:[function(require,module,exports){
+},{"../CSS.String":208,"../Color":218,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Profunctor.Strong":329,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],204:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var CSS_Selector = require("../CSS.Selector");
@@ -25657,7 +25636,7 @@ module.exports = {
     monoidFile: monoidFile
 };
 
-},{"../CSS.Property":203,"../CSS.Selector":206,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Console":241,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Data.These":347,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],206:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.Selector":206,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Alternative":220,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Console":241,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Data.These":347,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],206:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -26603,7 +26582,7 @@ module.exports = {
     isStringSelector: isStringSelector
 };
 
-},{"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.String":346,"../Data.Unit":355,"../Prelude":366}],207:[function(require,module,exports){
+},{"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.String":346,"../Data.Unit":355,"../Prelude":368}],207:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -26776,7 +26755,7 @@ module.exports = {
     valAngle: valAngle
 };
 
-},{"../CSS.Common":194,"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],208:[function(require,module,exports){
+},{"../CSS.Common":194,"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],208:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -26794,7 +26773,7 @@ module.exports = {
     isStringString: isStringString
 };
 
-},{"../Control.Category":228,"../Prelude":366}],209:[function(require,module,exports){
+},{"../Control.Category":228,"../Prelude":368}],209:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -27680,7 +27659,7 @@ module.exports = {
     semigroupCSS: semigroupCSS
 };
 
-},{"../CSS.Property":203,"../CSS.Selector":206,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Writer":262,"../Control.Monad.Writer.Class":260,"../Control.Monad.Writer.Trans":261,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Identity":303,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Profunctor.Strong":329,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],210:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.Selector":206,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Writer":262,"../Control.Monad.Writer.Class":260,"../Control.Monad.Writer.Trans":261,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Identity":303,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Profunctor.Strong":329,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],210:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -27748,7 +27727,7 @@ module.exports = {
     valTextWhitespace: valTextWhitespace
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],211:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],211:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -27817,7 +27796,7 @@ module.exports = {
     valTextDecoration: valTextDecoration
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],212:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],212:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -27890,7 +27869,7 @@ module.exports = {
     valTextAlign: valTextAlign
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],213:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],213:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -27955,7 +27934,7 @@ module.exports = {
     valTime: valTime
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],214:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],214:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -28031,7 +28010,7 @@ module.exports = {
     valTransformation: valTransformation
 };
 
-},{"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],215:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.Size":207,"../CSS.String":208,"../CSS.Stylesheet":209,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],215:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -28091,7 +28070,7 @@ module.exports = {
     valTimingFunction: valTimingFunction
 };
 
-},{"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":366}],216:[function(require,module,exports){
+},{"../CSS.Property":203,"../CSS.String":208,"../Control.Apply":223,"../Data.Eq":286,"../Data.Function":294,"../Data.Generic":300,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Unit":355,"../Prelude":368}],216:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var CSS_Animation = require("../CSS.Animation");
@@ -29071,7 +29050,7 @@ module.exports = {
     eqColor: eqColor
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Boolean":278,"../Data.Either":284,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Int":307,"../Data.Int.Bits":305,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.String":346,"../Data.String.Regex":342,"../Math":361,"../Partial.Unsafe":363,"../Prelude":366}],219:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Boolean":278,"../Data.Either":284,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Int":307,"../Data.Int.Bits":305,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.String":346,"../Data.String.Regex":342,"../Math":363,"../Partial.Unsafe":365,"../Prelude":368}],219:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Data_Functor = require("../Data.Functor");
@@ -29722,7 +29701,7 @@ module.exports = {
     _takeVar: $foreign._takeVar
 };
 
-},{"../Control.Monad.Eff.Exception":243,"../Data.Function.Uncurried":293,"../Prelude":366,"./foreign":232}],234:[function(require,module,exports){
+},{"../Control.Monad.Eff.Exception":243,"../Data.Function.Uncurried":293,"../Prelude":368,"./foreign":232}],234:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Monad_Aff = require("../Control.Monad.Aff");
@@ -29732,7 +29711,7 @@ module.exports = {
     unsafeCoerceAff: unsafeCoerceAff
 };
 
-},{"../Control.Monad.Aff":236,"../Unsafe.Coerce":387}],235:[function(require,module,exports){
+},{"../Control.Monad.Aff":236,"../Unsafe.Coerce":389}],235:[function(require,module,exports){
 /* globals setTimeout, clearTimeout, setImmediate, clearImmediate */
 "use strict";
 
@@ -30416,7 +30395,7 @@ module.exports = {
     parallelParAff: parallelParAff
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Aff.Internal":233,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Exception":243,"../Control.Monad.Error.Class":250,"../Control.Monad.Rec.Class":255,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Parallel":267,"../Control.Parallel.Class":266,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Unit":355,"../Prelude":366,"../Unsafe.Coerce":387,"./foreign":235}],237:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Aff.Internal":233,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Exception":243,"../Control.Monad.Error.Class":250,"../Control.Monad.Rec.Class":255,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Parallel":267,"../Control.Parallel.Class":266,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Unit":355,"../Prelude":368,"../Unsafe.Coerce":389,"./foreign":235}],237:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -30432,7 +30411,7 @@ module.exports = {
     callCC: callCC
 };
 
-},{"../Prelude":366}],238:[function(require,module,exports){
+},{"../Prelude":368}],238:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -30604,7 +30583,7 @@ module.exports = {
     monadStateContT: monadStateContT
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Reader.Class":253,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Prelude":366}],239:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Reader.Class":253,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Prelude":368}],239:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Category = require("../Control.Category");
@@ -30773,7 +30752,7 @@ module.exports = {
     throwException: $foreign.throwException
 };
 
-},{"../Control.Applicative":221,"../Control.Monad.Eff":249,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Show":339,"../Prelude":366,"./foreign":242}],244:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Monad.Eff":249,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Show":339,"../Prelude":368,"./foreign":242}],244:[function(require,module,exports){
 "use strict";
 
 exports.newRef = function (val) {
@@ -30832,7 +30811,7 @@ module.exports = {
     writeRef: $foreign.writeRef
 };
 
-},{"../Control.Monad.Eff":249,"../Data.Unit":355,"../Prelude":366,"./foreign":244}],246:[function(require,module,exports){
+},{"../Control.Monad.Eff":249,"../Data.Unit":355,"../Prelude":368,"./foreign":244}],246:[function(require,module,exports){
 "use strict";
 
 exports.unsafeCoerceEff = function (f) {
@@ -31025,7 +31004,7 @@ module.exports = {
     monadErrorMaybe: monadErrorMaybe
 };
 
-},{"../Data.Either":284,"../Data.Function":294,"../Data.Maybe":313,"../Data.Unit":355,"../Prelude":366}],251:[function(require,module,exports){
+},{"../Data.Either":284,"../Data.Function":294,"../Data.Maybe":313,"../Data.Unit":355,"../Prelude":368}],251:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -31336,7 +31315,7 @@ module.exports = {
     monadWriterExceptT: monadWriterExceptT
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":366}],252:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":368}],252:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -31601,7 +31580,7 @@ module.exports = {
     monadWriterMaybeT: monadWriterMaybeT
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Newtype":322,"../Data.Tuple":351,"../Prelude":366}],253:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Newtype":322,"../Data.Tuple":351,"../Prelude":368}],253:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -31644,7 +31623,7 @@ module.exports = {
     monadReaderFun: monadReaderFun
 };
 
-},{"../Control.Category":228,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Functor":298,"../Prelude":366}],254:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Functor":298,"../Prelude":368}],254:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -31908,7 +31887,7 @@ module.exports = {
     monadRecReaderT: monadRecReaderT
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Distributive":283,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Prelude":366}],255:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Distributive":283,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Prelude":368}],255:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -32126,7 +32105,7 @@ module.exports = {
     monadRecEither: monadRecEither
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Unsafe":247,"../Control.Monad.ST":257,"../Control.Semigroupoid":269,"../Data.Bifunctor":276,"../Data.Either":284,"../Data.Functor":298,"../Data.Identity":303,"../Data.Unit":355,"../Partial.Unsafe":363,"../Prelude":366}],256:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Unsafe":247,"../Control.Monad.ST":257,"../Control.Semigroupoid":269,"../Data.Bifunctor":276,"../Data.Either":284,"../Data.Functor":298,"../Data.Identity":303,"../Data.Unit":355,"../Partial.Unsafe":365,"../Prelude":368}],256:[function(require,module,exports){
 "use strict";
 
 exports.newSTRef = function (val) {
@@ -32228,7 +32207,7 @@ module.exports = {
     state: state
 };
 
-},{"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],259:[function(require,module,exports){
+},{"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],259:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -32243,7 +32222,7 @@ module.exports = {
     lift: lift
 };
 
-},{"../Prelude":366}],260:[function(require,module,exports){
+},{"../Prelude":368}],260:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -32297,7 +32276,7 @@ module.exports = {
     tell: tell
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Data.Function":294,"../Data.Tuple":351,"../Prelude":366}],261:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Data.Function":294,"../Data.Tuple":351,"../Prelude":368}],261:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -32593,7 +32572,7 @@ module.exports = {
     monadWriterWriterT: monadWriterWriterT
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],262:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad":263,"../Control.Monad.Cont.Class":237,"../Control.Monad.Eff.Class":239,"../Control.Monad.Error.Class":250,"../Control.Monad.Reader.Class":253,"../Control.Monad.Rec.Class":255,"../Control.Monad.State.Class":258,"../Control.Monad.Trans.Class":259,"../Control.Monad.Writer.Class":260,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],262:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -32620,7 +32599,7 @@ module.exports = {
     runWriter: runWriter
 };
 
-},{"../Control.Monad.Writer.Class":260,"../Control.Monad.Writer.Trans":261,"../Control.Semigroupoid":269,"../Data.Identity":303,"../Data.Newtype":322,"../Data.Tuple":351,"../Prelude":366}],263:[function(require,module,exports){
+},{"../Control.Monad.Writer.Class":260,"../Control.Monad.Writer.Trans":261,"../Control.Semigroupoid":269,"../Data.Identity":303,"../Data.Newtype":322,"../Data.Tuple":351,"../Prelude":368}],263:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Applicative = require("../Control.Applicative");
@@ -32968,7 +32947,7 @@ module.exports = {
     monadParParCont: monadParParCont
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Cont.Trans":238,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Ref":245,"../Control.Monad.Eff.Unsafe":247,"../Control.Monad.Except.Trans":251,"../Control.Monad.Maybe.Trans":252,"../Control.Monad.Reader.Trans":254,"../Control.Monad.Writer.Trans":261,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Compose":295,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Unit":355,"../Prelude":366}],267:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Cont.Trans":238,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Ref":245,"../Control.Monad.Eff.Unsafe":247,"../Control.Monad.Except.Trans":251,"../Control.Monad.Maybe.Trans":252,"../Control.Monad.Reader.Trans":254,"../Control.Monad.Writer.Trans":261,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Compose":295,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Unit":355,"../Prelude":368}],267:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -33016,7 +32995,7 @@ module.exports = {
     parTraverse_: parTraverse_
 };
 
-},{"../Control.Category":228,"../Control.Parallel.Class":266,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Traversable":349,"../Prelude":366}],268:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Parallel.Class":266,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Traversable":349,"../Prelude":368}],268:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Alt = require("../Control.Alt");
@@ -33968,7 +33947,7 @@ module.exports = {
     zipWith: $foreign.zipWith
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Lazy":231,"../Control.Monad.Rec.Class":255,"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Partial.Unsafe":363,"../Prelude":366,"./foreign":273}],275:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Lazy":231,"../Control.Monad.Rec.Class":255,"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Partial.Unsafe":365,"../Prelude":368,"./foreign":273}],275:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -34144,7 +34123,7 @@ module.exports = {
     bitraverse_: bitraverse_
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Monoid":320,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Endo":318,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],276:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Monoid":320,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Endo":318,"../Data.Newtype":322,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],276:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Category = require("../Control.Category");
@@ -34226,7 +34205,7 @@ module.exports = {
     bitraverseDefault: bitraverseDefault
 };
 
-},{"../Control.Category":228,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Prelude":366}],278:[function(require,module,exports){
+},{"../Control.Category":228,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Prelude":368}],278:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var otherwise = true;
@@ -34419,7 +34398,7 @@ module.exports = {
     distributiveFunction: distributiveFunction
 };
 
-},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Identity":303,"../Data.Newtype":322,"../Prelude":366}],284:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Function":294,"../Data.Functor":298,"../Data.Identity":303,"../Data.Newtype":322,"../Prelude":368}],284:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -34826,7 +34805,7 @@ module.exports = {
     semigroupEither: semigroupEither
 };
 
-},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":366}],285:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":368}],285:[function(require,module,exports){
 "use strict";
 
 exports.refEq = function (r1) {
@@ -35537,7 +35516,7 @@ module.exports = {
     foldableMultiplicative: foldableMultiplicative
 };
 
-},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Maybe.Last":312,"../Data.Monoid":320,"../Data.Monoid.Additive":314,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Endo":318,"../Data.Monoid.Multiplicative":319,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Unit":355,"../Prelude":366,"./foreign":290}],292:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Maybe.Last":312,"../Data.Monoid":320,"../Data.Monoid.Additive":314,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Endo":318,"../Data.Monoid.Multiplicative":319,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Unit":355,"../Prelude":368,"./foreign":290}],292:[function(require,module,exports){
 "use strict";
 
 // module Data.Function.Uncurried
@@ -35997,7 +35976,7 @@ module.exports = {
     alternativeCompose: alternativeCompose
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":366}],296:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":368}],296:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Data_Functor = require("../Data.Functor");
@@ -37083,7 +37062,7 @@ module.exports = {
     showGenericSignature: showGenericSignature
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Boolean":278,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Identity":303,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366,"../Type.Proxy":385,"./foreign":299}],301:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Boolean":278,"../Data.Either":284,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Identity":303,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368,"../Type.Proxy":387,"./foreign":299}],301:[function(require,module,exports){
 "use strict";
 
 exports.boolConj = function (b1) {
@@ -37381,7 +37360,7 @@ module.exports = {
     traversableIdentity: traversableIdentity
 };
 
-},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Field":289,"../Data.Foldable":291,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":366}],304:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Field":289,"../Data.Foldable":291,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":368}],304:[function(require,module,exports){
 "use strict";
 
 // module Data.Int.Bits
@@ -37589,7 +37568,7 @@ module.exports = {
     toStringAs: $foreign.toStringAs
 };
 
-},{"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Function":294,"../Data.HeytingAlgebra":302,"../Data.Int.Bits":305,"../Data.Maybe":313,"../Data.Ord":327,"../Math":361,"../Partial.Unsafe":363,"./foreign":306}],308:[function(require,module,exports){
+},{"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Function":294,"../Data.HeytingAlgebra":302,"../Data.Int.Bits":305,"../Data.Maybe":313,"../Data.Ord":327,"../Math":363,"../Partial.Unsafe":365,"./foreign":306}],308:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -38082,7 +38061,7 @@ module.exports = {
     traversableNonEmptyList: traversableNonEmptyList
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Data.Unit":355,"../Prelude":366}],309:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Data.Unit":355,"../Prelude":368}],309:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -39037,7 +39016,7 @@ module.exports = {
     zipWithA: zipWithA
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Lazy":231,"../Control.Monad.Rec.Class":255,"../Control.Semigroupoid":269,"../Data.Bifunctor":276,"../Data.Boolean":278,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Data.Unit":355,"../Prelude":366}],310:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Lazy":231,"../Control.Monad.Rec.Class":255,"../Control.Semigroupoid":269,"../Data.Bifunctor":276,"../Data.Boolean":278,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.NonEmpty":323,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Data.Unit":355,"../Prelude":368}],310:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40217,7 +40196,7 @@ module.exports = {
     traversableMap: traversableMap
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Partial.Unsafe":363,"../Prelude":366}],311:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unfoldable":353,"../Partial.Unsafe":365,"../Prelude":368}],311:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40292,7 +40271,7 @@ module.exports = {
     monoidFirst: monoidFirst
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":366}],312:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":368}],312:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40370,7 +40349,7 @@ module.exports = {
     monoidLast: monoidLast
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":366}],313:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":368}],313:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40636,7 +40615,7 @@ module.exports = {
     showMaybe: showMaybe
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Extend":230,"../Control.Monad":263,"../Control.MonadZero":265,"../Control.Plus":268,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Unit":355,"../Prelude":366}],314:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Extend":230,"../Control.Monad":263,"../Control.MonadZero":265,"../Control.Plus":268,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Unit":355,"../Prelude":368}],314:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40751,7 +40730,7 @@ module.exports = {
     monoidAdditive: monoidAdditive
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":366}],315:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":368}],315:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -40879,7 +40858,7 @@ module.exports = {
     semiringConj: semiringConj
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":366}],316:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":368}],316:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41007,7 +40986,7 @@ module.exports = {
     semiringDisj: semiringDisj
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":366}],317:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":368}],317:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41121,7 +41100,7 @@ module.exports = {
     monoidDual: monoidDual
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":366}],318:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Show":339,"../Prelude":368}],318:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41164,7 +41143,7 @@ module.exports = {
     monoidEndo: monoidEndo
 };
 
-},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Prelude":366}],319:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Semigroup":334,"../Prelude":368}],319:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41279,7 +41258,7 @@ module.exports = {
     monoidMultiplicative: monoidMultiplicative
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":366}],320:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Monad":263,"../Data.Bounded":281,"../Data.Eq":286,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Prelude":368}],320:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41343,7 +41322,7 @@ module.exports = {
     monoidArray: monoidArray
 };
 
-},{"../Data.Boolean":278,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Function":294,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":366}],321:[function(require,module,exports){
+},{"../Data.Boolean":278,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Function":294,"../Data.Ord":327,"../Data.Semigroup":334,"../Data.Unit":355,"../Prelude":368}],321:[function(require,module,exports){
 arguments[4][270][0].apply(exports,arguments)
 },{"dup":270}],322:[function(require,module,exports){
 // Generated by psc version 0.10.2
@@ -41461,7 +41440,7 @@ module.exports = {
     wrap: wrap
 };
 
-},{"../Control.Semigroupoid":269,"../Data.Functor":298,"../Prelude":366}],323:[function(require,module,exports){
+},{"../Control.Semigroupoid":269,"../Data.Functor":298,"../Prelude":368}],323:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -41635,7 +41614,7 @@ module.exports = {
     traversableNonEmpty: traversableNonEmpty
 };
 
-},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":366}],324:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Alternative":220,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Control.Plus":268,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Prelude":368}],324:[function(require,module,exports){
 "use strict";
 
 exports.unsafeCompareImpl = function (lt) {
@@ -42100,7 +42079,7 @@ module.exports = {
     strongFn: strongFn
 };
 
-},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Functor":298,"../Data.Profunctor":330,"../Data.Tuple":351,"../Prelude":366}],330:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Functor":298,"../Data.Profunctor":330,"../Data.Tuple":351,"../Prelude":368}],330:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -42162,7 +42141,7 @@ module.exports = {
     profunctorFn: profunctorFn
 };
 
-},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Newtype":322,"../Prelude":366}],331:[function(require,module,exports){
+},{"../Control.Category":228,"../Control.Semigroupoid":269,"../Data.Newtype":322,"../Prelude":368}],331:[function(require,module,exports){
 "use strict";
 
 exports.intSub = function (x) {
@@ -42607,7 +42586,7 @@ module.exports = {
     foldableSet: foldableSet
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Rec.Class":255,"../Control.Monad.ST":257,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Array.ST":272,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Unfoldable":353,"../Data.Unit":355,"../Partial.Unsafe":363,"../Prelude":366}],338:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.Monad.Rec.Class":255,"../Control.Monad.ST":257,"../Control.Semigroupoid":269,"../Data.Array":274,"../Data.Array.ST":272,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.HeytingAlgebra":302,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Monoid":320,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Unfoldable":353,"../Data.Unit":355,"../Partial.Unsafe":365,"../Prelude":368}],338:[function(require,module,exports){
 "use strict";
 
 exports.showIntImpl = function (n) {
@@ -42815,7 +42794,7 @@ module.exports = {
     showRegexFlags: showRegexFlags
 };
 
-},{"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Data.Eq":286,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Prelude":366}],341:[function(require,module,exports){
+},{"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Data.Eq":286,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Prelude":368}],341:[function(require,module,exports){
 "use strict";
 
 exports["showRegex'"] = function (r) {
@@ -43004,7 +42983,7 @@ module.exports = {
     test: $foreign.test
 };
 
-},{"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Maybe":313,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Data.String.Regex.Flags":340,"../Prelude":366,"./foreign":341}],343:[function(require,module,exports){
+},{"../Control.Semigroupoid":269,"../Data.Either":284,"../Data.Function":294,"../Data.Maybe":313,"../Data.Semigroup":334,"../Data.Show":339,"../Data.String":346,"../Data.String.Regex.Flags":340,"../Prelude":368,"./foreign":341}],343:[function(require,module,exports){
 "use strict";
 
 exports.charCodeAt = function (i) {
@@ -43372,7 +43351,7 @@ module.exports = {
     trim: $foreign.trim
 };
 
-},{"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Maybe":313,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.String.Unsafe":344,"../Prelude":366,"./foreign":345}],347:[function(require,module,exports){
+},{"../Control.Semigroupoid":269,"../Data.Eq":286,"../Data.Function":294,"../Data.Maybe":313,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.String.Unsafe":344,"../Prelude":368,"./foreign":345}],347:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -43923,7 +43902,7 @@ module.exports = {
     showThese: showThese
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Extend":230,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],348:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Extend":230,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.Generic":300,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Semigroup":334,"../Data.Show":339,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],348:[function(require,module,exports){
 "use strict";
 
 // jshint maxparams: 3
@@ -44348,7 +44327,7 @@ module.exports = {
     traversableMultiplicative: traversableMultiplicative
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Data.Foldable":291,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Maybe.Last":312,"../Data.Monoid.Additive":314,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Multiplicative":319,"../Prelude":366,"./foreign":348}],350:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Category":228,"../Data.Foldable":291,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Maybe.Last":312,"../Data.Monoid.Additive":314,"../Data.Monoid.Conj":315,"../Data.Monoid.Disj":316,"../Data.Monoid.Dual":317,"../Data.Monoid.Multiplicative":319,"../Prelude":368,"./foreign":348}],350:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -44817,7 +44796,7 @@ module.exports = {
     uncurry9: uncurry9
 };
 
-},{"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":366}],351:[function(require,module,exports){
+},{"../Data.Tuple":351,"../Data.Unit":355,"../Prelude":368}],351:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Prelude = require("../Prelude");
@@ -45214,7 +45193,7 @@ module.exports = {
     bitraversableTuple: bitraversableTuple
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Biapplicative":224,"../Control.Biapply":225,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Lazy":231,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Data.Unit":355,"../Prelude":366}],352:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Biapplicative":224,"../Control.Biapply":225,"../Control.Bind":227,"../Control.Comonad":229,"../Control.Extend":230,"../Control.Lazy":231,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Bifoldable":275,"../Data.Bifunctor":276,"../Data.Bitraversable":277,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Functor.Invariant":296,"../Data.HeytingAlgebra":302,"../Data.Maybe":313,"../Data.Maybe.First":311,"../Data.Monoid":320,"../Data.Newtype":322,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Traversable":349,"../Data.Unit":355,"../Prelude":368}],352:[function(require,module,exports){
 "use strict";
 
 exports.unfoldrArrayImpl = function (isNothing) {
@@ -45311,7 +45290,7 @@ module.exports = {
     unfoldableArray: unfoldableArray
 };
 
-},{"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ring":332,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Partial.Unsafe":363,"../Prelude":366,"./foreign":352}],354:[function(require,module,exports){
+},{"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Ring":332,"../Data.Traversable":349,"../Data.Tuple":351,"../Data.Unit":355,"../Partial.Unsafe":365,"../Prelude":368,"./foreign":352}],354:[function(require,module,exports){
 "use strict";
 
 exports.unit = {};
@@ -45354,6 +45333,91 @@ module.exports = {
 };
 
 },{"../Data.Show":339}],357:[function(require,module,exports){
+"use strict";
+
+// Alias require to prevent webpack or browserify from actually requiring.
+var req = typeof module === "undefined" ? undefined : module.require;
+var util = req === undefined ? undefined : req("util");
+
+exports.traceAny = function (x) {
+  return function (k) {
+    // node only recurses two levels into an object before printing
+    // "[object]" for further objects when using console.log()
+    if (util !== undefined) {
+      console.log(util.inspect(x, { depth: null, colors: true }));
+    } else {
+      console.log(x);
+    }
+    return k({});
+  };
+};
+
+},{}],358:[function(require,module,exports){
+// Generated by psc version 0.10.2
+"use strict";
+var $foreign = require("./foreign");
+var Prelude = require("../Prelude");
+var Data_Show = require("../Data.Show");
+var Control_Applicative = require("../Control.Applicative");
+var Control_Semigroupoid = require("../Control.Semigroupoid");
+var Data_Unit = require("../Data.Unit");
+var traceShowM = function (dictShow) {
+    return function (dictMonad) {
+        return function (s) {
+            return $foreign.traceAny(Data_Show.show(dictShow)(s))(function (v) {
+                return Control_Applicative.pure(dictMonad["__superclass_Control.Applicative.Applicative_0"]())(s);
+            });
+        };
+    };
+};
+var traceShow = function (dictShow) {
+    return function ($16) {
+        return $foreign.traceAny(Data_Show.show(dictShow)($16));
+    };
+};
+var traceAnyM = function (dictMonad) {
+    return function (s) {
+        return $foreign.traceAny(s)(function (v) {
+            return Control_Applicative.pure(dictMonad["__superclass_Control.Applicative.Applicative_0"]())(s);
+        });
+    };
+};
+var traceAnyA = function (dictApplicative) {
+    return function (s) {
+        return $foreign.traceAny(s)(function (v) {
+            return Control_Applicative.pure(dictApplicative)(Data_Unit.unit);
+        });
+    };
+};
+var traceShowA = function (dictShow) {
+    return function (dictApplicative) {
+        return function ($17) {
+            return traceAnyA(dictApplicative)(Data_Show.show(dictShow)($17));
+        };
+    };
+};
+var traceA = function (dictApplicative) {
+    return traceAnyA(dictApplicative);
+};
+var trace = $foreign.traceAny;
+var spy = function (a) {
+    return $foreign.traceAny(a)(function (v) {
+        return a;
+    });
+};
+module.exports = {
+    spy: spy, 
+    trace: trace, 
+    traceA: traceA, 
+    traceAnyA: traceAnyA, 
+    traceAnyM: traceAnyM, 
+    traceShow: traceShow, 
+    traceShowA: traceShowA, 
+    traceShowM: traceShowM, 
+    traceAny: $foreign.traceAny
+};
+
+},{"../Control.Applicative":221,"../Control.Semigroupoid":269,"../Data.Show":339,"../Data.Unit":355,"../Prelude":368,"./foreign":357}],359:[function(require,module,exports){
 /* globals exports */
 "use strict";
 
@@ -45380,7 +45444,7 @@ exports.encodeURI = encodeURI;
 exports.decodeURIComponent = decodeURIComponent;
 exports.encodeURIComponent = encodeURIComponent;
 
-},{}],358:[function(require,module,exports){
+},{}],360:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -45397,7 +45461,7 @@ module.exports = {
     readInt: $foreign.readInt
 };
 
-},{"./foreign":357}],359:[function(require,module,exports){
+},{"./foreign":359}],361:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var App_Model = require("../App.Model");
@@ -45430,7 +45494,7 @@ module.exports = {
     main: main
 };
 
-},{"../App.Model":186,"../App.View":188,"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../DOM":270,"../Prelude":366,"../Pux":378,"../Pux.Router":376}],360:[function(require,module,exports){
+},{"../App.Model":186,"../App.View":188,"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Eff":249,"../DOM":270,"../Prelude":368,"../Pux":380,"../Pux.Router":378}],362:[function(require,module,exports){
 "use strict";
 
 // module Math
@@ -45511,7 +45575,7 @@ exports.sqrt1_2 = Math.SQRT1_2;
 
 exports.sqrt2 = Math.SQRT2;
 
-},{}],361:[function(require,module,exports){
+},{}],363:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -45545,7 +45609,7 @@ module.exports = {
     trunc: $foreign.trunc
 };
 
-},{"./foreign":360}],362:[function(require,module,exports){
+},{"./foreign":362}],364:[function(require,module,exports){
 "use strict";
 
 // module Partial.Unsafe
@@ -45554,7 +45618,7 @@ exports.unsafePartial = function (f) {
   return f();
 };
 
-},{}],363:[function(require,module,exports){
+},{}],365:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -45569,7 +45633,7 @@ module.exports = {
     unsafePartial: $foreign.unsafePartial
 };
 
-},{"../Partial":365,"./foreign":362}],364:[function(require,module,exports){
+},{"../Partial":367,"./foreign":364}],366:[function(require,module,exports){
 "use strict";
 
 // module Partial
@@ -45580,7 +45644,7 @@ exports.crashWith = function () {
   };
 };
 
-},{}],365:[function(require,module,exports){
+},{}],367:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -45592,7 +45656,7 @@ module.exports = {
     crashWith: $foreign.crashWith
 };
 
-},{"./foreign":364}],366:[function(require,module,exports){
+},{"./foreign":366}],368:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Control_Applicative = require("../Control.Applicative");
@@ -45622,7 +45686,7 @@ var Data_Unit = require("../Data.Unit");
 var Data_Void = require("../Data.Void");
 module.exports = {};
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Field":289,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.NaturalTransformation":321,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Unit":355,"../Data.Void":356}],367:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Category":228,"../Control.Monad":263,"../Control.Semigroupoid":269,"../Data.Boolean":278,"../Data.BooleanAlgebra":279,"../Data.Bounded":281,"../Data.CommutativeRing":282,"../Data.Eq":286,"../Data.EuclideanRing":288,"../Data.Field":289,"../Data.Function":294,"../Data.Functor":298,"../Data.HeytingAlgebra":302,"../Data.NaturalTransformation":321,"../Data.Ord":327,"../Data.Ordering":328,"../Data.Ring":332,"../Data.Semigroup":334,"../Data.Semiring":336,"../Data.Show":339,"../Data.Unit":355,"../Data.Void":356}],369:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var CSS = require("../CSS");
@@ -45674,7 +45738,7 @@ module.exports = {
     style: style
 };
 
-},{"../CSS":216,"../CSS.Overflow":202,"../CSS.Render":205,"../CSS.Stylesheet":209,"../CSS.TextAlign":212,"../Data.Either":284,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.String":346,"../Data.Tuple":351,"../Prelude":366,"../Pux.Html":374,"../Pux.Html.Attributes":369}],368:[function(require,module,exports){
+},{"../CSS":216,"../CSS.Overflow":202,"../CSS.Render":205,"../CSS.Stylesheet":209,"../CSS.TextAlign":212,"../Data.Either":284,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Monoid":320,"../Data.Semigroup":334,"../Data.String":346,"../Data.Tuple":351,"../Prelude":368,"../Pux.Html":376,"../Pux.Html.Attributes":371}],370:[function(require,module,exports){
 'use strict';
 
 // module Pux.Html.Attributes
@@ -45693,7 +45757,7 @@ exports.attr = function (key) {
   };
 };
 
-},{}],369:[function(require,module,exports){
+},{}],371:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -46431,7 +46495,7 @@ module.exports = {
     attr: $foreign.attr
 };
 
-},{"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":366,"../Pux.Html":374,"./foreign":368}],370:[function(require,module,exports){
+},{"../Data.Semigroup":334,"../Data.Tuple":351,"../Prelude":368,"../Pux.Html":376,"./foreign":370}],372:[function(require,module,exports){
 'use strict';
 
 // module Pux.Html.Elements
@@ -46485,7 +46549,7 @@ exports.mapAttribute = function (f) {
   };
 };
 
-},{"react":180}],371:[function(require,module,exports){
+},{"react":180}],373:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -46887,7 +46951,7 @@ module.exports = {
     text: $foreign.text
 };
 
-},{"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Prelude":366,"./foreign":370}],372:[function(require,module,exports){
+},{"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Prelude":368,"./foreign":372}],374:[function(require,module,exports){
 'use strict';
 
 // module Pux.Html.Events
@@ -46914,7 +46978,7 @@ exports.onKeyHandler = function (keyName, action) {
   }];
 };
 
-},{}],373:[function(require,module,exports){
+},{}],375:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -47053,7 +47117,7 @@ module.exports = {
     onKeyHandler: $foreign.onKeyHandler
 };
 
-},{"../Data.Function.Uncurried":293,"../Pux.Html":374,"./foreign":372}],374:[function(require,module,exports){
+},{"../Data.Function.Uncurried":293,"../Pux.Html":376,"./foreign":374}],376:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Data_Array = require("../Data.Array");
@@ -47089,7 +47153,7 @@ module.exports = {
     withTextChild: withTextChild
 };
 
-},{"../Data.Array":274,"../Pux.Html.Elements":371}],375:[function(require,module,exports){
+},{"../Data.Array":274,"../Pux.Html.Elements":373}],377:[function(require,module,exports){
 "use strict";
 
 // module Pux.Router
@@ -47131,7 +47195,7 @@ exports.navigateTo = function (url) {
   }
 };
 
-},{}],376:[function(require,module,exports){
+},{}],378:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -47400,7 +47464,7 @@ module.exports = {
     navigateTo: $foreign.navigateTo
 };
 
-},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../DOM":270,"../Data.Array":274,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.Int":307,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Profunctor":330,"../Data.Semigroup":334,"../Data.String":346,"../Data.Tuple":351,"../Data.Unit":355,"../Global":358,"../Prelude":366,"../Pux.Html":374,"../Pux.Html.Attributes":369,"../Pux.Html.Elements":371,"../Signal":384,"./foreign":375}],377:[function(require,module,exports){
+},{"../Control.Alt":219,"../Control.Applicative":221,"../Control.Apply":223,"../Control.Bind":227,"../Control.Monad.Eff":249,"../Control.MonadPlus":264,"../Control.MonadZero":265,"../Control.Plus":268,"../Control.Semigroupoid":269,"../DOM":270,"../Data.Array":274,"../Data.Eq":286,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.Int":307,"../Data.List":309,"../Data.List.Types":308,"../Data.Map":310,"../Data.Maybe":313,"../Data.Ord":327,"../Data.Profunctor":330,"../Data.Semigroup":334,"../Data.String":346,"../Data.Tuple":351,"../Data.Unit":355,"../Global":360,"../Prelude":368,"../Pux.Html":376,"../Pux.Html.Attributes":371,"../Pux.Html.Elements":373,"../Signal":386,"./foreign":377}],379:[function(require,module,exports){
 "use strict";
 
 // module Pux
@@ -47504,7 +47568,7 @@ exports.render = function (input, parentAction, html) {
   return render(input, composeAction(parentAction, html), html);
 };
 
-},{"react":180,"react-dom":25,"react-dom/server":155}],378:[function(require,module,exports){
+},{"react":180,"react-dom":25,"react-dom/server":155}],380:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -47624,7 +47688,7 @@ module.exports = {
     toReact: $foreign.toReact
 };
 
-},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Aff":236,"../Control.Monad.Aff.Unsafe":234,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Exception":243,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Partial.Unsafe":363,"../Prelude":366,"../Pux.Html":374,"../React":380,"../Signal":384,"../Signal.Channel":382,"./foreign":377}],379:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Bind":227,"../Control.Monad.Aff":236,"../Control.Monad.Aff.Unsafe":234,"../Control.Monad.Eff":249,"../Control.Monad.Eff.Class":239,"../Control.Monad.Eff.Exception":243,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Function":294,"../Data.Function.Uncurried":293,"../Data.Functor":298,"../Data.List":309,"../Data.List.Types":308,"../Data.Maybe":313,"../Partial.Unsafe":365,"../Prelude":368,"../Pux.Html":376,"../React":382,"../Signal":386,"../Signal.Channel":384,"./foreign":379}],381:[function(require,module,exports){
 /* global exports */
 "use strict";
 
@@ -47790,7 +47854,7 @@ function stopPropagation(event) {
 };
 exports.stopPropagation = stopPropagation;
 
-},{"react":180}],380:[function(require,module,exports){
+},{"react":180}],382:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -47877,7 +47941,7 @@ module.exports = {
     writeStateWithCallback: $foreign.writeStateWithCallback
 };
 
-},{"../Control.Applicative":221,"../Control.Monad.Eff":249,"../Data.Unit":355,"../Prelude":366,"../Unsafe.Coerce":387,"./foreign":379}],381:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Monad.Eff":249,"../Data.Unit":355,"../Prelude":368,"../Unsafe.Coerce":389,"./foreign":381}],383:[function(require,module,exports){
 // module Signal.Channel
 
 exports.channelP =
@@ -47903,7 +47967,7 @@ exports.subscribe =
     return chan;
   };
 
-},{}],382:[function(require,module,exports){
+},{}],384:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -47918,7 +47982,7 @@ module.exports = {
     subscribe: $foreign.subscribe
 };
 
-},{"../Control.Monad.Eff":249,"../Prelude":366,"../Signal":384,"./foreign":381}],383:[function(require,module,exports){
+},{"../Control.Monad.Eff":249,"../Prelude":368,"../Signal":386,"./foreign":383}],385:[function(require,module,exports){
 // module Signal
 
 function make(initial) {
@@ -48068,7 +48132,7 @@ exports.flattenArray = function(sig) {
   };
 };
 
-},{}],384:[function(require,module,exports){
+},{}],386:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -48206,7 +48270,7 @@ module.exports = {
     unwrap: $foreign.unwrap
 };
 
-},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Monad.Eff":249,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Semigroup":334,"../Prelude":366,"./foreign":383}],385:[function(require,module,exports){
+},{"../Control.Applicative":221,"../Control.Apply":223,"../Control.Monad.Eff":249,"../Control.Semigroupoid":269,"../Data.Foldable":291,"../Data.Function":294,"../Data.Functor":298,"../Data.Maybe":313,"../Data.Monoid":320,"../Data.Semigroup":334,"../Prelude":368,"./foreign":385}],387:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var Proxy3 = (function () {
@@ -48236,7 +48300,7 @@ module.exports = {
     Proxy3: Proxy3
 };
 
-},{}],386:[function(require,module,exports){
+},{}],388:[function(require,module,exports){
 "use strict";
 
 // module Unsafe.Coerce
@@ -48245,7 +48309,7 @@ exports.unsafeCoerce = function (x) {
   return x;
 };
 
-},{}],387:[function(require,module,exports){
+},{}],389:[function(require,module,exports){
 // Generated by psc version 0.10.2
 "use strict";
 var $foreign = require("./foreign");
@@ -48253,10 +48317,10 @@ module.exports = {
     unsafeCoerce: $foreign.unsafeCoerce
 };
 
-},{"./foreign":386}],388:[function(require,module,exports){
+},{"./foreign":388}],390:[function(require,module,exports){
 require('Main').main();
 
-},{"Main":359}],389:[function(require,module,exports){
+},{"Main":361}],391:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -48438,4 +48502,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[388]);
+},{}]},{},[390]);
