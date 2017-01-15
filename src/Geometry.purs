@@ -10,18 +10,17 @@ import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt)
 
 data Point = Point Number Number
 
+{--
 approxEq :: Number -> Number -> Boolean
 approxEq a b =
   abs (a - b) < 1.0
+--}
 
 instance ptOrd :: Ord Point where
-  compare (Point x1 y1) (Point x2 y2) =
-    if x1 `approxEq` x2 then if y1 `approxEq` y2 then EQ
-                                                 else compare y1 y2
-                        else compare x1 x2
+  compare (Point x1 y1) (Point x2 y2) = compare x1 x2 <> compare y1 y2
 
 instance ptEq :: Eq Point where
-  eq (Point x1 y1) (Point x2 y2) = x1 `approxEq` x2 && y1 `approxEq` y2
+  eq (Point x1 y1) (Point x2 y2) = x1 == x2 && y1 == y2
 
 instance ptShow :: Show Point where
   show (Point x y) = "(" <> show x <> ", " <> show y <> ")"

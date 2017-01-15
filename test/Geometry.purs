@@ -2,7 +2,7 @@ module Test.Geometry where
 
 import Prelude
 import App.Geometry
-import Data.List (List(..), (:))
+import Data.List (List(..), sort, (:))
 import Math (pi)
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
@@ -27,7 +27,15 @@ spec = do
         (secondPoint $ constructArc (Point 10.0 10.0) (Point 20.0 20.0))
           `shouldEqual` Point 20.0 20.0
 
-        secondPoint (Arc (Point 1.0 1.0) 1.0 pi pi) `shouldEqual` Point 2.0 1.0
+        secondPoint (Arc (Point 10.0 10.0) 10.0 pi pi) `shouldEqual` Point 20.0 10.0
+
+    describe "strokeOrd" do
+      it "should sort strokes by curvature" do
+        let l1 = Line (Point 10.0 10.0) (Point 20.0 10.0)
+            a1 = Arc (Point 10.0 0.0) 10.0 (pi / 2.0) (-pi)
+            a2 = Arc (Point 10.0 20.0) 10.0 (-pi / 2.0) pi
+
+        sort ( l1 : a1 : a2 : Nil)`shouldEqual` (a1 : l1 : a2 : Nil)
 
     describe "intersect" do
       it "should find an intersection point" do
