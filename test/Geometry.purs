@@ -29,13 +29,21 @@ spec = do
 
         secondPoint (Arc (Point 10.0 10.0) 10.0 pi pi) `shouldEqual` Point 20.0 10.0
 
+    describe "outboundAngle" do
+      it "should produce correct angles for arcs" do
+        outboundAngle (Arc (Point 10.0 10.0) 10.0 (pi/2.0) (pi/2.0)) `shouldEqual` pi
+        outboundAngle (Arc (Point 10.0 10.0) 10.0 (pi/2.0) (-pi/2.0)) `shouldEqual` 0.0
+        outboundAngle (Arc (Point 10.0 10.0) 10.0 (-pi/2.0) (pi/2.0)) `shouldEqual` 0.0
+        outboundAngle (Arc (Point 10.0 10.0) 10.0 (-pi/2.0) (-pi/2.0)) `shouldEqual` -pi
+
     describe "strokeOrd" do
-      it "should sort strokes by curvature" do
+      it "should sort strokes by 'traverseLeftWall' order" do
         let l1 = Line (Point 10.0 10.0) (Point 20.0 10.0)
+            l2 = Line (Point 10.0 10.0) (Point 20.0 20.0)
             a1 = Arc (Point 10.0 0.0) 10.0 (pi / 2.0) (-pi)
             a2 = Arc (Point 10.0 20.0) 10.0 (-pi / 2.0) pi
 
-        sort ( l1 : a1 : a2 : Nil)`shouldEqual` (a1 : l1 : a2 : Nil)
+        sort ( l1 : a1 : a2 : Nil)`shouldEqual` (a1 : l1 : a2 : l2 : Nil)
 
     describe "intersect" do
       it "should find an intersection point" do
