@@ -2,7 +2,7 @@ module App.Geometry where
 
 import Prelude
 import Data.Function (on)
-import Data.List (List(..), concatMap, foldl, head, mapMaybe, nub, reverse, singleton, sort, zipWith, (:))
+import Data.List (List(..), concatMap, filter, foldl, head, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
 import Data.Map (Map, empty, insert)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
@@ -40,6 +40,23 @@ ptX (Point x _) = x
 ptY :: Point -> Number
 ptY (Point _ y) = y
 
+scalePt :: Point -> Number -> Point
+scalePt (Point x y) c = Point (c * x) (c * y)
+
+ptAngle :: Point -> Point -> Radians
+ptAngle (Point x1 y1) (Point x2 y2) =
+  atan2 (y2 - y1) (x2 - x1)
+
+getAngleDiff :: Radians -> Radians -> Boolean -> Radians
+getAngleDiff a1 a2 ccw =
+  case a2 - a1 of diff | diff < 0.0 && ccw -> diff + 2.0 * pi
+                       | diff > 0.0 && (not ccw) -> diff - 2.0 * pi
+                       | otherwise -> diff
+
+ptSweep :: Point -> Point -> Point -> Boolean -> Radians
+ptSweep c p q ccw =
+  getAngleDiff (ptAngle c p) (ptAngle c q) ccw
+
 mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
 
@@ -61,11 +78,11 @@ getNearestPoint p ps = foldl updateMax Nothing ps
     updateMax (Just p1) p2 = if (distance p p1) < (distance p p2) then Just p1 else Just p2
 
 data Stroke = Line Point Point
-            | Arc Point Number Number Number
+            | Arc Point Point Point Boolean
 
 instance strokeEq :: Eq Stroke where
   eq (Line p1 p2) (Line q1 q2) = p1 == q1 && p2 == q2
-  eq (Arc c r a s) (Arc c' r' a' s') = c == c' && r == r' && a == a' && s == s'
+  eq (Arc c p q ccw) (Arc c' p' q' ccw') = c == c' && p == p' && q == q' && ccw == ccw'
   eq _ _ = false
 
 unorderedEq :: Stroke -> Stroke -> Boolean
@@ -75,8 +92,8 @@ instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
     "[" <> show p1 <> " --- " <> show p2 <> "]"
 
-  show (Arc c r a s) =
-    "(" <> show c <> ", radius: " <> show r <> ", angle: " <> show a <> ", sweep: " <> show s <> ")"
+  show (Arc c p q ccw) =
+    "( center: " <> show c <> ", p: " <> show p <> ", q: " <> show q <> ", ccw: " <> show ccw <> ")"
 
 compareMap :: forall a. (Ord a) => List (Stroke -> a) -> Stroke -> Stroke -> Ordering
 compareMap (fn : rest) s1 s2 = case compare (fn s1) (fn s2) of
@@ -92,22 +109,30 @@ instance strokeOrd :: Ord Stroke where
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
-firstPoint (Arc c r a _) = c + (Point (r * (cos a)) (r * (sin a)))
+firstPoint (Arc _ p _ _) = p
 
 secondPoint :: Stroke -> Point
 secondPoint (Line _ p2) = p2
-secondPoint (Arc c r a s) = c + (Point (r * (cos $ a + s)) (r * (sin $ a + s)))
+secondPoint (Arc _ _ q _) = q
+
+sweep :: Stroke -> Radians
+sweep (Line _ _) = 0.0
+sweep (Arc c p q ccw) =
+  case ptSweep c p q ccw of s | s == 0.0 -> if ccw then 2.0 * pi else -2.0 * pi
+                              | otherwise -> s
 
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (y2 - y1) (x2 - x1)
-outboundAngle (Arc _ _ a s) =
-  a + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
+outboundAngle (Arc c p _ ccw) =
+  let a = ptAngle c p
+   in a + if ccw then (pi / 2.0) else (- pi / 2.0)
 
 inboundAngle :: Stroke -> Radians
 inboundAngle s@(Line _ _) = outboundAngle s
-inboundAngle (Arc _ _ a s) =
-  a + s + if s > 0.0 then (pi / 2.0) else (- pi / 2.0)
+inboundAngle (Arc c _ q ccw) =
+  let a = ptAngle c q
+   in a + if ccw then (pi / 2.0) else (- pi / 2.0)
 
 -- communicates how aggressively the curve turns. Lines don't turn at all, so have curvature 0
 -- arcs, when sorted by curvature will go from small-radii counterclockwise arcs, to large-radii ones (with a limit
@@ -115,11 +140,13 @@ inboundAngle (Arc _ _ a s) =
 -- arcs (which are the most negative).
 curvature :: Stroke -> Number
 curvature (Line _ _) = 0.0
-curvature (Arc _ r _ s) = if s > 0.0 then (1.0 / r) else (- 1.0 / r)
+curvature (Arc c p _ ccw) =
+  let r = distance c p
+   in if ccw then (1.0 / r) else (- 1.0 / r)
 
 length :: Stroke -> Number
 length (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
-length (Arc _ r _ s) = (abs s) * 2.0 * pi * r
+length a@(Arc c p _ _) = (sweep a) * (distance c p)
 
 -- clockwise rotation -> positive angle
 -- ->/ == negative
@@ -128,10 +155,6 @@ length (Arc _ r _ s) = (abs s) * 2.0 * pi * r
 angleDiff :: Stroke -> Stroke -> Radians
 angleDiff strokeFrom strokeTo =
   atan2Radians (inboundAngle strokeFrom - outboundAngle strokeTo)
-
-sweep :: Stroke -> Radians
-sweep (Line _ _) = 0.0
-sweep (Arc _ _ _ s) = atan2Radians s
 
 findWrap :: Path -> Radians
 findWrap Nil = 0.0
@@ -142,7 +165,7 @@ findWrap path@(_ : rest) =
 
 flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1
-flipStroke (Arc c r a s) = (Arc c r (positiveRadians $ a + s) (-s))
+flipStroke (Arc c p q ccw) = (Arc c q p (not ccw))
 
 positiveRadians :: Radians -> Radians
 positiveRadians a
@@ -155,19 +178,6 @@ atan2Radians a
   | a > pi = (mod a 2.0*pi) - pi
   | a < pi = (mod a 2.0*pi) + pi
   | otherwise = a
-
-getAngleDiff :: Point -> Radians -> Radians -> Radians
-getAngleDiff (Point x y) a s =
-  case (atan2 y x) - a of diff | diff >= 0.0 && s >= 0.0 -> diff
-                               | diff <= 0.0 && s <= 0.0 -> diff
-                               | otherwise -> -diff
-
-constructArc :: Point -> Point -> Stroke
-constructArc c@(Point cx cy) p@(Point x y) =
-  let r = distance c p
-      a = atan2 (y - cy) (x - cx)
-      s = 2.0 * pi
-   in Arc c r a s
 
 type Path = List Stroke
 type Intersections = Map Stroke (List Stroke)
@@ -211,22 +221,25 @@ intersect (Line p p') (Line q q') =
         if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
                                                         else Nil
 
-intersect (Line (Point lx1 ly1) (Point lx2 ly2)) (Arc c@(Point cx cy) r a s) =
+intersect (Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p q ccw) =
   let m = (ly2 - ly1) / (lx2 - lx1) -- TODO : what if line is vertical
       b = ly1 - (m * lx1)
       cA = m * m + 1.0
       cB = 2.0 * (m * b - m * cy - cx)
+      r = distance c p
       cC = cy * cy - r * r + cx * cx - 2.0 * b * cy + b * b
       disc = cB*cB - 4.0 * cA * cC
+      ap = ptAngle c p
+      arcSweep = sweep arc
 
       -- check if a potential solution is inside our segment and arc
-      withinBounds p@(Point x y) =
-        let adiff = getAngleDiff (p - c) a s
+      withinBounds sol@(Point x y) =
+        let adiff = getAngleDiff ap (ptAngle c sol) ccw
             minx = min lx1 lx2
             maxx = max lx1 lx2
             miny = min ly1 ly2
             maxy = max ly1 ly2
-         in x >= minx && x <= maxx && y >= miny && y <= maxy && adiff <= s
+         in x >= minx && x <= maxx && y >= miny && y <= maxy && (abs adiff) <= (abs arcSweep)
 
       -- plug in a value for the determinant
       getSolution d =
@@ -278,11 +291,20 @@ split (Line p1 p2) points =
     zipPointPairs _ = Nil
     lines = zipPointPairs sortedPoints
 
-split (Arc c r a s) points =
-  let angles = sort $ nub $ a : (a + s) : ((\p -> getAngleDiff (p - c) a s) <$> points)
-      orderedAngles = if s > 0.0 then angles else reverse angles
-      zipAnglePairs (a1 : a2 : rest) =
-        (Arc c r (atan2Radians a1) (a2 - a1)) : zipAnglePairs (a2 : rest)
+split (Arc c p q ccw) points =
+  let
+      intersectionSweep i = ptSweep c p i ccw
+
+      -- remove p and q from intersections since we will add them back later
+      intersections = sortBy (compare `on` intersectionSweep) $
+                      (filter (\pt -> pt /= p && pt /= q) points)
+
+      -- sandwich the intersections, in the right order, between p and q
+      orderedIntersections =
+         p : (snoc (if ccw then intersections else reverse intersections) q)
+
+      zipAnglePairs (p1 : p2 : rest) =
+        (Arc c p1 p2 ccw) : zipAnglePairs (p2 : rest)
       zipAnglePairs _ = Nil
 
-   in zipAnglePairs orderedAngles
+   in zipAnglePairs orderedIntersections

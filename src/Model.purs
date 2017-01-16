@@ -3,7 +3,7 @@ module App.Model where
 import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), updateCycles)
-import App.Geometry (Point(..), Stroke(..), constructArc, distance, getNearestPoint, split)
+import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
 import App.Graph (Graph, applyIntersections, emptyGraph, findIntersections)
 import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop)
@@ -61,7 +61,7 @@ newStroke s p =
        Just c ->
          let snappedPoint = snapToPoint p s
           in case s.tool of
-                  ArcTool -> Just $ constructArc c snappedPoint
+                  ArcTool -> Just $ (Arc c snappedPoint snappedPoint true)
                   LineTool -> Just $ Line c snappedPoint
                   _ -> Nothing
 

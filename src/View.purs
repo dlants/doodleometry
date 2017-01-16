@@ -3,7 +3,7 @@ module App.View where
 import Prelude
 import App.ColorScheme (ColorScheme, toColor)
 import App.Cycle (Cycle(..))
-import App.Geometry (Point(..), Stroke(..), distance, firstPoint, getNearestPoint, ptX, ptY, secondPoint)
+import App.Geometry (Point(..), Stroke(..), distance, firstPoint, getNearestPoint, ptX, ptY, scalePt, secondPoint, sweep)
 import App.Graph (edges)
 import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
@@ -58,20 +58,23 @@ mCommand (Point x y) = "M " <> (show $ x) <> " " <> (show $ y) <> " "
 
 dCommand :: Stroke -> String
 dCommand (Line _ (Point x2 y2)) = "L " <> show x2 <> " " <> show y2 <> " "
-dCommand arc@(Arc c r a s) =
-  if (abs s) < 1.99 * pi then dArc arc
-                  else dArc (Arc c r a (1.99 * pi)) <> "Z "
+dCommand arc@(Arc c p q ccw) =
+  if p == q then let halfPoint = c + c - p
+                  in dArc (Arc c p halfPoint ccw) <> dArc (Arc c halfPoint q ccw)
+            else dArc arc
 
 dArc :: Stroke -> String
-dArc arc@(Arc (Point cx cy) r a s) =
+dArc arc@(Arc c p q ccw) =
   let endPoint = secondPoint arc
+      r = distance c p
+      s = sweep arc
    in "A "
       <> show r <> " " -- rx
       <> show r -- ry
       <> " 0 " -- x-axis-rotation
       <> show (if abs s > pi then 1 else 0) -- large sweep flag (sweep > 180 degrees)
       <> " "
-      <> show (if s > 0.0 then 1 else 0) -- sweep flag (sweep starts positive or negative)
+      <> show (if ccw then 1 else 0) -- sweep flag (sweep starts positive or negative)
       <> " "
       <> show (ptX endPoint) <> " "
       <> show (ptY endPoint) <> " "
