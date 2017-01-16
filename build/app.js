@@ -21957,10 +21957,8 @@ var drawCurrentStroke = function (v) {
     };
     throw new Error("Failed pattern match at App.View line 103, column 1 - line 103, column 36: " + [ v.constructor.name ]);
 };
-var drawStrokes = function (strokeStyle) {
-    return function (strokes) {
-        return Pux_Html_Elements.g([  ])(Data_Array.fromFoldable(Data_List_Types.foldableList)(Data_Functor.map(Data_List_Types.functorList)(drawStroke(strokeStyle))(strokes)));
-    };
+var drawStrokes = function (strokes) {
+    return Pux_Html_Elements.g([  ])(Data_Array.fromFoldable(Data_List_Types.foldableList)(Data_Functor.map(Data_List_Types.functorList)(drawStroke([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.fill("transparent"), Pux_Html_Attributes.className("stroke") ]))(strokes)));
 };
 var pathAttrs = function (v) {
     if (v instanceof Data_List_Types.Cons) {
@@ -21988,7 +21986,7 @@ var drawCycles = function (tool) {
     };
 };
 var drawing = function (state) {
-    return Pux_Html_Elements.svg(Data_Semigroup.append(Data_Semigroup.semigroupArray)(svgListeners(state.tool))([ Pux_Html_Attributes.width("800px"), Pux_Html_Attributes.height("400px") ]))([ drawStrokes([ Pux_Html_Attributes.stroke("black"), Pux_Html_Attributes.fill("transparent") ])(App_Graph.edges(state.graph)), drawCycles(state.tool)(state.cycles), drawSnapPoint(state.hover)(Data_Map.keys(state.graph)), drawCurrentStroke(state.currentStroke) ]);
+    return Pux_Html_Elements.svg(Data_Semigroup.append(Data_Semigroup.semigroupArray)(svgListeners(state.tool))([ Pux_Html_Attributes.width("800px"), Pux_Html_Attributes.height("400px") ]))([ drawCycles(state.tool)(state.cycles), drawStrokes(App_Graph.edges(state.graph)), drawSnapPoint(state.hover)(Data_Map.keys(state.graph)), drawCurrentStroke(state.currentStroke) ]);
 };
 var view = function (state) {
     return Pux_Html_Elements.div([  ])([ drawing(state), App_Tool_View.view(state.tool) ]);

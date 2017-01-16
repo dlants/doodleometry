@@ -13,3 +13,7 @@ body {
   bottom: 0;
   right: 0;
 }
+
+.stroke {
+  pointer-events: none
+}

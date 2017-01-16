@@ -16,7 +16,7 @@ import Data.Tuple (Tuple(..))
 import Math (abs, pi)
 import Pux.CSS (absolute, bottom, left, position, px, right, style, toHexString, top)
 import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
-import Pux.Html.Attributes (cx, cy, d, fill, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
+import Pux.Html.Attributes (className, cx, cy, d, fill, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseMove)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
@@ -32,9 +32,9 @@ drawStroke strokeStyle s =
   let command = (mCommand $ firstPoint s) <> (dCommand s)
    in path (strokeStyle <> [d command]) []
 
-drawStrokes :: Array (Attribute Action) -> List Stroke -> Html Action
-drawStrokes strokeStyle strokes =
-    g [] $ fromFoldable $ drawStroke strokeStyle <$> strokes
+drawStrokes :: List Stroke -> Html Action
+drawStrokes strokes =
+    g [] $ fromFoldable $ drawStroke [stroke "black", fill "transparent", className "stroke"] <$> strokes
 
 drawCycle :: Tool -> Tuple Cycle ColorScheme -> Html Action
 drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
@@ -116,8 +116,8 @@ svgListeners tool =
 drawing :: State -> Html Action
 drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
-    [ drawStrokes [stroke "black", fill "transparent"] (edges state.graph)
-    , drawCycles state.tool state.cycles
+    [ drawCycles state.tool state.cycles
+    , drawStrokes (edges state.graph)
     , drawSnapPoint state.hover (keys state.graph)
     , drawCurrentStroke state.currentStroke
     ]
