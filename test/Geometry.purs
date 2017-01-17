@@ -54,6 +54,14 @@ spec = do
         intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
           `shouldEqual` ((Point 20.0 10.0) : (Point 0.0 10.0) : Nil)
 
+      it "should find one intersection between arc and tangent" do
+        intersect (Line (Point 0.0 0.0) (Point 20.0 0.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
+          `shouldEqual` ((Point 10.0 0.0) : Nil)
+
+      it "should find one intersection between arc and vertical tangent" do
+        intersect (Line (Point 0.0 0.0) (Point 0.0 20.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
+          `shouldEqual` ((Point 0.0 10.0) : Nil)
+
       it "should exclude intersections between a line and arc that are outside of the arc -- positive sweep" do
         intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 20.0 10.0) (Point 10.0 20.0) true)
           `shouldEqual` ((Point 20.0 10.0) : Nil)
@@ -67,6 +75,30 @@ spec = do
 
         intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 20.0 10.0) false)
           `shouldEqual` ((Point 20.0 10.0) : Nil)
+
+      it "can find intersection between touching circles" do
+        let c0 = Point 0.0 5.0
+            c1 = Point 10.0 5.0
+            p1 = Point 5.0 5.0
+
+        intersect (Arc c0 p1 p1 true) (Arc c1 p1 p1 true) `shouldEqual` (p1 : Nil)
+
+      it "can find two intersections between two circles" do
+        let c0 = Point 0.0 5.0
+            c1 = Point 9.0 5.0
+            p1 = Point 4.0 2.0
+            p2 = Point 4.0 8.0
+
+        intersect (Arc c0 p1 p1 true) (Arc c1 p1 p1 true) `shouldEqual` (p2 : p1 : Nil)
+
+      it "checks for arc intersections to be within arc sweep" do
+        let c0 = Point 0.0 5.0
+            p1 = Point 4.0 2.0
+            p2 = Point (-4.0) 2.0
+            c1 = Point 9.0 5.0
+            p3 = Point 4.0 8.0
+
+        intersect (Arc c0 p1 p2 false) (Arc c1 p3 p3 true) `shouldEqual` (p1 : Nil)
 
     describe "split" do
       it "should split a line, in order" do
@@ -113,3 +145,12 @@ spec = do
 
       it "should have negative wrap when we take the outer angle (clockwise traversal)" do
         (findWrap ( (Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil ) < 0.0) `shouldEqual` true
+
+      it "wrap when dealing with arcs" do
+        let c0 = Point 0.0 5.0
+            c1 = Point 9.0 5.0
+            p1 = Point 4.0 2.0
+            p2 = Point 4.0 8.0
+
+        (findWrap ( (Arc c0 p1 p2 true) : (Arc c1 p2 p1 true) : Nil) > 0.0) `shouldEqual` true
+        (findWrap ( (Arc c0 p2 p1 false) : (Arc c1 p1 p2 false) : Nil) < 0.0 ) `shouldEqual` true

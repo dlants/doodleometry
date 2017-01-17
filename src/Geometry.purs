@@ -43,6 +43,15 @@ ptY (Point _ y) = y
 scalePt :: Point -> Number -> Point
 scalePt (Point x y) c = Point (c * x) (c * y)
 
+normalize :: Point -> Point
+normalize p@(Point x y) =
+  let m = distance (Point 0.0 0.0) p
+   in Point (x/m) (y/m)
+
+rotate :: Point -> Radians -> Point
+rotate (Point x y) theta =
+  Point (x * (cos theta) - y * (sin theta)) (x * (sin theta) + y * (cos theta))
+
 ptAngle :: Point -> Point -> Radians
 ptAngle (Point x1 y1) (Point x2 y2) =
   atan2 (y2 - y1) (x2 - x1)
@@ -193,6 +202,16 @@ swapEdge (c : cs) s ss
   | otherwise = c : (swapEdge cs s ss)
 swapEdge Nil _ _ = Nil
 
+-- is the potential solution within the bounds of this stroke?
+withinBounds :: Stroke -> Point -> Boolean
+withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
+  let between a a1 a2 = (a1 <= a && a <= a2) || (a1 >= a && a >= a2)
+   in (between x x1 x2) && (between y y1 y2)
+
+withinBounds arc@(Arc c p _ ccw) sol =
+  let adiff = getAngleDiff (ptAngle c p) (ptAngle c sol) ccw
+   in (abs adiff) <= (abs (sweep arc))
+
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =
   let
@@ -221,40 +240,62 @@ intersect (Line p p') (Line q q') =
         if 0.0 <= t && t <= 1.0 && 0.0 <= u && u <= 1.0 then singleton (p + ((*) t) `mapPt` r)
                                                         else Nil
 
-intersect (Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p q ccw) =
-  let m = (ly2 - ly1) / (lx2 - lx1) -- TODO : what if line is vertical
-      b = ly1 - (m * lx1)
-      cA = m * m + 1.0
-      cB = 2.0 * (m * b - m * cy - cx)
-      r = distance c p
-      cC = cy * cy - r * r + cx * cx - 2.0 * b * cy + b * b
-      disc = cB*cB - 4.0 * cA * cC
-      ap = ptAngle c p
-      arcSweep = sweep arc
+intersect line@(Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p q ccw) =
+  let check sol = (withinBounds line sol) && (withinBounds arc sol)
+   in if lx2 == lx1 then
+     let r = distance c p
+         disc = r * r - (pow (cx - lx1) 2.0)
 
-      -- check if a potential solution is inside our segment and arc
-      withinBounds sol@(Point x y) =
-        let adiff = getAngleDiff ap (ptAngle c sol) ccw
-            minx = min lx1 lx2
-            maxx = max lx1 lx2
-            miny = min ly1 ly2
-            maxy = max ly1 ly2
-         in x >= minx && x <= maxx && y >= miny && y <= maxy && (abs adiff) <= (abs arcSweep)
+         getSolution d =
+           let y = cy + d
+               solution = Point lx1 y
+            in if check solution then Just solution
+                                 else Nothing
 
-      -- plug in a value for the determinant
-      getSolution d =
-        let x = (-cB + d) / (2.0 * cA)
-            y = m * x + b
-            solution = Point x y
-         in if withinBounds solution then Just solution
-                                     else Nothing
+      in case disc of
+              _ | disc < 0.0 -> Nil
+                | disc == 0.0 -> mapMaybe getSolution (0.0 : Nil)
+                | otherwise -> mapMaybe getSolution (sqrt disc : -(sqrt disc) : Nil)
 
-   in case disc of
-           _ | disc < 0.0 -> Nil
-             | disc == 0.0 -> mapMaybe getSolution (0.0 : Nil)
-             | otherwise -> mapMaybe getSolution (sqrt disc : -(sqrt disc) : Nil)
+    else
+      let m = (ly2 - ly1) / (lx2 - lx1)
+          b = ly1 - (m * lx1)
+          cA = m * m + 1.0
+          cB = 2.0 * (m * b - m * cy - cx)
+          r = distance c p
+          cC = cy * cy - r * r + cx * cx - 2.0 * b * cy + b * b
+          disc = cB*cB - 4.0 * cA * cC
 
-intersect (Arc c r a s) (Arc c' r' a' s') = Nil
+          -- plug in a value for the determinant
+          getSolution d =
+            let x = (-cB + d) / (2.0 * cA)
+                y = m * x + b
+                solution = Point x y
+             in if check solution then Just solution
+                                  else Nothing
+
+       in case disc of
+               _ | disc < 0.0 -> Nil
+                 | disc == 0.0 -> mapMaybe getSolution (0.0 : Nil)
+                 | otherwise -> mapMaybe getSolution (sqrt disc : -(sqrt disc) : Nil)
+
+intersect arc1@(Arc c1 p1 q1 ccw1) arc2@(Arc c2 p2 q2 ccw2) =
+  let r1 = distance c1 p1
+      r2 = distance c2 p2
+      d = distance c1 c2
+      a = (r1 * r1 - r2 * r2 + d * d) / (2.0 * d)
+      cvec = normalize (c2 - c1)
+      check sol = (withinBounds arc1 sol) && (withinBounds arc2 sol)
+   in filter check (
+     case true of _ | d > r1 + r2 -> Nil -- circles too far apart
+                    | d < abs (r1 - r2) -> Nil -- one circle inside the other
+                    | d == r1 + r2 -> ((c1 + (scalePt cvec r1)) : Nil) -- circles are touching
+                    | otherwise ->
+                        let h = sqrt (r1 * r1 - a * a)
+                            hvec = scalePt (rotate cvec (pi/2.0)) h
+                            pt = c1 + (scalePt cvec a) -- where the center line and intersection line meet
+                         in ((pt + hvec) : (pt - hvec) : Nil)
+   )
 
 intersect a@(Arc _ _ _ _) l@(Line _ _) = intersect l a
 

@@ -5,6 +5,7 @@ import Test.Fixtures
 import App.Cycle
 import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Point(..), Stroke(..), flipStroke)
+import App.Graph (addStroke, emptyGraph)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert)
 import Data.Maybe (Maybe(..))
@@ -126,6 +127,13 @@ spec = do
                )
              )
         findCycle g4 (Line (Point 1.0 1.0) (Point 0.0 1.0)) `shouldEqual` Nothing
+
+      it "should consider a single circle a cycle" do
+        let arc = Arc (Point 0.0 0.0) (Point 1.0 0.0) (Point 1.0 0.0) true
+            gArc = addStroke arc emptyGraph
+
+        findCycle gArc arc `shouldEqual` Just (Cycle $ arc : Nil)
+        findCycle gArc (flipStroke arc) `shouldEqual` Nothing
 
     describe "updateCycles" do
       it "should insert a cycle" do
