@@ -141,8 +141,8 @@ inboundAngle (Arc c _ q ccw) =
 curvature :: Stroke -> Number
 curvature (Line _ _) = 0.0
 curvature (Arc c p _ ccw) =
-  let r = distance c p
-   in if ccw then (1.0 / r) else (- 1.0 / r)
+  let r = (distance c p)
+   in if ccw then 1.0 / r else - 1.0 / r
 
 length :: Stroke -> Number
 length (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
@@ -175,8 +175,8 @@ positiveRadians a
 
 atan2Radians :: Radians -> Radians
 atan2Radians a
-  | a > pi = (mod a 2.0*pi) - pi
-  | a < pi = (mod a 2.0*pi) + pi
+  | a > pi = a - 2.0 * pi
+  | a < -pi = a + 2.0 * pi
   | otherwise = a
 
 type Path = List Stroke

@@ -20,7 +20,7 @@ spec = do
     describe "addStroke" do
       it "should insert strokes in both directions and in correct order" do
         keys g `shouldEqual` (p1 : p2 : p3 : Nil)
-        lookup p2 g `shouldEqual` Just (flipStroke l12 : l23 : Nil)
+        lookup p2 g `shouldEqual` Just (l23 : flipStroke l12 : Nil)
 
     describe "getNextEdge" do
       it "should generate the list of next edges to follow" do
@@ -28,10 +28,10 @@ spec = do
         getNextEdge l23 g `shouldEqual` Just l32
 
       it "should pick the next edge in ascending radiant order" do
-        -- top right of the x inbound, top left of the x outbound
+        -- bottom right inbound, top right outbound
         getNextEdge (Line (Point 1.0 0.0) (Point 0.5 0.5)) g4 `shouldEqual`
-          Just (Line (Point 0.5 0.5) (Point 0.0 0.0))
+          Just (Line (Point 0.5 0.5) (Point 1.0 1.0))
 
-        -- top left of the x inbound, bottom left of the x outbound
+        -- bottom left inbound, bottom right outbound
         getNextEdge (Line (Point 0.0 0.0) (Point 0.5 0.5)) g4 `shouldEqual`
-          Just (Line (Point 0.5 0.5) (Point 0.0 1.0))
+          Just (Line (Point 0.5 0.5) (Point 1.0 0.0))

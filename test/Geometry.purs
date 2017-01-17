@@ -31,16 +31,15 @@ spec = do
         outboundAngle (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 20.0 10.0) true) `shouldEqual` pi
         outboundAngle (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 20.0 10.0) false) `shouldEqual` 0.0
 
-    {--
     describe "strokeOrd" do
       it "should sort strokes by 'traverseLeftWall' order" do
-        let l1 = Line (Point 10.0 10.0) (Point 20.0 10.0)
-            l2 = Line (Point 10.0 10.0) (Point 20.0 20.0)
-            a1 = Arc (Point 10.0 20.0) (Point 10.0 10.0) (Point 10.0 10.0) true
+        let l1 = Line (Point 10.0 10.0) (Point 20.0 10.0) -- this has a different outboundAngle so should go last
+            l2 = Line (Point 10.0 10.0) (Point 20.0 20.0) -- this has curvature 0 so should be between cw and ccw arcs
+            a1 = Arc (Point 10.0 20.0) (Point 10.0 10.0) (Point 10.0 10.0) true -- curves away so should be last arc
             a2 = Arc (Point 10.0 0.0) (Point 10.0 10.0) (Point 10.0 10.0) false
+            a3 = Arc (Point 10.0 5.0) (Point 10.0 10.0) (Point 10.0 10.0) false -- shorter radius so should be first
 
-        sort ( l1 : a1 : a2 : Nil)`shouldEqual` (a1 : l1 : a2 : l2 : Nil)
-    --}
+        sort ( l2 : l1 : a1 : a2 : a3 : Nil) `shouldEqual` (a3 : a2 : l1 : a1 : l2 : Nil)
 
     describe "intersect" do
       it "should find an intersection point" do
@@ -94,3 +93,23 @@ spec = do
           : (Arc c i2 i3 true)
           : (Arc c i3 q true)
           : Nil)
+
+    describe "angleDiff" do
+      it "should have positive angleDiff when strokes are in ascending outboundAngle order" do
+        angleDiff (Line (Point 1.0 1.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 0.0 0.0))
+          `shouldEqual` (pi / 2.0)
+
+      it "should have negative angleDiff when strokes are in descending outboundAngle order" do
+        angleDiff (Line (Point 0.0 0.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 1.0 1.0))
+          `shouldEqual` (- pi / 2.0)
+
+    describe "findWrap" do
+      let p1 = Point 0.0 0.0
+          p2 = Point 1.0 0.0
+          p3 = Point 1.0 1.0
+
+      it "should have positive wrap when we take the inner angle (counterclockwise traversal)" do
+        (findWrap ( (Line p1 p3) : (Line p3 p2) : (Line p2 p1) : Nil ) > 0.0) `shouldEqual` true
+
+      it "should have negative wrap when we take the outer angle (clockwise traversal)" do
+        (findWrap ( (Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil ) < 0.0) `shouldEqual` true

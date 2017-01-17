@@ -102,11 +102,11 @@ spec = do
         findCycle g l23 `shouldEqual` Nothing
 
       it "should find the clockwise cycle in a triangle, but not the counter clockwise one" do
-        findCycle g2 l12 `shouldEqual` Just (Cycle (l12 : l23 : l31 : Nil))
-        findCycle g2 l21 `shouldEqual` Nothing
+        findCycle g2 l12 `shouldEqual` Nothing
+        findCycle g2 l21 `shouldEqual` Just (Cycle (l21 : l13 : l32 : Nil))
 
-      it "should find two cycles in an hourglass (but not counter clockwise)" do
-        findCycle g4 (Line (Point 0.0 0.0) (Point 1.0 0.0)) `shouldEqual`
+      it "should find bottom cycle in an hourglass (but not counter clockwise)" do
+        findCycle g4 (Line (Point 1.0 0.0) (Point 0.0 0.0)) `shouldEqual`
           Just (Cycle (
                  (Line (Point 1.0 0.0) (Point 0.5 0.5)) :
                  (Line (Point 0.5 0.5) (Point 0.0 0.0)) :
@@ -114,9 +114,10 @@ spec = do
                  Nil
                )
              )
-        findCycle g4 (Line (Point 1.0 0.0) (Point 0.0 0.0)) `shouldEqual` Nothing
+        findCycle g4 (Line (Point 0.0 0.0) (Point 1.0 0.0)) `shouldEqual` Nothing
 
-        findCycle g4 (Line (Point 1.0 1.0) (Point 0.0 1.0)) `shouldEqual`
+      it "should find top cycle in an hourglass (but not counter clockwise)" do
+        findCycle g4 (Line (Point 0.0 1.0) (Point 1.0 1.0)) `shouldEqual`
           Just (Cycle (
                  (Line (Point 0.0 1.0) (Point 1.0 1.0)) :
                  (Line (Point 1.0 1.0) (Point 0.5 0.5)) :
@@ -124,7 +125,7 @@ spec = do
                  Nil
                )
              )
-        findCycle g4 (Line (Point 0.0 1.0) (Point 1.0 1.0)) `shouldEqual` Nothing
+        findCycle g4 (Line (Point 1.0 1.0) (Point 0.0 1.0)) `shouldEqual` Nothing
 
     describe "updateCycles" do
       it "should insert a cycle" do
