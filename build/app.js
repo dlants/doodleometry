@@ -21888,7 +21888,7 @@ var getSnapPoints = function (v) {
 };
 var snapToPoint = function (p) {
     return function (strokes) {
-        var nearestPoint = App_Geometry.getNearestPoint(p)(Data_List.concatMap(getSnapPoints(p))(strokes));
+        var nearestPoint = App_Geometry.getNearestPoint(p)(Data_List.nub(App_Geometry.ptEq)(Data_List.concatMap(getSnapPoints(p))(strokes)));
         if (nearestPoint instanceof Data_Maybe.Just) {
             var $11 = App_Geometry.distance(p)(nearestPoint.value0) < 20.0;
             if ($11) {
