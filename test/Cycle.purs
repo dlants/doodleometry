@@ -4,8 +4,8 @@ import Prelude
 import Test.Fixtures
 import App.Cycle
 import App.ColorScheme (ColorScheme(..))
-import App.Geometry (Point(..), Stroke(..), flipStroke)
-import App.Graph (addStroke, emptyGraph)
+import App.Geometry (Point(..), Stroke(..), angleDiff, findWrap, flipStroke)
+import App.Graph (addStroke, emptyGraph, getNextEdge)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert)
 import Data.Maybe (Maybe(..))
@@ -128,12 +128,47 @@ spec = do
              )
         findCycle g4 (Line (Point 1.0 1.0) (Point 0.0 1.0)) `shouldEqual` Nothing
 
-      it "should consider a single circle a cycle" do
-        let arc = Arc (Point 0.0 0.0) (Point 1.0 0.0) (Point 1.0 0.0) true
+      it "should consider a single ccw circle a cycle" do
+        let arc = Arc (Point 0.0 0.0) (Point 1.0 0.0) (Point 1.0 0.0) false
             gArc = addStroke arc emptyGraph
 
         findCycle gArc arc `shouldEqual` Just (Cycle $ arc : Nil)
         findCycle gArc (flipStroke arc) `shouldEqual` Nothing
+
+    describe "twoCircles" do
+      let c1 = Point 0.0 5.0
+          c2 = Point 9.0 5.0
+          p1 = Point 4.0 2.0
+          p2 = Point 4.0 8.0
+          a1 = Arc c1 p1 p2 true
+          a2 = Arc c1 p2 p1 true
+          a3 = Arc c2 p1 p2 true
+          a4 = Arc c2 p2 p1 true
+          gTwoCircles = addStroke a1
+                      $ addStroke a2
+                      $ addStroke a3
+                      $ addStroke a4
+                      $ emptyGraph
+
+      it "should suggest a3 after a1 and a1 after a3" do
+        getNextEdge a1 gTwoCircles `shouldEqual` Just (flipStroke a3)
+        getNextEdge (flipStroke a3) gTwoCircles `shouldEqual` Just a1
+
+      it "should give negative angleDiff for a1 : a3 and a3 : a1" do
+        (angleDiff a1 (flipStroke a3) < 0.0) `shouldEqual` true
+        (angleDiff (flipStroke a3) a1 < 0.0) `shouldEqual` true
+
+      it "should give negative wrap for a1 : a3" do
+        (findWrap (a1 : (flipStroke a3) : Nil) < 0.0) `shouldEqual` true
+
+      it "should find three cycles in two intersecting circles" do
+        findCycle gTwoCircles a1 `shouldEqual` Just (Cycle $ a1 : (flipStroke a3) : Nil)
+        findCycle gTwoCircles (flipStroke a1) `shouldEqual` Just (Cycle $ a1 : a4 : Nil)
+        findCycle gTwoCircles a4 `shouldEqual` Just (Cycle $ a4 : (flipStroke a2) : Nil)
+
+      it "should not find the outside cycle for two circles" do
+        findCycle gTwoCircles a3 `shouldEqual` Nothing
+        findCycle gTwoCircles a2 `shouldEqual` Nothing
 
     describe "updateCycles" do
       it "should insert a cycle" do

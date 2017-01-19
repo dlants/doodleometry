@@ -163,7 +163,7 @@ length a@(Arc c p _ _) = (sweep a) * (distance c p)
 -- TODO: what if we do a 180? (currently should never happen due to simplify)
 angleDiff :: Stroke -> Stroke -> Radians
 angleDiff strokeFrom strokeTo =
-  atan2Radians (inboundAngle strokeFrom - outboundAngle strokeTo)
+  atan2Radians (outboundAngle strokeTo - inboundAngle strokeFrom)
 
 findWrap :: Path -> Radians
 findWrap Nil = 0.0

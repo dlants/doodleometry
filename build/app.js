@@ -20566,7 +20566,7 @@ var findCycle = function (g) {
         };
         var $20 = Data_Eq.eq(Data_Maybe.eqMaybe(App_Geometry.ptEq))(Data_Functor.map(Data_Maybe.functorMaybe)(App_Geometry.firstPoint)(Data_List.head(path)))(Data_Functor.map(Data_Maybe.functorMaybe)(App_Geometry.secondPoint)(Data_List.last(path)));
         if ($20) {
-            var $21 = App_Geometry.findWrap(path) > 0.0;
+            var $21 = App_Geometry.findWrap(path) < 0.0;
             if ($21) {
                 return new Data_Maybe.Just(path);
             };
@@ -21371,7 +21371,7 @@ var atan2Radians = function (a) {
  */
 var angleDiff = function (strokeFrom) {
     return function (strokeTo) {
-        return atan2Radians(inboundAngle(strokeFrom) - outboundAngle(strokeTo));
+        return atan2Radians(outboundAngle(strokeTo) - inboundAngle(strokeFrom));
     };
 };
 var findWrap = function (v) {

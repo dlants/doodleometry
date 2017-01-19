@@ -106,7 +106,7 @@ findCycle g stroke =
   case path of
        Nil -> Nothing
        strokes -> if firstPoint <$> head strokes == secondPoint <$> last strokes
-                     then if findWrap path > 0.0 then Just (Cycle path)
+                     then if findWrap path < 0.0 then Just (Cycle path)
                                                  else Nothing
                      else Nothing
   where

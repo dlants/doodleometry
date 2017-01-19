@@ -127,24 +127,24 @@ spec = do
           : Nil)
 
     describe "angleDiff" do
-      it "should have positive angleDiff when strokes are in ascending outboundAngle order" do
+      it "should have negative angleDiff when strokes are in ascending outboundAngle order" do
         angleDiff (Line (Point 1.0 1.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 0.0 0.0))
-          `shouldEqual` (pi / 2.0)
-
-      it "should have negative angleDiff when strokes are in descending outboundAngle order" do
-        angleDiff (Line (Point 0.0 0.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 1.0 1.0))
           `shouldEqual` (- pi / 2.0)
+
+      it "should have positive angleDiff when strokes are in descending outboundAngle order" do
+        angleDiff (Line (Point 0.0 0.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 1.0 1.0))
+          `shouldEqual` (pi / 2.0)
 
     describe "findWrap" do
       let p1 = Point 0.0 0.0
           p2 = Point 1.0 0.0
           p3 = Point 1.0 1.0
 
-      it "should have positive wrap when we take the inner angle (counterclockwise traversal)" do
-        (findWrap ( (Line p1 p3) : (Line p3 p2) : (Line p2 p1) : Nil ) > 0.0) `shouldEqual` true
+      it "should have negative wrap when we take the inner angle (counterclockwise traversal)" do
+        (findWrap ( (Line p1 p3) : (Line p3 p2) : (Line p2 p1) : Nil ) < 0.0) `shouldEqual` true
 
-      it "should have negative wrap when we take the outer angle (clockwise traversal)" do
-        (findWrap ( (Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil ) < 0.0) `shouldEqual` true
+      it "should have positive wrap when we take the outer angle (clockwise traversal)" do
+        (findWrap ( (Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil ) > 0.0) `shouldEqual` true
 
       it "wrap when dealing with arcs" do
         let c0 = Point 0.0 5.0
