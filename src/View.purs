@@ -92,12 +92,9 @@ drawPoint (Point x y) size =
          , r $ show size
          ] []
 
-drawSnapPoint :: Maybe Point -> List Point -> Html Action
-drawSnapPoint Nothing _ = g [] []
-drawSnapPoint (Just p) ps =
-  case getNearestPoint p ps of
-    Nothing -> g [] []
-    Just np -> drawPoint np (if distance p np < 20.0 then 3.0 else 2.0)
+drawSnapPoint :: Maybe Point -> Html Action
+drawSnapPoint Nothing = g [] []
+drawSnapPoint (Just p) = drawPoint p 3.0
 
 drawCurrentStroke :: Maybe Stroke -> Html Action
 drawCurrentStroke Nothing = g [] []
@@ -118,7 +115,7 @@ drawing state =
   svg (svgListeners state.tool <> [width "800px", height "400px"])
     [ drawCycles state.tool state.cycles
     , drawStrokes (edges state.graph)
-    , drawSnapPoint state.hover (keys state.graph)
+    , drawSnapPoint state.snapPoint
     , drawCurrentStroke state.currentStroke
     ]
 
