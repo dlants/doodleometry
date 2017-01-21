@@ -2,8 +2,8 @@ module App.Geometry where
 
 import Prelude
 import Data.Function (on)
-import Data.List (List(..), concatMap, filter, foldl, head, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
-import Data.Map (Map, empty, insert)
+import Data.List (List(..), concatMap, filter, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
+import Data.Map (Map, empty, insert, lookup, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt)
@@ -114,7 +114,7 @@ instance strokeOrd :: Ord Stroke where
   compare =  (compare `on` firstPoint)
           <> (compare `on` outboundAngle)
           <> (compare `on` curvature)
-          <> (compare `on` length)
+          <> (compare `on` strokeLength)
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
@@ -153,9 +153,9 @@ curvature (Arc c p _ ccw) =
   let r = (distance c p)
    in if ccw then 1.0 / r else - 1.0 / r
 
-length :: Stroke -> Number
-length (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
-length a@(Arc c p _ _) = (sweep a) * (distance c p)
+strokeLength :: Stroke -> Number
+strokeLength (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
+strokeLength a@(Arc c p _ _) = (sweep a) * (distance c p)
 
 -- clockwise rotation -> positive angle
 -- ->/ == negative
@@ -303,22 +303,49 @@ insertSplitStroke ::  Stroke -> Path -> Intersections -> Intersections
 insertSplitStroke  stroke splitStroke intersections =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
 
+-- look over the points in order. If a point is close to an earlier point, map from that point to the earlier point
+makePtMap :: List Point -> Map Point Point
+makePtMap points =
+  let mapPoint map p =
+        let nearbyPt = head $ filter (\existingPt -> distance p existingPt < 0.05) (values map)
+         in case nearbyPt of
+                 Just pt -> insert p pt map
+                 Nothing -> insert p p map
+
+   in foldl mapPoint empty points
+
 intersectMultiple :: Stroke -> List Stroke -> Intersections
 intersectMultiple stroke strokes =
   let
-    intersectionPoints = do
+    intersectionTuples = do
       toIntersect <- strokes
       case intersect stroke toIntersect of
            Nil -> Nil
            newPoints -> pure $ Tuple toIntersect newPoints
 
-    allPoints = concatMap snd intersectionPoints
+    -- we don't want slight inequalities in floating point arithmetic to cause multiple nearby points to be created
+    -- since we rely on point equality to do cycle detection.
+    -- if an intersection point is near an existing point, or another intersection point, replace it
+    ptMap = makePtMap $ (firstPoint <$> strokes) <> (secondPoint <$> strokes) <> (concatMap snd intersectionTuples)
+    shrunkTuples =
+      let shrinkPoint pt = case lookup pt ptMap of
+                                Just newPt -> newPt
+                                Nothing -> pt
+       in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
+
     insertPoints i (Tuple edge points) =
       insertSplitStroke edge (split edge points) i
 
-    intersections = foldl insertPoints empty intersectionPoints
+    intersections = foldl insertPoints empty shrunkTuples
   in
-    insertSplitStroke stroke (split stroke allPoints) intersections
+    insertSplitStroke stroke (split stroke (concatMap snd shrunkTuples)) intersections
+
+nubAdjacent :: forall a. (Eq a) => List a -> List a
+nubAdjacent (a : b : rest) | a == b = (nubAdjacent $ a : rest)
+                           | otherwise = a : (nubAdjacent $ b : rest)
+
+nubAdjacent (a : Nil) = a : Nil
+nubAdjacent Nil = Nil
 
 -- given a stroke and a list of intersections, return a list of strokes
 split :: Stroke -> List Point -> List Stroke
@@ -332,7 +359,7 @@ split (Line p1 p2) points =
     zipPointPairs _ = Nil
     lines = zipPointPairs sortedPoints
 
-split (Arc c p q ccw) points =
+split arc@(Arc c p q ccw) points =
   let
       intersectionSweep i = ptSweep c p i ccw
 
@@ -341,11 +368,12 @@ split (Arc c p q ccw) points =
                       (filter (\pt -> pt /= p && pt /= q) points)
 
       -- sandwich the intersections, in the right order, between p and q
-      orderedIntersections =
+      orderedIntersections = nubAdjacent $
          p : (snoc (if ccw then intersections else reverse intersections) q)
 
       zipAnglePairs (p1 : p2 : rest) =
         (Arc c p1 p2 ccw) : zipAnglePairs (p2 : rest)
       zipAnglePairs _ = Nil
 
-   in zipAnglePairs orderedIntersections
+   in if (length orderedIntersections > 2) then (zipAnglePairs orderedIntersections)
+                                           else (singleton arc)

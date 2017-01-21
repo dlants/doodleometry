@@ -20706,8 +20706,8 @@ var Data_Semiring = require("../Data.Semiring");
 var Data_Ordering = require("../Data.Ordering");
 var Data_Boolean = require("../Data.Boolean");
 var Data_EuclideanRing = require("../Data.EuclideanRing");
-var Data_Functor = require("../Data.Functor");
 var Data_List_Types = require("../Data.List.Types");
+var Data_Functor = require("../Data.Functor");
 var Data_Foldable = require("../Data.Foldable");
 var Control_Bind = require("../Control.Bind");
 var Control_Applicative = require("../Control.Applicative");
@@ -20872,6 +20872,25 @@ var outboundAngle = function (v) {
     };
     throw new Error("Failed pattern match at App.Geometry line 134, column 1 - line 135, column 28: " + [ v.constructor.name ]);
 };
+var nubAdjacent = function (dictEq) {
+    return function (v) {
+        if (v instanceof Data_List_Types.Cons && v.value1 instanceof Data_List_Types.Cons) {
+            if (Data_Eq.eq(dictEq)(v.value0)(v.value1.value0)) {
+                return nubAdjacent(dictEq)(new Data_List_Types.Cons(v.value0, v.value1.value1));
+            };
+            if (Data_Boolean.otherwise) {
+                return new Data_List_Types.Cons(v.value0, nubAdjacent(dictEq)(new Data_List_Types.Cons(v.value1.value0, v.value1.value1)));
+            };
+        };
+        if (v instanceof Data_List_Types.Cons && v.value1 instanceof Data_List_Types.Nil) {
+            return new Data_List_Types.Cons(v.value0, Data_List_Types.Nil.value);
+        };
+        if (v instanceof Data_List_Types.Nil) {
+            return Data_List_Types.Nil.value;
+        };
+        throw new Error("Failed pattern match at App.Geometry line 334, column 1 - line 335, column 70: " + [ v.constructor.name ]);
+    };
+};
 var mapPt = function (f) {
     return function (v) {
         return new Point(f(v.value0), f(v.value1));
@@ -20898,17 +20917,17 @@ var inboundAngle = function (v) {
 var getAngleDiff = function (a1) {
     return function (a2) {
         return function (ccw) {
-            var $163 = a2 - a1;
-            if ($163 < 0.0 && ccw) {
-                return $163 + 2.0 * $$Math.pi;
+            var $172 = a2 - a1;
+            if ($172 < 0.0 && ccw) {
+                return $172 + 2.0 * $$Math.pi;
             };
-            if ($163 > 0.0 && !ccw) {
-                return $163 - 2.0 * $$Math.pi;
+            if ($172 > 0.0 && !ccw) {
+                return $172 - 2.0 * $$Math.pi;
             };
             if (Data_Boolean.otherwise) {
-                return $163;
+                return $172;
             };
-            throw new Error("Failed pattern match at App.Geometry line 61, column 3 - line 63, column 43: " + [ $163.constructor.name ]);
+            throw new Error("Failed pattern match at App.Geometry line 61, column 3 - line 63, column 43: " + [ $172.constructor.name ]);
         };
     };
 };
@@ -20926,8 +20945,8 @@ var sweep = function (v) {
         return 0.0;
     };
     if (v instanceof Arc) {
-        var $167 = ptSweep(v.value0)(v.value1)(v.value2)(v.value3);
-        if ($167 === 0.0) {
+        var $176 = ptSweep(v.value0)(v.value1)(v.value2)(v.value3);
+        if ($176 === 0.0) {
             if (v.value3) {
                 return 2.0 * $$Math.pi;
             };
@@ -20937,9 +20956,9 @@ var sweep = function (v) {
             throw new Error("Failed pattern match at App.Geometry line 130, column 45 - line 130, column 80: " + [ v.value3.constructor.name ]);
         };
         if (Data_Boolean.otherwise) {
-            return $167;
+            return $176;
         };
-        throw new Error("Failed pattern match at App.Geometry line 130, column 3 - line 131, column 47: " + [ $167.constructor.name ]);
+        throw new Error("Failed pattern match at App.Geometry line 130, column 3 - line 131, column 47: " + [ $176.constructor.name ]);
     };
     throw new Error("Failed pattern match at App.Geometry line 128, column 1 - line 129, column 1: " + [ v.constructor.name ]);
 };
@@ -20993,8 +21012,8 @@ var split = function (v) {
             };
             var sortedPoints = Data_List.sort(ptOrd)(Data_List.nub(ptEq)(new Data_List_Types.Cons(v.value0, new Data_List_Types.Cons(v.value1, points))));
             var lines = zipPointPairs(sortedPoints);
-            var $201 = Data_List.head(lines);
-            if ($201 instanceof Data_Maybe.Just && ($201.value0 instanceof Line && Data_Eq.eq(ptEq)($201.value0.value0)(v.value0))) {
+            var $210 = Data_List.head(lines);
+            if ($210 instanceof Data_Maybe.Just && ($210.value0 instanceof Line && Data_Eq.eq(ptEq)($210.value0.value0)(v.value0))) {
                 return lines;
             };
             return reversePath(lines);
@@ -21012,18 +21031,25 @@ var split = function (v) {
             var intersections = Data_List.sortBy(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(intersectionSweep))(Data_List.filter(function (pt) {
                 return Data_Eq.notEq(ptEq)(pt)(v.value1) && Data_Eq.notEq(ptEq)(pt)(v.value2);
             })(points));
-            var orderedIntersections = new Data_List_Types.Cons(v.value1, Data_List.snoc((function () {
+            var orderedIntersections = nubAdjacent(ptEq)(new Data_List_Types.Cons(v.value1, Data_List.snoc((function () {
                 if (v.value3) {
                     return intersections;
                 };
                 if (!v.value3) {
                     return Data_List.reverse(intersections);
                 };
-                throw new Error("Failed pattern match at App.Geometry line 345, column 21 - line 345, column 73: " + [ v.value3.constructor.name ]);
-            })())(v.value2));
-            return zipAnglePairs(orderedIntersections);
+                throw new Error("Failed pattern match at App.Geometry line 362, column 21 - line 362, column 73: " + [ v.value3.constructor.name ]);
+            })())(v.value2)));
+            var $222 = Data_List.length(orderedIntersections) > 2;
+            if ($222) {
+                return zipAnglePairs(orderedIntersections);
+            };
+            if (!$222) {
+                return Data_List.singleton(v);
+            };
+            throw new Error("Failed pattern match at App.Geometry line 368, column 7 - line 369, column 63: " + [ $222.constructor.name ]);
         };
-        throw new Error("Failed pattern match at App.Geometry line 325, column 1 - line 333, column 39: " + [ v.constructor.name, points.constructor.name ]);
+        throw new Error("Failed pattern match at App.Geometry line 342, column 1 - line 350, column 39: " + [ v.constructor.name, points.constructor.name ]);
     };
 };
 var swapEdge = function (v) {
@@ -21082,14 +21108,14 @@ var getNearestPoint = function (v) {
                     return new Data_Maybe.Just(v3);
                 };
                 if (v2 instanceof Data_Maybe.Just) {
-                    var $245 = distance(v)(v2.value0) < distance(v)(v3);
-                    if ($245) {
+                    var $255 = distance(v)(v2.value0) < distance(v)(v3);
+                    if ($255) {
                         return new Data_Maybe.Just(v2.value0);
                     };
-                    if (!$245) {
+                    if (!$255) {
                         return new Data_Maybe.Just(v3);
                     };
-                    throw new Error("Failed pattern match at App.Geometry line 87, column 30 - line 87, column 92: " + [ $245.constructor.name ]);
+                    throw new Error("Failed pattern match at App.Geometry line 87, column 30 - line 87, column 92: " + [ $255.constructor.name ]);
                 };
                 throw new Error("Failed pattern match at App.Geometry line 86, column 5 - line 86, column 35: " + [ v2.constructor.name, v3.constructor.name ]);
             };
@@ -21097,18 +21123,18 @@ var getNearestPoint = function (v) {
         return Data_Foldable.foldl(Data_List_Types.foldableList)(updateMax)(Data_Maybe.Nothing.value)(v1);
     };
 };
-var length = function (v) {
+var normalize = function (v) {
+    var m = distance(new Point(0.0, 0.0))(v);
+    return new Point(v.value0 / m, v.value1 / m);
+};
+var strokeLength = function (v) {
     if (v instanceof Line) {
         return $$Math.pow(v.value1.value0 - v.value0.value0)(2.0) + $$Math.pow(v.value1.value1 - v.value0.value1)(2.0);
     };
     if (v instanceof Arc) {
         return sweep(v) * distance(v.value0)(v.value1);
     };
-    throw new Error("Failed pattern match at App.Geometry line 157, column 1 - line 157, column 86: " + [ v.constructor.name ]);
-};
-var normalize = function (v) {
-    var m = distance(new Point(0.0, 0.0))(v);
-    return new Point(v.value0 / m, v.value1 / m);
+    throw new Error("Failed pattern match at App.Geometry line 157, column 1 - line 157, column 92: " + [ v.constructor.name ]);
 };
 
 /**
@@ -21135,7 +21161,7 @@ var curvature = function (v) {
 };
 var strokeOrd = new Data_Ord.Ord(function () {
     return strokeEq;
-}, Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(ptOrd))(firstPoint))(Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(outboundAngle))(Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(curvature))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(length)))));
+}, Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(ptOrd))(firstPoint))(Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(outboundAngle))(Data_Semigroup.append(Data_Semigroup.semigroupFn(Data_Semigroup.semigroupFn(Data_Ordering.semigroupOrdering)))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(curvature))(Data_Function.on(Data_Ord.compare(Data_Ord.ordNumber))(strokeLength)))));
 var insertSplitStroke = function (stroke) {
     return function (splitStroke) {
         return function (intersections) {
@@ -21148,7 +21174,7 @@ var crossProduct = function (v) {
         return v.value0 * v1.value1 - v1.value0 * v.value1;
     };
 };
-var intersect = function (__copy_v) {
+var intersectExact = function (__copy_v) {
     return function (__copy_v1) {
         var v = __copy_v;
         var v1 = __copy_v1;
@@ -21160,10 +21186,10 @@ var intersect = function (__copy_v) {
                 var qp = Data_Ring.sub(ptRing)(v1.value0)(v.value0);
                 var qpxr = crossProduct(qp)(r);
                 var qpxs = crossProduct(qp)(s);
-                var $277 = rxs === 0.0;
-                if ($277) {
-                    var $278 = qpxr === 0.0;
-                    if ($278) {
+                var $287 = rxs === 0.0;
+                if ($287) {
+                    var $288 = qpxr === 0.0;
+                    if ($288) {
                         var rr = dotProduct(r)(r);
                         var t0 = dotProduct(qp)(r) / rr;
                         var t1 = dotProduct(Data_Semiring.add(ptSemiring)(qp)(s))(r) / rr;
@@ -21171,43 +21197,43 @@ var intersect = function (__copy_v) {
                         var s2 = Data_Ord.max(Data_Ord.ordNumber)(t0)(t1);
                         return Data_List_Types.Nil.value;
                     };
-                    if (!$278) {
+                    if (!$288) {
                         return Data_List_Types.Nil.value;
                     };
-                    throw new Error("Failed pattern match at App.Geometry line 226, column 7 - line 234, column 15: " + [ $278.constructor.name ]);
+                    throw new Error("Failed pattern match at App.Geometry line 226, column 7 - line 234, column 15: " + [ $288.constructor.name ]);
                 };
-                if (!$277) {
+                if (!$287) {
                     var u = qpxr / rxs;
                     var t = qpxs / rxs;
-                    var $279 = 0.0 <= t && (t <= 1.0 && (0.0 <= u && u <= 1.0));
-                    if ($279) {
+                    var $289 = 0.0 <= t && (t <= 1.0 && (0.0 <= u && u <= 1.0));
+                    if ($289) {
                         return Data_List.singleton(Data_Semiring.add(ptSemiring)(v.value0)(mapPt(Data_Semiring.mul(Data_Semiring.semiringNumber)(t))(r)));
                     };
-                    if (!$279) {
+                    if (!$289) {
                         return Data_List_Types.Nil.value;
                     };
-                    throw new Error("Failed pattern match at App.Geometry line 240, column 9 - line 241, column 65: " + [ $279.constructor.name ]);
+                    throw new Error("Failed pattern match at App.Geometry line 240, column 9 - line 241, column 65: " + [ $289.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at App.Geometry line 225, column 5 - line 241, column 65: " + [ $277.constructor.name ]);
+                throw new Error("Failed pattern match at App.Geometry line 225, column 5 - line 241, column 65: " + [ $287.constructor.name ]);
             };
             if (v instanceof Line && v1 instanceof Arc) {
                 var check = function (sol) {
                     return withinBounds(v)(sol) && withinBounds(v1)(sol);
                 };
-                var $284 = v.value1.value0 === v.value0.value0;
-                if ($284) {
+                var $294 = v.value1.value0 === v.value0.value0;
+                if ($294) {
                     var r = distance(v1.value0)(v1.value1);
                     var getSolution = function (d) {
                         var y = v1.value0.value1 + d;
                         var solution = new Point(v.value0.value0, y);
-                        var $285 = check(solution);
-                        if ($285) {
+                        var $295 = check(solution);
+                        if ($295) {
                             return new Data_Maybe.Just(solution);
                         };
-                        if (!$285) {
+                        if (!$295) {
                             return Data_Maybe.Nothing.value;
                         };
-                        throw new Error("Failed pattern match at App.Geometry line 252, column 16 - line 253, column 46: " + [ $285.constructor.name ]);
+                        throw new Error("Failed pattern match at App.Geometry line 252, column 16 - line 253, column 46: " + [ $295.constructor.name ]);
                     };
                     var disc = r * r - $$Math.pow(v1.value0.value0 - v.value0.value0)(2.0);
                     if (disc < 0.0) {
@@ -21221,7 +21247,7 @@ var intersect = function (__copy_v) {
                     };
                     throw new Error("Failed pattern match at App.Geometry line 255, column 10 - line 258, column 85: " + [ disc.constructor.name ]);
                 };
-                if (!$284) {
+                if (!$294) {
                     
                     /**
                      *  plug in a value for the determinant
@@ -21237,14 +21263,14 @@ var intersect = function (__copy_v) {
                         var x = (-cB + d) / (2.0 * cA);
                         var y = m * x + b;
                         var solution = new Point(x, y);
-                        var $287 = check(solution);
-                        if ($287) {
+                        var $297 = check(solution);
+                        if ($297) {
                             return new Data_Maybe.Just(solution);
                         };
-                        if (!$287) {
+                        if (!$297) {
                             return Data_Maybe.Nothing.value;
                         };
-                        throw new Error("Failed pattern match at App.Geometry line 274, column 17 - line 275, column 47: " + [ $287.constructor.name ]);
+                        throw new Error("Failed pattern match at App.Geometry line 274, column 17 - line 275, column 47: " + [ $297.constructor.name ]);
                     };
                     if (disc < 0.0) {
                         return Data_List_Types.Nil.value;
@@ -21257,7 +21283,7 @@ var intersect = function (__copy_v) {
                     };
                     throw new Error("Failed pattern match at App.Geometry line 277, column 11 - line 280, column 86: " + [ disc.constructor.name ]);
                 };
-                throw new Error("Failed pattern match at App.Geometry line 245, column 7 - line 280, column 86: " + [ $284.constructor.name ]);
+                throw new Error("Failed pattern match at App.Geometry line 245, column 7 - line 280, column 86: " + [ $294.constructor.name ]);
             };
             if (v instanceof Arc && v1 instanceof Arc) {
                 var r2 = distance(v1.value0)(v1.value1);
@@ -21298,14 +21324,37 @@ var intersect = function (__copy_v) {
         };
     };
 };
+
+/**
+ *  If an intersection is very close to an endpoint of either stroke, round the intersection to that point
+ */
+var intersect = function (s1) {
+    return function (s2) {
+        var exactIntersections = intersectExact(s1)(s2);
+        var endPoints = new Data_List_Types.Cons(firstPoint(s1), new Data_List_Types.Cons(secondPoint(s1), new Data_List_Types.Cons(firstPoint(s2), new Data_List_Types.Cons(secondPoint(s2), Data_List_Types.Nil.value))));
+        var snapToPoints = function (p) {
+            var $326 = Data_List.head(Data_List.filter(function (endPoint) {
+                return distance(p)(endPoint) < 5.0e-2;
+            })(endPoints));
+            if ($326 instanceof Data_Maybe.Just) {
+                return $326.value0;
+            };
+            if ($326 instanceof Data_Maybe.Nothing) {
+                return p;
+            };
+            throw new Error("Failed pattern match at App.Geometry line 307, column 24 - line 309, column 41: " + [ $326.constructor.name ]);
+        };
+        return Data_List.nub(ptEq)(Data_Functor.map(Data_List_Types.functorList)(snapToPoints)(exactIntersections));
+    };
+};
 var intersectMultiple = function (stroke) {
     return function (strokes) {
         var intersectionPoints = Control_Bind.bind(Data_List_Types.bindList)(strokes)(function (v) {
-            var $317 = intersect(stroke)(v);
-            if ($317 instanceof Data_List_Types.Nil) {
+            var $329 = intersect(stroke)(v);
+            if ($329 instanceof Data_List_Types.Nil) {
                 return Data_List_Types.Nil.value;
             };
-            return Control_Applicative.pure(Data_List_Types.applicativeList)(new Data_Tuple.Tuple(v, $317));
+            return Control_Applicative.pure(Data_List_Types.applicativeList)(new Data_Tuple.Tuple(v, $329));
         });
         var insertPoints = function (i) {
             return function (v) {
@@ -21327,8 +21376,8 @@ var compareMap = function (__copy_dictOrd) {
                 var v2 = __copy_v2;
                 tco: while (true) {
                     if (v instanceof Data_List_Types.Cons) {
-                        var $325 = Data_Ord.compare(dictOrd)(v.value0(v1))(v.value0(v2));
-                        if ($325 instanceof Data_Ordering.EQ) {
+                        var $337 = Data_Ord.compare(dictOrd)(v.value0(v1))(v.value0(v2));
+                        if ($337 instanceof Data_Ordering.EQ) {
                             var __tco_dictOrd = dictOrd;
                             var __tco_v = v.value1;
                             var __tco_v1 = v1;
@@ -21339,7 +21388,7 @@ var compareMap = function (__copy_dictOrd) {
                             v2 = __tco_v2;
                             continue tco;
                         };
-                        return $325;
+                        return $337;
                     };
                     if (v instanceof Data_List_Types.Nil) {
                         return Data_Ordering.EQ.value;
@@ -21403,10 +21452,11 @@ module.exports = {
     inboundAngle: inboundAngle, 
     insertSplitStroke: insertSplitStroke, 
     intersect: intersect, 
+    intersectExact: intersectExact, 
     intersectMultiple: intersectMultiple, 
-    length: length, 
     mapPt: mapPt, 
     normalize: normalize, 
+    nubAdjacent: nubAdjacent, 
     outboundAngle: outboundAngle, 
     positiveRadians: positiveRadians, 
     ptAngle: ptAngle, 
@@ -21418,6 +21468,7 @@ module.exports = {
     scalePt: scalePt, 
     secondPoint: secondPoint, 
     split: split, 
+    strokeLength: strokeLength, 
     swapEdge: swapEdge, 
     sweep: sweep, 
     unorderedEq: unorderedEq, 
