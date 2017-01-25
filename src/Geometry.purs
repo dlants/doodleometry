@@ -6,7 +6,7 @@ import Data.List (List(..), concatMap, filter, foldl, head, length, mapMaybe, nu
 import Data.Map (Map, empty, insert, lookup, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
-import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt)
+import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt, trunc)
 
 data Point = Point Number Number
 
@@ -112,7 +112,7 @@ compareMap Nil _ _ = EQ
 
 instance strokeOrd :: Ord Stroke where
   compare =  (compare `on` firstPoint)
-          <> (compare `on` outboundAngle)
+          <> (compare `on` (outboundAngle >>> truncTo5))
           <> (compare `on` curvature)
           <> (compare `on` strokeLength)
 
@@ -129,6 +129,9 @@ sweep (Line _ _) = 0.0
 sweep (Arc c p q ccw) =
   case ptSweep c p q ccw of s | s == 0.0 -> if ccw then 2.0 * pi else -2.0 * pi
                               | otherwise -> s
+
+truncTo5 :: Number -> Number
+truncTo5 num = (trunc (num * 100000.0)) / 100000.0
 
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
