@@ -34,7 +34,7 @@ drawStroke strokeStyle s =
 
 drawStrokes :: List Stroke -> Html Action
 drawStrokes strokes =
-    g [] $ fromFoldable $ drawStroke [stroke "black", fill "transparent", className "stroke"] <$> strokes
+    g [className "strokes"] $ fromFoldable $ drawStroke [stroke "black", fill "transparent", className "stroke"] <$> strokes
 
 drawCycle :: Tool -> Tuple Cycle ColorScheme -> Html Action
 drawCycle tool (Tuple cycle@(Cycle strokes) colorScheme) =
@@ -83,7 +83,7 @@ dArc _ = ""
 
 drawCycles :: Tool -> Map Cycle ColorScheme -> Html Action
 drawCycles tool cycles =
-  g [] $ fromFoldable $ drawCycle tool <$> toList cycles
+  g [className "cycles"] $ fromFoldable $ drawCycle tool <$> toList cycles
 
 drawPoint :: Point -> Number -> Html Action
 drawPoint (Point x y) size =

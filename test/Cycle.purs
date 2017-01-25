@@ -7,7 +7,7 @@ import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Point(..), Stroke(..), angleDiff, findWrap, flipStroke)
 import App.Graph (addStroke, emptyGraph, getNextEdge)
 import Data.List (List(..), singleton, (:))
-import Data.Map (empty, insert)
+import Data.Map (empty, insert, lookup)
 import Data.Maybe (Maybe(..))
 import Test.Spec (describe, it)
 import Test.Spec.Assertions (shouldEqual)
@@ -30,7 +30,7 @@ spec = do
                  )
           )
 
-      it "hould not depend on edge orientation" do
+      it "should not depend on edge orientation" do
         shouldEqual
           (Cycle ( Line (Point 0.0 0.0) (Point 0.5 0.0)
                  : Line (Point 0.5 0.0) (Point 0.0 0.5)
@@ -137,7 +137,7 @@ spec = do
 
     describe "twoCircles" do
       let c1 = Point 0.0 5.0
-          c2 = Point 9.0 5.0
+          c2 = Point 8.0 5.0
           p1 = Point 4.0 2.0
           p2 = Point 4.0 8.0
           a1 = Arc c1 p1 p2 true
@@ -170,14 +170,49 @@ spec = do
         findCycle gTwoCircles a3 `shouldEqual` Nothing
         findCycle gTwoCircles a2 `shouldEqual` Nothing
 
-    describe "updateCycles" do
-      it "should insert a cycle" do
-        updateCycles empty g2 empty (singleton l13) `shouldEqual`
-          (insert c123 White $ empty)
+    describe "twoCirclesVertical" do
+      let c1 = Point 5.0 0.0
+          c2 = Point 5.0 8.0
+          p1 = Point 2.0 4.0
+          p2 = Point 8.0 4.0
+          outer1 = Arc c1 p1 p2 true
+          inner1 = Arc c1 p2 p1 true
+          inner2 = Arc c2 p1 p2 true
+          outer2 = Arc c2 p2 p1 true
+          gTwoCircles = addStroke inner1
+                      $ addStroke outer1
+                      $ addStroke inner2
+                      $ addStroke outer2
+                      $ emptyGraph
 
-        updateCycles empty g2 empty (l13 : l32 : Nil) `shouldEqual`
-          (insert c123 White $ empty)
+      it "stroke order at p1" do
+        lookup p1 gTwoCircles `shouldEqual`
+          Just ( outer1
+               : inner2
+               : (flipStroke inner1)
+               : (flipStroke outer2)
+               : Nil)
 
-      it "should split a cycle" do
-        updateCycles cycles g3 empty (singleton l13) `shouldEqual`
-          (insert c123 Red $ insert c134 Red $ empty)
+      it "stroke order at p2" do
+        lookup p2 gTwoCircles `shouldEqual`
+          Just ( (flipStroke inner2)
+               : (flipStroke outer1)
+               : outer2
+               : inner1
+               : Nil)
+
+      it "getNextEdge order inner1" do
+        getNextEdge inner1 gTwoCircles `shouldEqual` Just (flipStroke outer2)
+        --getNextEdge (flipStroke inner1) gTwoCircles `shouldEqual` Just (flipStroke inner2)
+
+      it "getNextEdge order outer1" do
+        getNextEdge outer1 gTwoCircles `shouldEqual` Just outer2
+        getNextEdge (flipStroke outer1) gTwoCircles `shouldEqual` Just inner2
+
+      it "getNextEdge order inner2" do
+        getNextEdge inner2 gTwoCircles `shouldEqual` Just (flipStroke outer1)
+        getNextEdge (flipStroke inner2) gTwoCircles `shouldEqual` Just (flipStroke inner1)
+
+      it "getNextEdge order outer2" do
+        getNextEdge outer2 gTwoCircles `shouldEqual` Just outer1
+        getNextEdge (flipStroke outer2) gTwoCircles `shouldEqual` Just inner1

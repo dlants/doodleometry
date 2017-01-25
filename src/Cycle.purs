@@ -3,10 +3,10 @@ module App.Cycle where
 import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStroke, secondPoint, swapEdge)
-import App.Graph (Graph, traverseLeftWall)
+import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
-import Data.List (List(..), delete, drop, elem, foldr, head, last, mapMaybe, nub, reverse, sort, (:))
-import Data.Map (Map, empty, insert, lookup, pop, toList)
+import Data.List (List(..), all, concat, delete, drop, elem, filter, foldl, foldr, head, last, mapMaybe, nub, reverse, sort, (:))
+import Data.Map (Map, empty, fromFoldable, insert, lookup, member, pop, toList, values)
 import Data.Maybe (Maybe(..))
 import Data.Set (empty) as Set
 import Data.Tuple (Tuple(..))
@@ -59,10 +59,25 @@ joinCycles c1 c2 stroke =
 
 type CyclesMap = Map Cycle ColorScheme
 
-updateCycles :: CyclesMap -> Graph -> Intersections -> Path -> CyclesMap
-updateCycles cycles g intersections splitStroke =
-  let newCycles = splitCycles cycles intersections
-   in foldr (\s c -> insertStroke s c g) newCycles splitStroke
+findCycles :: Graph -> CyclesMap
+findCycles g =
+  foldl (\c s -> insertStroke s c g) empty (edges g)
+
+updateCycles :: CyclesMap -> Graph -> Intersections -> CyclesMap
+updateCycles cycles g intersections =
+  foldr (\s c -> insertStroke s c g) empty (edges g)
+  {--
+  let trimmedCycles = trimCycles cycles intersections
+   in foldr (\s c -> insertStroke s c g) trimmedCycles (concat $ values $ intersections)
+  --}
+
+-- remove any cycle affected by an intersection
+trimCycles :: CyclesMap -> Intersections -> CyclesMap
+trimCycles cMap intersections =
+  let unaffected stroke = not (member stroke intersections)
+      unaffectedCycle cycle@(Cycle edges) = all unaffected edges
+      unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (toList cMap)
+   in fromFoldable unaffectedCycles
 
 splitCycles :: CyclesMap -> Intersections -> CyclesMap
 splitCycles cMap intersections =
@@ -88,7 +103,8 @@ insertStroke :: Stroke -> CyclesMap -> Graph -> CyclesMap
 insertStroke stroke cycles g =
   let
     newCycles = nub $ mapMaybe (findCycle g) $ stroke : (flipStroke stroke) : Nil
-  in
+   in foldl (\m newCycle -> insert newCycle White m) cycles newCycles
+   {--
     case newCycles of
          Nil -> cycles -- no new cycles, just return old cycles
          (c : Nil) -> insert c White cycles -- one new cycle - push it on the front
@@ -100,6 +116,7 @@ insertStroke stroke cycles g =
                    Just (Tuple previousColor newCycles) ->
                      insert c1 previousColor $ insert c2 previousColor $ newCycles
                    _ -> insert c1 White $ insert c2 White $ cycles
+   --}
 
 findCycle :: Graph -> Stroke -> Maybe Cycle
 findCycle g stroke =

@@ -133,9 +133,10 @@ sweep (Arc c p q ccw) =
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (y2 - y1) (x2 - x1)
+
 outboundAngle (Arc c p _ ccw) =
   let a = ptAngle c p
-   in a + if ccw then (pi / 2.0) else (- pi / 2.0)
+   in atan2Radians $ a + if ccw then (pi / 2.0) else (- pi / 2.0)
 
 inboundAngle :: Stroke -> Radians
 inboundAngle s@(Line _ _) = outboundAngle s
@@ -167,10 +168,11 @@ angleDiff strokeFrom strokeTo =
 
 findWrap :: Path -> Radians
 findWrap Nil = 0.0
-findWrap path@(_ : rest) =
+findWrap path@(s1 : rest) =
   foldl (+) 0.0 (angles <> (sweep <$> path))
   where
-    angles = zipWith angleDiff path rest
+    -- include the angle from the last to the first stroke as well
+    angles = zipWith angleDiff path (snoc rest s1)
 
 flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1

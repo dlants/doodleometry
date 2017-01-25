@@ -5,7 +5,7 @@ import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, first
 import App.Helpers (rotatePast)
 import Data.Foldable (foldr)
 import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insert, insertBy, last, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
-import Data.Map (Map, alter, empty, lookup, toList, update, values)
+import Data.Map (Map, alter, empty, keys, lookup, toList, update, values)
 import Data.Maybe (Maybe(..))
 import Data.Set (Set, member)
 import Data.Set (insert, empty) as Set
@@ -20,6 +20,10 @@ emptyGraph = empty
 edges :: Graph -> List Stroke
 edges g =
   nubBy unorderedEq $ concat $ values g
+
+points :: Graph -> List Point
+points g =
+  keys g
 
 pushUnique :: forall a. (Eq a) => a -> List a -> List a
 pushUnique a as = if elem a as then as else a : as

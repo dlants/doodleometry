@@ -2,7 +2,7 @@ module App.Model where
 
 import Prelude
 import App.ColorScheme (ColorScheme(..))
-import App.Cycle (Cycle(..), updateCycles)
+import App.Cycle (Cycle(..), findCycles, updateCycles)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
 import App.Graph (Graph, applyIntersections, edges, emptyGraph, findIntersections)
 import App.Snap (snapToPoint)
@@ -63,8 +63,9 @@ newStroke s p =
 
 update :: Action -> State -> State
 update (Click p) s =
-  let newPt = case s.snapPoint of Just sp -> sp
-                                  _ -> p
+  let newPt = case snapToPoint p (edges s.graph) of
+                   Just sp -> sp
+                   _ -> p
    in case s.click of
        Nothing -> s { click = Just newPt }
        Just c ->
@@ -107,4 +108,4 @@ updateForStroke s stroke
                        Just ss -> ss
                        _ -> singleton stroke
     newGraph = applyIntersections intersections s.graph
-    newCycles = updateCycles s.cycles newGraph intersections splitStroke
+    newCycles = findCycles newGraph
