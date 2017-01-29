@@ -164,10 +164,15 @@ strokeLength a@(Arc c p _ _) = (sweep a) * (distance c p)
 -- clockwise rotation -> positive angle
 -- ->/ == negative
 -- ->\ == positive
--- TODO: what if we do a 180? (currently should never happen due to simplify)
 angleDiff :: Stroke -> Stroke -> Radians
-angleDiff strokeFrom strokeTo =
-  atan2Radians (outboundAngle strokeTo - inboundAngle strokeFrom)
+angleDiff strokeIn strokeOut =
+  let a1 = outboundAngle strokeOut
+      a2 = inboundAngle strokeIn
+      diff = atan2Radians (a1 - a2)
+   in if (abs $ truncTo5 diff) == truncTo5 pi then case compare strokeOut (flipStroke strokeIn) of EQ -> -pi
+                                                                                                   LT -> pi
+                                                                                                   GT -> -pi
+                                       else diff
 
 findWrap :: Path -> Radians
 findWrap Nil = 0.0

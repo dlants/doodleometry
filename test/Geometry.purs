@@ -154,3 +154,15 @@ spec = do
 
         (findWrap ( (Arc c0 p1 p2 true) : (Arc c1 p2 p1 true) : Nil) > 0.0) `shouldEqual` true
         (findWrap ( (Arc c0 p2 p1 false) : (Arc c1 p1 p2 false) : Nil) < 0.0 ) `shouldEqual` true
+
+      it "wrap when dealing with 0 angleDiff arcs" do
+        let c0 = Point 5.0 5.0
+            c1 = Point 15.0 5.0
+            p1 = Point 10.0 5.0
+            p2 = Point 0.0 5.0
+            p3 = Point 20.0 5.0
+
+            a1 = Arc c0 p2 p1 true
+            a2 = Arc c1 p1 p3 true
+
+        angleDiff a1 a2 `shouldEqual` -pi
