@@ -1,12 +1,13 @@
 module Main where
 
-import App.Model (Action, State, update, init)
+import App.Model (Action, State, update)
 import App.View (view)
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import DOM (DOM)
 import Prelude (bind, pure)
 import Pux (App, Config, CoreEffects, fromSimple, renderToDOM, start)
+import Pux.Devtool (Action, start) as Pux.Devtool
 import Pux.Router (sampleUrl)
 
 type AppEffects = (dom :: DOM)
@@ -24,9 +25,17 @@ config state = do
     , inputs: [] }
 
 -- | Entry point for the browser.
-main :: Eff (CoreEffects AppEffects) (App State Action)
-main = do
-  app <- start =<< config init
+main :: State -> Eff (CoreEffects AppEffects) (App State Action)
+main state = do
+  app <- start =<< config state
+  renderToDOM "#app" app.html
+  -- | Used by hot-reloading code in support/index.js
+  pure app
+
+-- | Entry point for the browser with pux-devtool injected.
+debug :: State -> Eff (CoreEffects AppEffects) (App State (Pux.Devtool.Action Action))
+debug state = do
+  app <- Pux.Devtool.start =<< config state
   renderToDOM "#app" app.html
   -- | Used by hot-reloading code in support/index.js
   pure app
