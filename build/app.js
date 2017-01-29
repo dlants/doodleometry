@@ -21924,6 +21924,7 @@ var eraseLine = function (s) {
             };
             $13.graph = newGraph;
             $13.cycles = newCycles;
+            $13.lastEraserPoint = new Data_Maybe.Just(ptTo);
             return $13;
         };
     };

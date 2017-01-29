@@ -113,6 +113,7 @@ eraseLine :: State -> Point -> Point -> State
 eraseLine s ptFrom ptTo =
   s { graph = newGraph
     , cycles = newCycles
+    , lastEraserPoint = Just ptTo
     }
   where
     intersections = findIntersections (Line ptFrom ptTo) s.graph
