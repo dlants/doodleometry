@@ -4,7 +4,7 @@ import Prelude
 import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
 import App.Helpers (rotatePast)
 import Data.Foldable (foldr)
-import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insert, insertBy, last, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
+import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insert, insertBy, last, length, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
 import Data.Map (Map, alter, empty, keys, lookup, toList, update, values)
 import Data.Maybe (Maybe(..))
 import Data.Set (Set, member)
@@ -65,6 +65,13 @@ removeMultiple :: List Stroke -> Graph -> Graph
 removeMultiple strokes g =
   foldl (flip removeStroke) g strokes
 
+cleanGraph :: Graph -> Graph
+cleanGraph g =
+  let alterVertex :: Maybe (List Stroke) -> Maybe (List Stroke)
+      alterVertex (Just edges) | length edges == 0 = Nothing
+      alterVertex a = a
+   in foldl (\g' pt -> alter alterVertex pt g') g (keys g)
+
 -- if stroke is (p1 p2) next edge should be (p2 p3), clockwise out out p2
 getNextEdge :: Stroke -> Graph -> Maybe Stroke
 getNextEdge stroke g =
@@ -87,7 +94,7 @@ findIntersections stroke g =
 
 applyIntersections :: Intersections -> Graph -> Graph
 applyIntersections intersections g =
-  foldr applyIntersection g $ toList intersections
+  cleanGraph $ foldr applyIntersection g $ toList intersections
   where
     applyIntersection (Tuple stroke strokes) g =
       addStrokes strokes $ removeStroke stroke g
