@@ -6,7 +6,7 @@ import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStro
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
 import Data.List (List(..), all, concat, delete, drop, elem, filter, foldl, foldr, head, last, mapMaybe, nub, reverse, sort, (:))
-import Data.Map (Map, empty, fromFoldable, insert, lookup, member, pop, toList, values)
+import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, pop, toList, values)
 import Data.Maybe (Maybe(..))
 import Data.Set (empty) as Set
 import Data.Tuple (Tuple(..))
@@ -63,13 +63,25 @@ findCycles :: Graph -> CyclesMap
 findCycles g =
   foldl (\c s -> insertStroke s c g) empty (edges g)
 
-updateCycles :: CyclesMap -> Graph -> Intersections -> CyclesMap
-updateCycles cycles g intersections =
-  foldr (\s c -> insertStroke s c g) empty (edges g)
-  {--
-  let trimmedCycles = trimCycles cycles intersections
-   in foldr (\s c -> insertStroke s c g) trimmedCycles (concat $ values $ intersections)
-  --}
+copyColors :: CyclesMap -> CyclesMap -> CyclesMap
+copyColors oldMap newMap =
+  let copyColor :: CyclesMap -> (Tuple Cycle ColorScheme) -> CyclesMap
+      copyColor cMap (Tuple oldCycle oldColor) =
+        let alterColor (Just _) = Just oldColor
+            alterColor Nothing = Nothing
+         in alter alterColor oldCycle cMap
+  in foldl copyColor newMap (toList oldMap)
+
+updateCyclesForInsert :: CyclesMap -> Graph -> Intersections -> CyclesMap
+updateCyclesForInsert cycles g intersections =
+  let newCycles = findCycles g
+      oldCycles = splitCycles cycles intersections
+   in copyColors oldCycles newCycles
+
+updateCyclesForRemove :: CyclesMap -> Graph -> CyclesMap
+updateCyclesForRemove oldCycles g =
+  let newCycles = findCycles g
+   in copyColors oldCycles newCycles
 
 -- remove any cycle affected by an intersection
 trimCycles :: CyclesMap -> Intersections -> CyclesMap

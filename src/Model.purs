@@ -2,7 +2,7 @@ module App.Model where
 
 import Prelude
 import App.ColorScheme (ColorScheme(..))
-import App.Cycle (Cycle(..), findCycles, updateCycles)
+import App.Cycle (Cycle(..), findCycles, updateCyclesForInsert, updateCyclesForRemove)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
 import App.Graph (Graph, applyIntersections, edges, emptyGraph, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
@@ -118,7 +118,7 @@ eraseLine s ptFrom ptTo =
   where
     intersections = findIntersections (Line ptFrom ptTo) s.graph
     newGraph = removeMultiple (keys intersections) s.graph
-    newCycles = findCycles newGraph
+    newCycles = updateCyclesForRemove s.cycles newGraph
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
@@ -131,4 +131,4 @@ updateForStroke s stroke
                        Just ss -> ss
                        _ -> singleton stroke
     newGraph = applyIntersections intersections s.graph
-    newCycles = findCycles newGraph
+    newCycles = updateCyclesForInsert s.cycles newGraph intersections
