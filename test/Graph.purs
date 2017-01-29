@@ -19,8 +19,8 @@ spec = do
   describe "App.Graph" do
     describe "addStroke" do
       it "should insert strokes in both directions and in correct order" do
-        keys g `shouldEqual` (p1 : p2 : p3 : Nil)
-        lookup p2 g `shouldEqual` Just (l23 : flipStroke l12 : Nil)
+        points g `shouldEqual` (p1 : p2 : p3 : Nil)
+        getEdgesForPt p2 g `shouldEqual` Just (l23 : flipStroke l12 : Nil)
 
     describe "getNextEdge" do
       it "should generate the list of next edges to follow" do

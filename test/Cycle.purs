@@ -5,7 +5,7 @@ import Test.Fixtures
 import App.Cycle
 import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Point(..), Stroke(..), angleDiff, findWrap, flipStroke)
-import App.Graph (addStroke, emptyGraph, getNextEdge)
+import App.Graph (addStroke, emptyGraph, getEdgesForPt, getNextEdge)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, lookup)
 import Data.Maybe (Maybe(..))
@@ -186,7 +186,7 @@ spec = do
                       $ emptyGraph
 
       it "stroke order at p1" do
-        lookup p1 gTwoCircles `shouldEqual`
+        getEdgesForPt p1 gTwoCircles `shouldEqual`
           Just ( outer1
                : inner2
                : (flipStroke inner1)
@@ -194,7 +194,7 @@ spec = do
                : Nil)
 
       it "stroke order at p2" do
-        lookup p2 gTwoCircles `shouldEqual`
+        getEdgesForPt p2 gTwoCircles `shouldEqual`
           Just ( (flipStroke inner2)
                : (flipStroke outer1)
                : outer2
