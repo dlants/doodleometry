@@ -60,6 +60,11 @@ removeStroke :: Stroke -> Graph -> Graph
 removeStroke stroke g =
   removeStroke' stroke $ removeStroke' (flipStroke stroke) $ g
 
+-- remove multiple unordered strokes from the graph
+removeMultiple :: List Stroke -> Graph -> Graph
+removeMultiple strokes g =
+  foldl (flip removeStroke) g strokes
+
 -- if stroke is (p1 p2) next edge should be (p2 p3), clockwise out out p2
 getNextEdge :: Stroke -> Graph -> Maybe Stroke
 getNextEdge stroke g =

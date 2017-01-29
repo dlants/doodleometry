@@ -4,7 +4,7 @@ import Prelude
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), findCycles, updateCycles)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
-import App.Graph (Graph, applyIntersections, edges, emptyGraph, findIntersections)
+import App.Graph (Graph, applyIntersections, edges, emptyGraph, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
 import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
 import Data.Map (Map, empty, insert, keys, lookup, pop)
@@ -14,6 +14,9 @@ import Data.Tuple (Tuple(..), snd)
 
 data Action
   = Click Point
+  | EraserDown Point
+  | EraserMove Point
+  | EraserUp Point
   | Move Point
   | Select Tool
   | Color Cycle ColorScheme
@@ -22,12 +25,9 @@ data Tool
   = LineTool
   | ArcTool
   | ColorTool ColorScheme
+  | EraserTool
 
-instance eqTool :: Eq Tool where
-  eq LineTool LineTool = true
-  eq ArcTool ArcTool = true
-  eq (ColorTool c1) (ColorTool c2) = c1 == c2
-  eq _ _ = false
+derive instance eqTool :: Eq Tool
 
 type State =
   { graph :: Graph
@@ -35,6 +35,7 @@ type State =
   , click :: Maybe Point
   , hover :: Maybe Point
   , snapPoint :: Maybe Point
+  , lastEraserPoint :: Maybe Point
   , currentStroke :: Maybe Stroke
   , tool :: Tool
   }
@@ -46,6 +47,7 @@ init =
   , click: Nothing
   , hover: Nothing
   , snapPoint: Nothing
+  , lastEraserPoint: Nothing
   , currentStroke: Nothing
   , tool: LineTool
   }
@@ -96,6 +98,26 @@ update (Select t) s
 
 update (Color cycle colorScheme) s =
   s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
+
+update (EraserDown pt) s =
+  let eraserPt = if s.tool == EraserTool then Just pt else Nothing
+   in s {lastEraserPoint = eraserPt}
+
+update (EraserUp pt) s = s {lastEraserPoint = Nothing}
+
+update (EraserMove pt) s =
+  case s.lastEraserPoint of Nothing -> s
+                            Just eraserPt -> eraseLine s eraserPt pt
+
+eraseLine :: State -> Point -> Point -> State
+eraseLine s ptFrom ptTo =
+  s { graph = newGraph
+    , cycles = newCycles
+    }
+  where
+    intersections = findIntersections (Line ptFrom ptTo) s.graph
+    newGraph = removeMultiple (keys intersections) s.graph
+    newCycles = findCycles newGraph
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke

@@ -17,7 +17,7 @@ import Math (abs, pi)
 import Pux.CSS (absolute, bottom, left, position, px, right, style, toHexString, top)
 import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
 import Pux.Html.Attributes (className, cx, cy, d, fill, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
-import Pux.Html.Events (onClick, onMouseMove)
+import Pux.Html.Events (onClick, onMouseDown, onMouseMove, onMouseUp)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
 drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
@@ -103,12 +103,14 @@ drawCurrentStroke (Just s) =
 
 svgListeners :: Tool -> Array (Attribute Action)
 svgListeners tool =
-  if elem tool [LineTool, ArcTool] then
-    [ (onClick \{pageX, pageY} -> Click (Point pageX pageY))
-    , (onMouseMove \{pageX, pageY} -> Move (Point pageX pageY))
-    ]
-  else []
-
+  case tool of _ | elem tool [LineTool, ArcTool] -> [ (onClick \{pageX, pageY} -> Click (Point pageX pageY))
+                                                    , (onMouseMove \{pageX, pageY} -> Move (Point pageX pageY))
+                                                    ]
+               EraserTool -> [ (onMouseDown \{pageX, pageY} -> EraserDown (Point pageX pageY))
+                             , (onMouseUp \{pageX, pageY} -> EraserUp (Point pageX pageY))
+                             , (onMouseMove \{pageX, pageY} -> EraserMove (Point pageX pageY))
+                             ]
+               _ -> []
 
 drawing :: State -> Html Action
 drawing state =

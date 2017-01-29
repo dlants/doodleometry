@@ -14,6 +14,7 @@ toolBelt =
   , ColorTool Red
   , ColorTool Green
   , ColorTool Blue
+  , EraserTool
   ]
 
 drawTool :: Tool -> Tool -> Html Action
@@ -28,6 +29,7 @@ drawTool selected tool =
          LineTool -> div [] [text "Line"]
          ArcTool -> div [] [text "Arc"]
          ColorTool color -> div [] [text ("Color: " <> show color)]
+         EraserTool -> div [] [text "Erase"]
     ]
 
 view :: Tool -> Html Action
