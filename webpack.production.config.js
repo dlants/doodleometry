@@ -7,10 +7,11 @@ module.exports = {
   output: {
     path: path.resolve('.'),
     filename: '[name]-[hash].min.js',
-    publicPath: '/'
+    publicPath: '/doodleometry/'
   },
   module: {
     loaders: [
+      { test: /\.css$/, loader: ['style-loader', 'raw-loader']},
       {
         test: /\.purs$/,
         loader: 'purs-loader',

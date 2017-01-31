@@ -18,6 +18,7 @@ var config = {
   module: {
     loaders: [
       { test: /\.js$/, loader: 'source-map-loader', exclude: /node_modules|bower_components/ },
+      { test: /\.css$/, loader: ['style-loader', 'raw-loader']},
       {
         test: /\.purs$/,
         loader: 'purs-loader',

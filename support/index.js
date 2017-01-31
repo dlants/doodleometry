@@ -1,5 +1,6 @@
 var Main = require('../src/Main.purs')
 var initialState = require('../src/Model.purs').init;
+require('../static/css/app.css')
 var debug = process.env.NODE_ENV === 'development'
 
 if (module.hot) {
