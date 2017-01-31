@@ -1,1 +1,0 @@
-a geometric doodling app
