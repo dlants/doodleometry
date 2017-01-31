@@ -5,10 +5,10 @@ import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStroke, secondPoint, swapEdge)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
-import Data.List (List(..), all, concat, delete, drop, elem, filter, foldl, foldr, head, last, mapMaybe, nub, reverse, sort, (:))
+import Data.List (List(..), all, concat, delete, drop, elem, elemIndex, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
 import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, pop, toList, values)
 import Data.Maybe (Maybe(..))
-import Data.Set (empty) as Set
+import Data.Set (Set, empty, insert, member) as Set
 import Data.Tuple (Tuple(..))
 
 newtype Cycle = Cycle Path
@@ -40,12 +40,25 @@ cut (Cycle edges) edge =
 
 -- when we traverse to find a cycle, we can end up visiting an edge and then going back along that same edge
 -- like O--
--- simplify removes such edges from the cycle, leaving O
-simplify :: Path -> Path
-simplify (stroke : rest) =
-  if elem (flipStroke stroke) rest then simplify (delete (flipStroke stroke) rest)
-                                   else stroke : (simplify rest)
-simplify Nil = Nil
+-- simplifyCycle removes such edges from the cycle, leaving O
+simplifyCycle :: Path -> Path
+simplifyCycle path =
+  let simplifyTraverse :: Set.Set Stroke -> List Stroke -> Path -> Path
+      simplifyTraverse visitedSet history@(last : before) togo@(next : after)
+        | next == (flipStroke last) = simplifyTraverse visitedSet before after
+        | otherwise = if Set.member next visitedSet then extractPath (reverse history) next
+                                                    else simplifyTraverse (Set.insert next visitedSet) (next : history) after
+
+      simplifyTraverse _ _ _ = Nil -- should never happen unless input is Nil!
+
+      extractPath traversal edge = case elemLastIndex edge traversal of
+                                   Just index -> slice index (1 + (length traversal)) traversal
+                                   _ -> Nil -- should never happen unless input is Nil!
+
+   -- We want to treat path as a cycle - once we get to the end, we should be able to start from the beginning again.
+   -- We also want to be able to reverse and go back through history. We simulate this by pushing copies of path into
+   -- history and future. We will only ever need to go that far before re-visiting an edge, so it should be safe!
+   in simplifyTraverse Set.empty (reverse path) (path <> path)
 
 -- TODO: make this work with multiple shared edges
 -- for now, assumes a single shared edge
@@ -55,7 +68,7 @@ joinCycles c1 c2 stroke =
     path1 = cut c1 stroke -- if stroke is p1p2, path1 takes from p2 to p1
     path2 = cut c2 (flipStroke stroke) -- if stroke is p1p2, path2 takes from p1 to p2
   in
-    Cycle (simplify $ path1 <> path2)
+    Cycle (simplifyCycle $ path1 <> path2)
 
 type CyclesMap = Map Cycle ColorScheme
 
@@ -139,4 +152,4 @@ findCycle g stroke =
                                                  else Nothing
                      else Nothing
   where
-    path = simplify $ traverseLeftWall stroke g Set.empty
+    path = simplifyCycle $ traverseLeftWall stroke g Set.empty

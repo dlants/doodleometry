@@ -9,5 +9,4 @@ import Test.Spec.Discovery (discover)
 import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (run)
 
-main :: Eff (fs :: FS, process :: PROCESS, console :: CONSOLE) Unit
 main = discover "Test\\." >>= run [consoleReporter]

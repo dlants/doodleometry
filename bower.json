@@ -14,8 +14,8 @@
     "purescript-sets": "^2.0.0"
   },
   "devDependencies": {
-    "purescript-spec": "^0.10.0",
-    "purescript-spec-discovery": "^0.2.0",
-    "purescript-debug": "^2.0.0"
+    "purescript-debug": "^2.0.0",
+    "purescript-spec": "^0.11.0",
+    "purescript-spec-discovery": "^0.3.0"
   }
 }

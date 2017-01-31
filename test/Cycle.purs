@@ -9,7 +9,7 @@ import App.Graph (addStroke, emptyGraph, getEdgesForPt, getNextEdge)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, lookup)
 import Data.Maybe (Maybe(..))
-import Test.Spec (describe, it)
+import Test.Spec (describe, describeOnly, it)
 import Test.Spec.Assertions (shouldEqual)
 
 spec = do
@@ -45,21 +45,19 @@ spec = do
                  )
           )
 
-    describe "simplify" do
-      it "should prune excess edges from path" do
-        simplify ((Line p1 p2) : (Line p2 p3) : (Line p3 p2) : (Line p2 p4) : Nil) `shouldEqual`
-          ((Line p1 p2) : (Line p2 p4) : Nil)
-
-        simplify ((Line p1 p2) : (Line p2 p3) : (Line p3 p4) : (Line p4 p3) : Nil) `shouldEqual`
-          ((Line p1 p2) : (Line p2 p3) : Nil)
-
-        simplify ((Line p1 p2) : (Line p2 p1) : Nil) `shouldEqual` Nil
-
-        simplify ((Line p1 p2) : (Line p2 p3) : (Line p3 p2) : (Line p2 p1) : Nil) `shouldEqual` Nil
-
-      it "should not simplify a cycle" do
-        simplify ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil) `shouldEqual`
+    describeOnly "simplifyCycle" do
+      it "should not simplifyCycle a cycle" do
+        simplifyCycle ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil) `shouldEqual`
           ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil)
+
+      it "should return Nil for Nil" do
+        simplifyCycle Nil `shouldEqual` Nil
+
+      it "should return Nil for path that doubles back on itself" do
+        simplifyCycle ((Line p1 p2) : (Line p2 p3) : (Line p3 p2) : (Line p2 p1) : Nil) `shouldEqual` Nil
+
+      -- TODO: more here
+
 
     describe "cutCycle" do
       it "should cut the cycle and orient it the right way" do
