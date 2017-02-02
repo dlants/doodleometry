@@ -1,6 +1,6 @@
 module Main where
 
-import App.Model (Action, State, update)
+import App.Model (Action, State, update, inputs)
 import App.View (view)
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
@@ -22,7 +22,8 @@ config state = do
     { initialState: state
     , update: fromSimple update
     , view: view
-    , inputs: [] }
+    , inputs
+    }
 
 -- | Entry point for the browser.
 main :: State -> Eff (CoreEffects AppEffects) (App State Action)

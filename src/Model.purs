@@ -11,6 +11,7 @@ import Data.Map (Map, empty, insert, keys, lookup, pop)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
+import Signal (Signal)
 
 data Action
   = Click Point
@@ -20,6 +21,7 @@ data Action
   | Move Point
   | Select Tool
   | Color Cycle ColorScheme
+  | WindowResize Int Int
 
 data Tool
   = LineTool
@@ -38,8 +40,11 @@ type State =
   , lastEraserPoint :: Maybe Point
   , currentStroke :: Maybe Stroke
   , tool :: Tool
+  , windowWidth :: Int
+  , windowHeight :: Int
   }
 
+-- the actual width and height will be overwritten in index.js
 init :: State
 init =
   { graph: emptyGraph
@@ -50,7 +55,13 @@ init =
   , lastEraserPoint: Nothing
   , currentStroke: Nothing
   , tool: LineTool
+  , windowWidth: 0
+  , windowHeight: 0
   }
+
+
+inputs :: Array (Signal Action)
+inputs = []
 
 newStroke :: State -> Point -> Maybe Stroke
 newStroke s p =
@@ -108,6 +119,9 @@ update (EraserUp pt) s = s {lastEraserPoint = Nothing}
 update (EraserMove pt) s =
   case s.lastEraserPoint of Nothing -> s
                             Just eraserPt -> eraseLine s eraserPt pt
+
+update (WindowResize w h) s =
+  s {windowWidth = w, windowHeight = h}
 
 eraseLine :: State -> Point -> Point -> State
 eraseLine s ptFrom ptTo =

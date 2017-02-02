@@ -114,7 +114,7 @@ svgListeners tool =
 
 drawing :: State -> Html Action
 drawing state =
-  svg (svgListeners state.tool <> [width "800px", height "400px"])
+  svg (svgListeners state.tool <> [width (show state.windowWidth <> "px"), height (show state.windowHeight <> "px")])
     [ drawCycles state.tool state.cycles
     , drawStrokes (edges state.graph)
     , drawSnapPoint state.snapPoint
