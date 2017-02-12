@@ -1,6 +1,8 @@
 module App.View where
 
 import Prelude
+import App.Background.View (fillBackground)
+import App.Background.View (view) as BackgroundView
 import App.ColorScheme (ColorScheme, toColor)
 import App.Cycle (Cycle(..))
 import App.Geometry (Point(..), Stroke(..), distance, firstPoint, getNearestPoint, ptX, ptY, scalePt, secondPoint, sweep)
@@ -9,14 +11,15 @@ import App.Model (Action(..), State, Tool(..))
 import App.Tool.View (view) as ToolView
 import Data.Array (fromFoldable)
 import Data.Foldable (elem)
+import Data.Int (toNumber)
 import Data.List (List, foldl, (:))
 import Data.Map (Map, keys, toList, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..))
 import Math (abs, pi)
-import Pux.CSS (absolute, bottom, left, position, px, right, style, toHexString, top)
+import Pux.CSS (absolute, bottom, height, left, position, px, right, style, toHexString, top, width)
 import Pux.Html (Attribute, Html, circle, div, g, line, svg, path)
-import Pux.Html.Attributes (className, cx, cy, d, fill, height, r, stroke, strokeDasharray, width, x1, x2, y1, y2)
+import Pux.Html.Attributes (className, cx, cy, d, fill, r, stroke, strokeDasharray, x1, x2, y1, y2)
 import Pux.Html.Events (onClick, onMouseDown, onMouseMove, onMouseUp)
 
 drawLine :: Array (Attribute Action) -> Point -> Point -> Html Action
@@ -114,8 +117,13 @@ svgListeners tool =
 
 drawing :: State -> Html Action
 drawing state =
-  svg (svgListeners state.tool <> [width (show state.windowWidth <> "px"), height (show state.windowHeight <> "px")])
-    [ drawCycles state.tool state.cycles
+  svg (svgListeners state.tool <> [
+       style $ do
+         width $ (toNumber state.windowWidth) # px
+         height $ (toNumber state.windowHeight) # px
+      ])
+    [ fillBackground state.background state.windowWidth state.windowHeight
+    , drawCycles state.tool state.cycles
     , drawStrokes (edges state.graph)
     , drawSnapPoint state.snapPoint
     , drawCurrentStroke state.currentStroke
@@ -125,4 +133,5 @@ view :: State -> Html Action
 view state =
   div [] [ (drawing state)
          , (ToolView.view state.tool)
+         , (BackgroundView.view state.background)
          ]

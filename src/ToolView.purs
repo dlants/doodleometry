@@ -21,9 +21,8 @@ drawTool :: Tool -> Tool -> Html Action
 drawTool selected tool =
   div
     [ (onClick  \_ -> Select tool)
-    , style $ do
-        if selected == tool then border solid (2.0 # px) black
-                            else border solid (1.0 # px) gray
+    , style $ if selected == tool then border solid (2.0 # px) black
+                                  else border solid (1.0 # px) gray
     ]
     [ case tool of
          LineTool -> div [] [text "Line"]

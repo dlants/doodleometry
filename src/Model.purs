@@ -1,6 +1,7 @@
 module App.Model where
 
 import Prelude
+import App.Background (Background(..))
 import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), findCycles, updateCyclesForInsert, updateCyclesForRemove)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
@@ -22,6 +23,7 @@ data Action
   | Select Tool
   | Color Cycle ColorScheme
   | WindowResize Int Int
+  | ChangeBackground Background
 
 data Tool
   = LineTool
@@ -42,6 +44,7 @@ type State =
   , tool :: Tool
   , windowWidth :: Int
   , windowHeight :: Int
+  , background :: Background
   }
 
 -- the actual width and height will be overwritten in index.js
@@ -57,8 +60,8 @@ init =
   , tool: LineTool
   , windowWidth: 0
   , windowHeight: 0
+  , background: Square
   }
-
 
 inputs :: Array (Signal Action)
 inputs = []
@@ -76,7 +79,7 @@ newStroke s p =
 
 update :: Action -> State -> State
 update (Click p) s =
-  let newPt = case snapToPoint p (edges s.graph) of
+  let newPt = case snapToPoint p s.background (edges s.graph) of
                    Just sp -> sp
                    _ -> p
    in case s.click of
@@ -91,7 +94,7 @@ update (Click p) s =
                                                         }
 
 update (Move p) s =
-  let sp = snapToPoint p (edges s.graph)
+  let sp = snapToPoint p s.background (edges s.graph)
       newPt = case sp of Just sp -> sp
                          _ -> p
    in s { hover = Just p
@@ -122,6 +125,9 @@ update (EraserMove pt) s =
 
 update (WindowResize w h) s =
   s {windowWidth = w, windowHeight = h}
+
+update (ChangeBackground b) s =
+  s {background = b, snapPoint = Nothing}
 
 eraseLine :: State -> Point -> Point -> State
 eraseLine s ptFrom ptTo =
