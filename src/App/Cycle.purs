@@ -1,17 +1,21 @@
 module App.Cycle where
 
 import Prelude
+
 import App.ColorScheme (ColorScheme(..))
-import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStroke, secondPoint, swapEdge)
+import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStroke, secondPoint)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
-import Data.List (List(..), all, concat, delete, drop, elem, elemIndex, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
-import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, pop, toList, values)
+import Data.List (List(Nil), all, drop, elem, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
+import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Set (Set, empty, insert, member) as Set
 import Data.Tuple (Tuple(..))
 
 newtype Cycle = Cycle Path
+
+mapToList :: forall k v. Map k v -> List (Tuple k v)
+mapToList = toUnfoldable
 
 instance cycleEq :: Eq Cycle where
   eq (Cycle p1@(a : rest)) (Cycle p2) =
@@ -83,7 +87,7 @@ copyColors oldMap newMap =
         let alterColor (Just _) = Just oldColor
             alterColor Nothing = Nothing
          in alter alterColor oldCycle cMap
-  in foldl copyColor newMap (toList oldMap)
+  in foldl copyColor newMap (mapToList oldMap)
 
 updateCyclesForInsert :: CyclesMap -> Graph -> Intersections -> CyclesMap
 updateCyclesForInsert cycles g intersections =
@@ -101,17 +105,17 @@ trimCycles :: CyclesMap -> Intersections -> CyclesMap
 trimCycles cMap intersections =
   let unaffected stroke = not (member stroke intersections)
       unaffectedCycle cycle@(Cycle edges) = all unaffected edges
-      unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (toList cMap)
+      unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (mapToList cMap)
    in fromFoldable unaffectedCycles
 
 splitCycles :: CyclesMap -> Intersections -> CyclesMap
 splitCycles cMap intersections =
   let
     insertCycle :: (Tuple Cycle ColorScheme) -> CyclesMap -> CyclesMap
-    insertCycle (Tuple c sch) cMap =
-      insert (splitCycle intersections c) sch cMap
+    insertCycle (Tuple c sch) cMap' =
+      insert (splitCycle intersections c) sch cMap'
   in
-    foldr insertCycle empty (toList cMap)
+    foldr insertCycle empty (mapToList cMap)
 
 splitCycle :: Intersections -> Cycle -> Cycle
 splitCycle intersections (Cycle path) =

@@ -1,103 +1,79 @@
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const appConfig = require('./src/App/Config.js').config
+const path = require('path')
+const webpack = require('webpack')
+const isProd = process.env.NODE_ENV === 'production'
 
-var port = process.env.PORT || 3000;
+const entries = [path.join(__dirname, 'support/entry.js')]
 
-var config = {
-  entry: [
-    'webpack-hot-middleware/client?reload=true',
-    path.join(__dirname, 'support/index.js'),
-  ],
-  devtool: 'cheap-module-eval-source-map',
+const plugins = [
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  })
+]
+
+if (isProd) {
+  plugins.push(
+    new webpack.LoaderOptionsPlugin({
+      minimize: true,
+      debug: false
+    })
+  )
+}
+
+module.exports = {
+  entry: entries,
+  context: __dirname,
+  target: 'web',
   output: {
-    path: path.resolve('./static/dist'),
-    filename: '[name].js',
-    publicPath: '/'
+    path: path.join(__dirname, 'static', 'dist'),
+    filename: 'bundle.js',
+    publicPath: appConfig.public_path
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'source-map-loader', exclude: /node_modules|bower_components/ },
-      { test: /\.css$/, loader: ['style-loader', 'raw-loader']},
       {
         test: /\.purs$/,
         loader: 'purs-loader',
         exclude: /node_modules/,
-        query: {
+        query: isProd ? {
+          bundle: true,
+          bundleOutput: 'static/dist/bundle.js'
+        } : {
           psc: 'psa',
-          pscArgs: {
-            sourceMaps: true
-          }
+          pscIde: true
         }
       }
     ],
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development')
-    }),
-    new webpack.optimize.OccurrenceOrderPlugin(true),
-    new webpack.LoaderOptionsPlugin({
-      debug: true
-    }),
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[file].map',
-      moduleFilenameTemplate: '[absolute-resource-path]',
-      fallbackModuleFilenameTemplate: '[absolute-resource-path]'
-    }),
-    new HtmlWebpackPlugin({
-      template: 'support/index.html',
-      inject: 'body',
-      filename: 'index.html'
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-  ],
+  plugins: plugins,
   resolveLoader: {
     modules: [
       path.join(__dirname, 'node_modules')
     ]
   },
   resolve: {
+    alias: {
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat'
+    },
     modules: [
       'node_modules',
       'bower_components'
     ],
     extensions: ['.js', '.purs']
   },
-};
-
-// If this file is directly run with node, start the development server
-// instead of exporting the webpack config.
-if (require.main === module) {
-  var compiler = webpack(config);
-  var express = require('express');
-  var app = express();
-
-  // Use webpack-dev-middleware and webpack-hot-middleware instead of
-  // webpack-dev-server, because webpack-hot-middleware provides more reliable
-  // HMR behavior, and an in-browser overlay that displays build errors
-  app
-    .use(express.static('./static'))
-    .use(require('connect-history-api-fallback')())
-    .use(require("webpack-dev-middleware")(compiler, {
-      publicPath: config.output.publicPath,
-      stats: {
-        hash: false,
-        timings: false,
-        version: false,
-        assets: false,
-        errors: true,
-        colors: false,
-        chunks: false,
-        children: false,
-        cached: false,
-        modules: false,
-        chunkModules: false,
-      },
-    }))
-    .use(require("webpack-hot-middleware")(compiler))
-    .listen(port);
-} else {
-  module.exports = config;
+  performance: { hints: false },
+  stats: {
+    hash: false,
+    timings: false,
+    version: false,
+    assets: false,
+    errors: true,
+    colors: false,
+    chunks: false,
+    children: false,
+    cached: false,
+    modules: false,
+    chunkModules: false
+  }
 }

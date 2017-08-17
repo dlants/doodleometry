@@ -1,7 +1,7 @@
 module App.ColorScheme where
 
 import Prelude
-import Pux.CSS (Color, blue, green, red, white)
+import CSS (Color, blue, green, red, white)
 
 data ColorScheme
   = Red

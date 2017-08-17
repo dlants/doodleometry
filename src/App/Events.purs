@@ -1,20 +1,22 @@
-module App.Model where
+module App.Events where
 
-import Prelude
-import App.Background (Background(..))
-import App.ColorScheme (ColorScheme(..))
-import App.Cycle (Cycle(..), findCycles, updateCyclesForInsert, updateCyclesForRemove)
-import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint, split)
-import App.Graph (Graph, applyIntersections, edges, emptyGraph, findIntersections, removeMultiple)
+import App.Background (Background)
+import App.ColorScheme (ColorScheme)
+import App.Cycle (Cycle, updateCyclesForInsert, updateCyclesForRemove)
+import App.Geometry (Point, Stroke(Line, Arc))
+import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
-import Data.List (List(..), concat, mapMaybe, nub, singleton, (:))
-import Data.Map (Map, empty, insert, keys, lookup, pop)
+import App.State (State, Tool(LineTool, ArcTool, EraserTool))
+import Data.Function (($))
+import Data.List (singleton)
+import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
-import Data.Tuple (Tuple(..), snd)
-import Signal (Signal)
+import Network.HTTP.Affjax (AJAX)
+import Prelude ((==))
+import Pux (EffModel, noEffects)
 
-data Action
+data Event
   = Click Point
   | EraserDown Point
   | EraserMove Point
@@ -24,60 +26,15 @@ data Action
   | Color Cycle ColorScheme
   | WindowResize Int Int
   | ChangeBackground Background
+  | NoOp
 
-data Tool
-  = LineTool
-  | ArcTool
-  | ColorTool ColorScheme
-  | EraserTool
 
-derive instance eqTool :: Eq Tool
+type AppEffects fx = (ajax :: AJAX | fx)
 
-type State =
-  { graph :: Graph
-  , cycles :: Map Cycle ColorScheme
-  , click :: Maybe Point
-  , hover :: Maybe Point
-  , snapPoint :: Maybe Point
-  , lastEraserPoint :: Maybe Point
-  , currentStroke :: Maybe Stroke
-  , tool :: Tool
-  , windowWidth :: Int
-  , windowHeight :: Int
-  , background :: Background
-  }
+foldp :: ∀ fx. Event -> State -> EffModel State Event (AppEffects fx)
+foldp evt st = noEffects $ update evt st
 
--- the actual width and height will be overwritten in index.js
-init :: State
-init =
-  { graph: emptyGraph
-  , cycles: empty
-  , click: Nothing
-  , hover: Nothing
-  , snapPoint: Nothing
-  , lastEraserPoint: Nothing
-  , currentStroke: Nothing
-  , tool: LineTool
-  , windowWidth: 0
-  , windowHeight: 0
-  , background: Square
-  }
-
-inputs :: Array (Signal Action)
-inputs = []
-
-newStroke :: State -> Point -> Maybe Stroke
-newStroke s p =
-  case s.click of
-       Just c ->
-          case s.tool of
-               ArcTool -> Just $ (Arc c p p true)
-               LineTool -> Just $ Line c p
-               _ -> Nothing
-
-       Nothing -> Nothing
-
-update :: Action -> State -> State
+update :: Event -> State -> State
 update (Click p) s =
   let newPt = case snapToPoint p s.background (edges s.graph) of
                    Just sp -> sp
@@ -95,7 +52,7 @@ update (Click p) s =
 
 update (Move p) s =
   let sp = snapToPoint p s.background (edges s.graph)
-      newPt = case sp of Just sp -> sp
+      newPt = case sp of Just sp' -> sp'
                          _ -> p
    in s { hover = Just p
         , currentStroke = newStroke s newPt
@@ -128,6 +85,19 @@ update (WindowResize w h) s =
 
 update (ChangeBackground b) s =
   s {background = b, snapPoint = Nothing}
+
+update NoOp s = s
+
+newStroke :: State -> Point -> Maybe Stroke
+newStroke s p =
+  case s.click of
+       Just c ->
+          case s.tool of
+               ArcTool -> Just $ (Arc c p p true)
+               LineTool -> Just $ Line c p
+               _ -> Nothing
+
+       Nothing -> Nothing
 
 eraseLine :: State -> Point -> Point -> State
 eraseLine s ptFrom ptTo =

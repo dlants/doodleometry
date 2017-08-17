@@ -1,15 +1,19 @@
 module App.Graph where
 
 import Prelude
+
 import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
 import App.Helpers (rotatePast)
 import Data.Foldable (fold, foldr)
-import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, head, insert, insertBy, last, length, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
-import Data.Map (Map, alter, empty, keys, lookup, toList, update, values)
+import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, fromFoldable, head, insert, insertBy, last, length, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
+import Data.Map (Map, alter, empty, keys, lookup, toUnfoldable, update, values)
 import Data.Maybe (Maybe(..))
 import Data.Set (Set, member)
 import Data.Set (insert, empty) as Set
 import Data.Tuple (Tuple(..))
+
+mapToList :: forall k v. Map k v -> List (Tuple k v)
+mapToList = toUnfoldable
 
 -- a vertex is a point along with outbound strokes, organized in clockwise order and with the vertexPoint first
 newtype Graph = Graph (Map Point (List Stroke))
@@ -17,7 +21,7 @@ instance graphShow :: Show Graph where
   show (Graph g) =
     let showPt :: (Tuple Point (List Stroke)) -> String
         showPt (Tuple pt edges) = (show pt) <> ": " <> show edges
-     in "(Graph " <> (fold $ showPt <$> toList g) <> ")"
+     in "(Graph " <> (fold $ showPt <$> mapToList g) <> ")"
 
 emptyGraph :: Graph
 emptyGraph = Graph empty
@@ -102,7 +106,7 @@ findIntersections stroke g =
 
 applyIntersections :: Intersections -> Graph -> Graph
 applyIntersections intersections g =
-  cleanGraph $ foldr applyIntersection g $ toList intersections
+  cleanGraph $ foldr applyIntersection g $ mapToList intersections
   where
     applyIntersection (Tuple stroke strokes) g =
       addStrokes strokes $ removeStroke stroke g

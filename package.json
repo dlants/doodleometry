@@ -1,7 +1,7 @@
 {
   "name": "pux-starter-app",
-  "version": "9.0.0",
-  "description": "Starter Pux application using webpack with hot-reloading.",
+  "version": "12.0.0",
+  "description": "Pux starter app with hot-reloading and isomorphic rendering and routing.",
   "main": "support/index.js",
   "keywords": [
     "pux",
@@ -11,10 +11,10 @@
   ],
   "scripts": {
     "postinstall": "bower cache clean && bower install",
-    "clean": "rimraf static/dist && rimraf dist && rimraf output",
-    "build": "npm run clean && webpack --config ./webpack.production.config.js --progress --profile --colors",
-    "watch": "npm run clean && node ./webpack.config.js",
-    "serve": "http-server static --cors -p 3000",
+    "clean": "rimraf static/dist",
+    "build": "npm run clean && webpack --config ./webpack.config.js --progress --profile --colors",
+    "watch": "npm run clean && webpack-dev-server --content-base static/ --hot --inline --config webpack.config.js",
+    "serve": "npm run build && serve static",
     "start": "npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,26 +27,21 @@
   "bugs": {
     "url": "https://github.com/alexmingoia/pux-starter-app/issues"
   },
+  "engines": {
+    "node": "^6.0.0"
+  },
   "dependencies": {
     "bower": "^1.7.9",
-    "connect-history-api-fallback": "^1.2.0",
-    "express": "^4.13.4",
-    "html-webpack-plugin": "^2.15.0",
-    "http-server": "^0.9.0",
-    "purescript": "^0.10.5",
-    "purescript-psa": "^0.3.9",
-    "purs-loader": "^2.0.0",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0",
+    "preact": "^8.1.0",
+    "preact-compat": "^3.16.0",
+    "purescript": "^0.11.4",
+    "purescript-psa": "^0.5.1",
+    "purs-loader": "^3.0.0",
     "rimraf": "^2.5.2",
-    "webpack": "^2.1.0-beta.25"
-  },
-  "devDependencies": {
-    "css-loader": "^0.26.1",
-    "raw-loader": "^0.5.1",
-    "source-map-loader": "^0.1.5",
-    "style-loader": "^0.13.1",
-    "webpack-dev-middleware": "^1.8.3",
-    "webpack-hot-middleware": "^2.12.2"
+    "serve": "^5.1.5",
+    "webpack": "^2.3.2",
+    "webpack-dev-server": "^2.4.5",
+    "webpack-node-externals": "^1.5.4",
+    "xhr2": "^0.1.3"
   }
 }
