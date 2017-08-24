@@ -18,8 +18,8 @@ type WebApp = App (DOMEvent -> Event) Event State
 
 type ClientEffects = CoreEffects (AppEffects (history :: HISTORY, dom :: DOM))
 
-main :: String -> State -> Eff ClientEffects WebApp
-main url state = do
+main :: Eff ClientEffects WebApp
+main = do
   -- | Create a signal of size changes.
   windowSizeSignal <- sampleWindowSize =<< window
 
@@ -28,16 +28,11 @@ main url state = do
 
   -- | Start the app.
   app <- start
-    { initialState: state
+    { initialState: init
     , view
     , foldp
     , inputs: [resizeSignal] }
 
   -- | Render to the DOM
   renderToDOM "#app" app.markup app.input
-
-  -- | Return app to be used for hot reloading logic in support/client.entry.js
   pure app
-
-initialState :: State
-initialState = init
