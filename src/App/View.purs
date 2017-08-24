@@ -8,7 +8,7 @@ import App.ColorScheme (ColorScheme, toColor)
 import App.Cycle (Cycle(..))
 import App.Events (Event(..))
 import App.Geometry (Point(Point), Stroke(Arc, Line), distance, firstPoint, ptX, ptY, secondPoint, sweep)
-import App.Graph (edges)
+import App.Graph (Graph(..), edges)
 import App.State (State, Tool(..))
 import App.Tool.View (view) as ToolView
 import CSS.Color (toHexString)
@@ -27,7 +27,7 @@ import Data.Monoid (mempty)
 import Data.Tuple (Tuple(..))
 import Math (abs, pi)
 import Pux.DOM.Events (DOMEvent, onClick, onMouseDown, onMouseMove, onMouseUp)
-import Pux.DOM.HTML (HTML)
+import Pux.DOM.HTML (HTML, memoize)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
 import Text.Smolder.HTML.Attributes (className)
@@ -48,12 +48,12 @@ drawStroke strokeStyle s =
   let command = (mCmdString $ firstPoint s) <> (lCmdString s)
    in path ! strokeStyle ! (d command) $ pure unit
 
-drawStrokes :: List Stroke -> HTML Event
-drawStrokes strokes =
+drawStrokes :: Graph -> HTML Event
+drawStrokes = memoize \graph ->
   let
       strokeStyle :: Attribute
       strokeStyle = stroke "black" <> fill "transparent" <> className "stroke"
-   in g ! className "strokes" $ for_ strokes (drawStroke strokeStyle)
+   in g ! className "strokes" $ for_ (edges graph) (drawStroke strokeStyle)
 
 pathAttrs :: List Stroke -> Attribute
 pathAttrs strokes@(s1 : _) =
@@ -145,7 +145,7 @@ drawing state =
           height $ (toNumber state.windowHeight) # px
       $ do
         fillBackground state.background state.windowWidth state.windowHeight
-        drawStrokes (edges state.graph)
+        drawStrokes state.graph
         drawCycles state.tool state.cycles
         drawSnapPoint state.snapPoint
         drawCurrentStroke state.currentStroke
