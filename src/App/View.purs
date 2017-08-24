@@ -153,6 +153,6 @@ drawing state =
 view :: State -> HTML Event
 view state =
   div $ do
-    drawing state
-    ToolView.view state.tool
     BackgroundView.view state.background
+    ToolView.view state.tool
+    drawing state
