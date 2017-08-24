@@ -2,6 +2,7 @@ module App.Geometry where
 
 import Prelude
 import Data.Function (on)
+import Data.Function.Uncurried (Fn2, runFn2)
 import Data.List (List(..), concatMap, filter, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
 import Data.Map (Map, empty, insert, lookup, values)
 import Data.Maybe (Maybe(..))
@@ -45,16 +46,15 @@ scalePt (Point x y) c = Point (c * x) (c * y)
 
 normalize :: Point -> Point
 normalize p@(Point x y) =
-  let m = distance (Point 0.0 0.0) p
+  let m = runFn2 distance (Point 0.0 0.0) p
    in Point (x/m) (y/m)
 
 rotate :: Point -> Radians -> Point
 rotate (Point x y) theta =
   Point (x * (cos theta) - y * (sin theta)) (x * (sin theta) + y * (cos theta))
 
-ptAngle :: Point -> Point -> Radians
-ptAngle (Point x1 y1) (Point x2 y2) =
-  atan2 (y2 - y1) (x2 - x1)
+foreign import ptAngle :: Fn2 Point Point Radians
+foreign import distance :: Fn2 Point Point Number
 
 getAngleDiff :: Radians -> Radians -> Boolean -> Radians
 getAngleDiff a1 a2 ccw =
@@ -64,13 +64,11 @@ getAngleDiff a1 a2 ccw =
 
 ptSweep :: Point -> Point -> Point -> Boolean -> Radians
 ptSweep c p q ccw =
-  getAngleDiff (ptAngle c p) (ptAngle c q) ccw
+  getAngleDiff (runFn2 ptAngle c p) (runFn2 ptAngle c q) ccw
 
 mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
 
-distance :: Point -> Point -> Number
-distance (Point x1 y1) (Point x2 y2) = sqrt (pow (x1 - x2) 2.0 + pow (y1 - y2) 2.0)
 
 crossProduct :: Point -> Point -> Number
 crossProduct (Point x1 y1) (Point x2 y2) = x1 * y2 - x2 * y1
@@ -84,7 +82,7 @@ getNearestPoint p ps = foldl updateMax Nothing ps
   where
     updateMax :: Maybe Point -> Point -> Maybe Point
     updateMax Nothing p1 = Just p1
-    updateMax (Just p1) p2 = if (distance p p1) < (distance p p2) then Just p1 else Just p2
+    updateMax (Just p1) p2 = if (runFn2 distance p p1) < (runFn2 distance p p2) then Just p1 else Just p2
 
 data Stroke = Line Point Point
             | Arc Point Point Point Boolean
@@ -138,13 +136,13 @@ outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
   atan2 (y2 - y1) (x2 - x1)
 
 outboundAngle (Arc c p _ ccw) =
-  let a = ptAngle c p
+  let a = runFn2 ptAngle c p
    in atan2Radians $ a + if ccw then (pi / 2.0) else (- pi / 2.0)
 
 inboundAngle :: Stroke -> Radians
 inboundAngle s@(Line _ _) = outboundAngle s
 inboundAngle (Arc c _ q ccw) =
-  let a = ptAngle c q
+  let a = runFn2 ptAngle c q
    in a + if ccw then (pi / 2.0) else (- pi / 2.0)
 
 -- communicates how aggressively the curve turns. Lines don't turn at all, so have curvature 0
@@ -154,12 +152,13 @@ inboundAngle (Arc c _ q ccw) =
 curvature :: Stroke -> Number
 curvature (Line _ _) = 0.0
 curvature (Arc c p _ ccw) =
-  let r = (distance c p)
+  let r = (runFn2 distance c p)
    in if ccw then 1.0 / r else - 1.0 / r
 
-strokeLength :: Stroke -> Number
-strokeLength (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
-strokeLength a@(Arc c p _ _) = (sweep a) * (distance c p)
+foreign import strokeLength :: Stroke -> Number
+-- strokeLength :: Stroke -> Number
+-- strokeLength (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
+-- strokeLength a@(Arc c p _ _) = (sweep a) * (runFn2 distance c p)
 
 -- clockwise rotation -> positive angle
 -- ->/ == negative
@@ -219,7 +218,7 @@ withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
    in (between x x1 x2) && (between y y1 y2)
 
 withinBounds arc@(Arc c p _ ccw) sol =
-  let adiff = getAngleDiff (ptAngle c p) (ptAngle c sol) ccw
+  let adiff = getAngleDiff (runFn2 ptAngle c p) (runFn2 ptAngle c sol) ccw
    in (abs adiff) <= (abs (sweep arc))
 
 intersect :: Stroke -> Stroke -> (List Point)
@@ -253,7 +252,7 @@ intersect (Line p p') (Line q q') =
 intersect line@(Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p q ccw) =
   let check sol = (withinBounds line sol) && (withinBounds arc sol)
    in if lx2 == lx1 then
-     let r = distance c p
+     let r = runFn2 distance c p
          disc = r * r - (pow (cx - lx1) 2.0)
 
          getSolution d =
@@ -272,7 +271,7 @@ intersect line@(Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p
           b = ly1 - (m * lx1)
           cA = m * m + 1.0
           cB = 2.0 * (m * b - m * cy - cx)
-          r = distance c p
+          r = runFn2 distance c p
           cC = cy * cy - r * r + cx * cx - 2.0 * b * cy + b * b
           disc = cB*cB - 4.0 * cA * cC
 
@@ -290,9 +289,9 @@ intersect line@(Line (Point lx1 ly1) (Point lx2 ly2)) arc@(Arc c@(Point cx cy) p
                  | otherwise -> mapMaybe getSolution (sqrt disc : -(sqrt disc) : Nil)
 
 intersect arc1@(Arc c1 p1 q1 ccw1) arc2@(Arc c2 p2 q2 ccw2) =
-  let r1 = distance c1 p1
-      r2 = distance c2 p2
-      d = distance c1 c2
+  let r1 = runFn2 distance c1 p1
+      r2 = runFn2 distance c2 p2
+      d = runFn2 distance c1 c2
       a = (r1 * r1 - r2 * r2 + d * d) / (2.0 * d)
       cvec = normalize (c2 - c1)
       check sol = (withinBounds arc1 sol) && (withinBounds arc2 sol)
@@ -317,7 +316,7 @@ insertSplitStroke  stroke splitStroke intersections =
 makePtMap :: List Point -> Map Point Point
 makePtMap points =
   let mapPoint map p =
-        let nearbyPt = head $ filter (\existingPt -> distance p existingPt < 0.05) (values map)
+        let nearbyPt = head $ filter (\existingPt -> (runFn2 distance p existingPt) < 0.05) (values map)
          in case nearbyPt of
                  Just pt -> insert p pt map
                  Nothing -> insert p p map

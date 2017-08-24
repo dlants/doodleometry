@@ -3,7 +3,7 @@ module App.Cycle where
 import Prelude
 
 import App.ColorScheme (ColorScheme(..))
-import App.Geometry (Intersections, Path, Stroke, findWrap, firstPoint, flipStroke, secondPoint)
+import App.Geometry (Path, Stroke, Intersections, findWrap, firstPoint, flipStroke, secondPoint)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
 import Data.List (List(Nil), all, drop, elem, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
@@ -88,6 +88,11 @@ copyColors oldMap newMap =
             alterColor Nothing = Nothing
          in alter alterColor oldCycle cMap
   in foldl copyColor newMap (mapToList oldMap)
+
+updateCycles :: CyclesMap -> Graph -> Intersections -> CyclesMap
+updateCycles cycles g intersections =
+  let trimmedCycles = trimCycles cycles intersections
+   in foldl (\c s -> insertStroke s c g) trimmedCycles (edges g)
 
 updateCyclesForInsert :: CyclesMap -> Graph -> Intersections -> CyclesMap
 updateCyclesForInsert cycles g intersections =

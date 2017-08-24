@@ -2,7 +2,7 @@ module App.Events where
 
 import App.Background (Background)
 import App.ColorScheme (ColorScheme)
-import App.Cycle (Cycle, updateCyclesForInsert, updateCyclesForRemove)
+import App.Cycle (Cycle, updateCycles, updateCyclesForRemove)
 import App.Geometry (Point, Stroke(Line, Arc))
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
@@ -121,4 +121,4 @@ updateForStroke s stroke
                        Just ss -> ss
                        _ -> singleton stroke
     newGraph = applyIntersections intersections s.graph
-    newCycles = updateCyclesForInsert s.cycles newGraph intersections
+    newCycles = updateCycles s.cycles newGraph intersections

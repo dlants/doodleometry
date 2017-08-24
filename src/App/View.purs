@@ -18,13 +18,13 @@ import Control.Monad.Except (runExcept)
 import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
 import Data.Either (either)
 import Data.Foldable (elem, for_)
+import Data.Function.Uncurried (runFn2)
 import Data.Int (toNumber)
 import Data.List (List, foldl, (:))
 import Data.Map (Map, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
 import Data.Tuple (Tuple(..))
-import Debug.Trace (trace)
 import Math (abs, pi)
 import Pux.DOM.Events (DOMEvent, onClick, onMouseDown, onMouseMove, onMouseUp)
 import Pux.DOM.HTML (HTML)
@@ -75,7 +75,7 @@ lCmdString arc@(Arc c p q ccw) =
 arcCmdString :: Stroke -> String
 arcCmdString arc@(Arc c p q ccw) =
   let endPoint = secondPoint arc
-      r = distance c p
+      r = runFn2 distance c p
       s = sweep arc
    in "A "
       <> show r <> " " -- rx
