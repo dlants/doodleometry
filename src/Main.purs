@@ -2,7 +2,6 @@ module Main where
 
 import Prelude
 import App.Events (AppEffects, Event(..), foldp)
--- import App.Routes (match)
 import App.State (State, init)
 import App.View (view)
 import Control.Monad.Eff (Eff)
@@ -11,9 +10,9 @@ import DOM.HTML (window)
 import DOM.HTML.Types (HISTORY)
 import Pux (CoreEffects, App, start)
 import Pux.DOM.Events (DOMEvent)
-import Pux.DOM.History (sampleURL)
 import Pux.Renderer.React (renderToDOM)
 import Signal ((~>))
+import SampleWindow (sampleWindowSize)
 
 type WebApp = App (DOMEvent -> Event) Event State
 
@@ -21,18 +20,18 @@ type ClientEffects = CoreEffects (AppEffects (history :: HISTORY, dom :: DOM))
 
 main :: String -> State -> Eff ClientEffects WebApp
 main url state = do
-  -- | Create a signal of URL changes.
-  urlSignal <- sampleURL =<< window
+  -- | Create a signal of size changes.
+  windowSizeSignal <- sampleWindowSize =<< window
 
   -- | Map a signal of URL changes to PageView actions.
-  -- let routeSignal = urlSignal ~> \r -> PageView (match r)
+  let resizeSignal = windowSizeSignal ~> \{width, height} -> WindowResize width height
 
   -- | Start the app.
   app <- start
     { initialState: state
     , view
     , foldp
-    , inputs: [] } -- routeSignal ] }
+    , inputs: [resizeSignal] }
 
   -- | Render to the DOM
   renderToDOM "#app" app.markup app.input
