@@ -4,6 +4,7 @@ import Prelude
 
 import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
 import App.Helpers (rotatePast)
+import Control.MonadPlus (guard)
 import Data.Foldable (fold, foldr)
 import Data.List (List(..), any, concat, delete, drop, dropWhile, elem, filter, foldl, fromFoldable, head, insert, insertBy, last, length, mapMaybe, nub, nubBy, reverse, singleton, snoc, sort, takeWhile, (:))
 import Data.Map (Map, alter, empty, keys, lookup, toUnfoldable, update, values)
@@ -26,9 +27,18 @@ instance graphShow :: Show Graph where
 emptyGraph :: Graph
 emptyGraph = Graph empty
 
+-- this guarantees we only get one entry per edge
 edges :: Graph -> List Stroke
 edges (Graph g) =
-  nubBy unorderedEq $ concat $ values g
+  let points = sort $ keys g
+   in do
+     point <- points
+     let strokes = case lookup point g of
+          Just strokes -> strokes
+          _ -> Nil
+     stroke <- strokes
+     guard $ secondPoint stroke >= point
+     pure stroke
 
 points :: Graph -> List Point
 points (Graph g) =

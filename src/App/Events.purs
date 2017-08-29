@@ -13,7 +13,7 @@ import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import Network.HTTP.Affjax (AJAX)
-import Prelude ((==))
+import Prelude (unit, (==))
 import Pux (EffModel, noEffects)
 
 data Event

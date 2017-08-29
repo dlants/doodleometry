@@ -332,25 +332,25 @@ intersectMultiple stroke strokes =
            Nil -> Nil
            newPoints -> pure $ Tuple toIntersect newPoints
 
-    getPoints (Line p1 p2) = p1 : p2 : Nil
-    getPoints (Arc c p q _) = c : p : q : Nil
+    --getPoints (Line p1 p2) = p1 : p2 : Nil
+    --getPoints (Arc c p q _) = c : p : q : Nil
 
     -- we don't want slight inequalities in floating point arithmetic to cause multiple nearby points to be created
     -- since we rely on point equality to do cycle detection.
     -- if an intersection point is near an existing point, or another intersection point, replace it
-    ptMap = makePtMap $ (concatMap getPoints strokes) <> (concatMap snd intersectionTuples)
-    shrunkTuples =
-      let shrinkPoint pt = case lookup pt ptMap of
-                                Just newPt -> newPt
-                                Nothing -> pt
-       in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
+    --ptMap = makePtMap $ (concatMap getPoints strokes) <> (concatMap snd intersectionTuples)
+    --shrunkTuples =
+    --  let shrinkPoint pt = case lookup pt ptMap of
+    --                            Just newPt -> newPt
+    --                            Nothing -> pt
+    --   in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
 
     insertPoints i (Tuple edge points) =
       insertSplitStroke edge (split edge points) i
 
-    intersections = foldl insertPoints empty shrunkTuples
+    intersections = foldl insertPoints empty intersectionTuples
   in
-    insertSplitStroke stroke (split stroke (concatMap snd shrunkTuples)) intersections
+  insertSplitStroke stroke (split stroke (concatMap snd intersectionTuples)) intersections
 
 nubAdjacent :: forall a. (Eq a) => List a -> List a
 nubAdjacent (a : b : rest) | a == b = (nubAdjacent $ a : rest)
