@@ -3,7 +3,7 @@ module App.Geometry where
 import Prelude
 import Data.Function (on)
 import Data.Function.Uncurried (Fn2, runFn2)
-import Data.List (List(..), concatMap, filter, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
+import Data.List (List(..), concatMap, filter, find, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
 import Data.Map (Map, empty, insert, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
@@ -316,17 +316,6 @@ insertPath ::  Intersections -> Stroke -> Path -> Intersections
 insertPath intersections stroke splitStroke =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
 
--- look over the points in order. If a point is close to an earlier point, map from that point to the earlier point
-makePtMap :: List Point -> Map Point Point
-makePtMap points =
-  let mapPoint map p =
-        let nearbyPt = head $ filter (\existingPt -> (runFn2 distance p existingPt) < 0.05) (values map)
-         in case nearbyPt of
-                 Just pt -> insert p pt map
-                 Nothing -> insert p p map
-
-   in foldl mapPoint empty points
-
 roundPt :: Point -> Point
 roundPt (Point x y) =
   let acc = 1000.0
@@ -341,18 +330,19 @@ intersectMultiple stroke strokes =
            Nil -> Nil
            newPoints -> pure $ Tuple toIntersect newPoints
 
-    --getPoints (Line p1 p2) = p1 : p2 : Nil
-    --getPoints (Arc c p q _) = c : p : q : Nil
+    getPoints (Line p1 p2) = p1 : p2 : Nil
+    getPoints (Arc c p q _) = c : p : q : Nil
 
     -- we don't want slight inequalities in floating point arithmetic to cause multiple nearby points to be created
     -- since we rely on point equality to do cycle detection.
     -- if an intersection point is near an existing point, or another intersection point, replace it
-    --ptMap = makePtMap $ (concatMap getPoints strokes) <> (concatMap snd intersectionTuples)
-    --shrunkTuples =
-    --  let shrinkPoint pt = case lookup pt ptMap of
-    --                            Just newPt -> newPt
-    --                            Nothing -> pt
-    --   in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
+    allPoints = (concatMap getPoints strokes) <> concatMap snd intersectionTuples
+
+    shrunkTuples =
+      let shrinkPoint pt = case find (\existingPoint -> (runFn2 distance pt existingPoint) < 0.05) allPoints of
+                                Just newPt -> newPt
+                                Nothing -> pt
+       in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
 
     insertPoints i (Tuple edge points) =
       insertPath i edge (split edge points)
