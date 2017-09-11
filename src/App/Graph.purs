@@ -2,7 +2,7 @@ module App.Graph where
 
 import Prelude
 
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, secondPoint, unorderedEq)
+import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, roundStroke, secondPoint, unorderedEq)
 import App.Helpers (rotatePast)
 import Control.MonadPlus (guard)
 import Data.Foldable (fold, foldr)
@@ -61,7 +61,8 @@ addStroke' s (Graph g) =
 -- push an unordered stroke into a graph
 addStroke :: Stroke -> Graph -> Graph
 addStroke s g =
-  addStroke' (flipStroke s) $ addStroke' s g
+  let roundedStroke = roundStroke s
+   in addStroke' (flipStroke roundedStroke) $ addStroke' roundedStroke g
 
 addStrokes :: List Stroke -> Graph -> Graph
 addStrokes strokes g =

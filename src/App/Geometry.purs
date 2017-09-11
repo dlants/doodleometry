@@ -4,10 +4,10 @@ import Prelude
 import Data.Function (on)
 import Data.Function.Uncurried (Fn2, runFn2)
 import Data.List (List(..), concatMap, filter, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
-import Data.Map (Map, empty, insert, lookup, values)
+import Data.Map (Map, empty, insert, values)
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
-import Math (Radians, abs, atan2, cos, pi, pow, sin, sqrt, trunc)
+import Math (Radians, abs, atan2, cos, pi, pow, round, sin, sqrt, trunc)
 
 data Point = Point Number Number
 
@@ -183,7 +183,11 @@ findWrap path@(s1 : rest) =
 
 flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1
-flipStroke (Arc c p q ccw) = (Arc c q p (not ccw))
+flipStroke (Arc c p q ccw) = Arc c q p (not ccw)
+
+roundStroke :: Stroke -> Stroke
+roundStroke (Line p1 p2) = Line (roundPt p1) (roundPt p2)
+roundStroke (Arc c p q ccw) = Arc (roundPt c) (roundPt p) (roundPt q) ccw
 
 positiveRadians :: Radians -> Radians
 positiveRadians a
@@ -308,8 +312,8 @@ intersect arc1@(Arc c1 p1 q1 ccw1) arc2@(Arc c2 p2 q2 ccw2) =
 
 intersect a@(Arc _ _ _ _) l@(Line _ _) = intersect l a
 
-insertSplitStroke ::  Stroke -> Path -> Intersections -> Intersections
-insertSplitStroke  stroke splitStroke intersections =
+insertPath ::  Intersections -> Stroke -> Path -> Intersections
+insertPath intersections stroke splitStroke =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
 
 -- look over the points in order. If a point is close to an earlier point, map from that point to the earlier point
@@ -322,6 +326,11 @@ makePtMap points =
                  Nothing -> insert p p map
 
    in foldl mapPoint empty points
+
+roundPt :: Point -> Point
+roundPt (Point x y) =
+  let acc = 1000.0
+   in Point ((round $ x * acc) / acc) ((round $ y * acc) / acc)
 
 intersectMultiple :: Stroke -> List Stroke -> Intersections
 intersectMultiple stroke strokes =
@@ -346,11 +355,11 @@ intersectMultiple stroke strokes =
     --   in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
 
     insertPoints i (Tuple edge points) =
-      insertSplitStroke edge (split edge points) i
+      insertPath i edge (split edge points)
 
     intersections = foldl insertPoints empty intersectionTuples
   in
-  insertSplitStroke stroke (split stroke (concatMap snd intersectionTuples)) intersections
+    insertPath intersections stroke (split stroke (concatMap snd intersectionTuples))
 
 nubAdjacent :: forall a. (Eq a) => List a -> List a
 nubAdjacent (a : b : rest) | a == b = (nubAdjacent $ a : rest)

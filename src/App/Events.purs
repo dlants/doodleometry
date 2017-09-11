@@ -1,33 +1,33 @@
 module App.Events where
 
 import App.Background (Background)
-import App.ColorScheme (ColorScheme)
 import App.Cycle (Cycle, updateCycles, updateCyclesForRemove)
 import App.Geometry (Point, Stroke(Line, Arc))
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
 import App.State (State, Tool(LineTool, ArcTool, EraserTool))
+import CSS.Color (Color)
 import Data.Function (($))
-import Data.List (singleton)
+import Data.List (List(..), singleton)
 import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import Network.HTTP.Affjax (AJAX)
-import Prelude (unit, (==))
+import Prelude ((==))
 import Pux (EffModel, noEffects)
 
 data Event
-  = Click Point
+  = Draw Point
   | EraserDown Point
   | EraserMove Point
   | EraserUp Point
   | Move Point
   | Select Tool
-  | Color Cycle ColorScheme
+  | SelectCycle Cycle
+  | ApplyColor Cycle Color
   | WindowResize Int Int
   | ChangeBackground Background
   | NoOp
-
 
 type AppEffects fx = (ajax :: AJAX | fx)
 
@@ -35,7 +35,7 @@ foldp :: ∀ fx. Event -> State -> EffModel State Event (AppEffects fx)
 foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State
-update (Click p) s =
+update (Draw p) s =
   let newPt = case snapToPoint p s.background (edges s.graph) of
                    Just sp -> sp
                    _ -> p
@@ -59,16 +59,17 @@ update (Move p) s =
         , snapPoint = sp
         }
 
-update (Select t) s
-  = s { tool = t
+update (Select tool) s
+  = s { tool = tool
       , click = Nothing
       , hover = Nothing
       , snapPoint = Nothing
       , currentStroke = Nothing
+      , selection = Nil
       }
 
-update (Color cycle colorScheme) s =
-  s {cycles = Map.update (\color -> (Just colorScheme)) cycle s.cycles}
+update (ApplyColor cycle color) s =
+  s {cycles = Map.update (\color -> (Just color)) cycle s.cycles}
 
 update (EraserDown pt) s =
   let eraserPt = if s.tool == EraserTool then Just pt else Nothing
@@ -87,6 +88,8 @@ update (ChangeBackground b) s =
   s {background = b, snapPoint = Nothing}
 
 update NoOp s = s
+
+update (SelectCycle cycle) state = state {selection = singleton cycle}
 
 newStroke :: State -> Point -> Maybe Stroke
 newStroke s p =

@@ -2,10 +2,10 @@ module App.Cycle where
 
 import Prelude
 
-import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Path, Stroke, Intersections, findWrap, firstPoint, flipStroke, secondPoint)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
+import CSS.Color (Color, white)
 import Data.List (List(Nil), all, drop, elem, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
 import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, toUnfoldable)
 import Data.Maybe (Maybe(..))
@@ -74,7 +74,7 @@ joinCycles c1 c2 stroke =
   in
     Cycle (simplifyCycle $ path1 <> path2)
 
-type CyclesMap = Map Cycle ColorScheme
+type CyclesMap = Map Cycle Color
 
 findCycles :: Graph -> CyclesMap
 findCycles g =
@@ -82,7 +82,7 @@ findCycles g =
 
 copyColors :: CyclesMap -> CyclesMap -> CyclesMap
 copyColors oldMap newMap =
-  let copyColor :: CyclesMap -> (Tuple Cycle ColorScheme) -> CyclesMap
+  let copyColor :: CyclesMap -> (Tuple Cycle Color) -> CyclesMap
       copyColor cMap (Tuple oldCycle oldColor) =
         let alterColor (Just _) = Just oldColor
             alterColor Nothing = Nothing
@@ -116,7 +116,7 @@ trimCycles cMap intersections =
 splitCycles :: CyclesMap -> Intersections -> CyclesMap
 splitCycles cMap intersections =
   let
-    insertCycle :: (Tuple Cycle ColorScheme) -> CyclesMap -> CyclesMap
+    insertCycle :: (Tuple Cycle Color) -> CyclesMap -> CyclesMap
     insertCycle (Tuple c sch) cMap' =
       insert (splitCycle intersections c) sch cMap'
   in
@@ -137,7 +137,7 @@ insertStroke :: Stroke -> CyclesMap -> Graph -> CyclesMap
 insertStroke stroke cycles g =
   let
     newCycles = nub $ mapMaybe (findCycle g) $ stroke : (flipStroke stroke) : Nil
-   in foldl (\m newCycle -> insert newCycle White m) cycles newCycles
+   in foldl (\m newCycle -> insert newCycle white m) cycles newCycles
    {--
     case newCycles of
          Nil -> cycles -- no new cycles, just return old cycles

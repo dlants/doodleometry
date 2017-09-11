@@ -2,11 +2,10 @@ module App.Tool.View where
 
 import Prelude
 
-import App.ColorScheme (ColorScheme(..))
 import App.Events (Event(..))
-import App.State (Tool(EraserTool, ColorTool, ArcTool, LineTool))
+import App.State (Tool(..))
 import CSS.Border (border, solid)
-import CSS.Color (black, gray)
+import CSS.Color (black, gray, red, green, blue)
 import CSS.Display (absolute, position)
 import CSS.Geometry (left, top)
 import CSS.Size (px)
@@ -21,10 +20,11 @@ toolBelt :: Array Tool
 toolBelt =
   [ LineTool
   , ArcTool
-  , ColorTool Red
-  , ColorTool Green
-  , ColorTool Blue
+  , ColorTool red
+  , ColorTool green
+  , ColorTool blue
   , EraserTool
+  , SelectTool
   ]
 
 drawTool :: Tool -> Tool -> HTML Event
@@ -38,6 +38,7 @@ drawTool selected tool =
                    ArcTool -> text "Arc"
                    ColorTool color -> text $ "Color: " <> show color
                    EraserTool -> text "Erase"
+                   SelectTool -> text "Select"
 
 view :: Tool -> HTML Event
 view tool =

@@ -1,25 +1,28 @@
 module App.State where
 
 import Prelude
+
 import App.Background (Background(..))
-import App.ColorScheme (ColorScheme)
 import App.Cycle (Cycle)
 import App.Geometry (Point, Stroke)
 import App.Graph (Graph, emptyGraph)
+import CSS.Color (Color)
+import Data.List (List(..))
 import Data.Map (Map, empty)
 import Data.Maybe (Maybe(..))
 
 data Tool
   = LineTool
   | ArcTool
-  | ColorTool ColorScheme
+  | ColorTool Color
   | EraserTool
+  | SelectTool
 
 derive instance eqTool :: Eq Tool
 
 type State =
   { graph :: Graph
-  , cycles :: Map Cycle ColorScheme
+  , cycles :: Map Cycle Color
   , click :: Maybe Point
   , hover :: Maybe Point
   , snapPoint :: Maybe Point
@@ -29,6 +32,7 @@ type State =
   , windowWidth :: Int
   , windowHeight :: Int
   , background :: Background
+  , selection :: List Cycle
   }
 
 -- the actual width and height will be overwritten in index.js
@@ -45,4 +49,5 @@ init =
   , windowWidth: 1000
   , windowHeight: 1000
   , background: Square
+  , selection: Nil
   }
