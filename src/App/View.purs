@@ -30,7 +30,7 @@ import Pux.DOM.HTML (HTML, memoize)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
 import Text.Smolder.HTML.Attributes (className)
-import Text.Smolder.Markup (Attribute, (!), (#!))
+import Text.Smolder.Markup (Attribute, Markup, (!), (#!))
 import Text.Smolder.SVG (circle, g, line, path, svg)
 import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, strokeDasharray, x1, x2, y1, y2)
 
@@ -42,17 +42,17 @@ drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
        ! (y2 $ show py2)
        ! strokeStyle
 
-drawStroke :: Attribute -> Stroke -> HTML Event
-drawStroke strokeStyle s =
+drawStroke :: Stroke -> HTML Event
+drawStroke s =
   let command = (mCmdString $ firstPoint s) <> (lCmdString s)
-   in path ! strokeStyle ! (d command) $ pure unit
+   in path ! (d command) $ pure unit
 
 drawStrokes :: Graph -> HTML Event
 drawStrokes = memoize \graph ->
   let
       strokeStyle :: Attribute
       strokeStyle = stroke "black" <> fill "transparent" <> className "stroke"
-   in g ! className "strokes" $ for_ (edges graph) (drawStroke strokeStyle)
+   in g ! className "strokes" $ for_ (edges graph) \stroke -> drawStroke stroke ! strokeStyle
 
 pathAttrs :: List Stroke -> Attribute
 pathAttrs strokes@(s1 : _) =
@@ -89,9 +89,9 @@ arcCmdString arc@(Arc c p q ccw) =
 
 arcCmdString _ = ""
 
-drawCycle :: Color -> Cycle -> HTML Event
-drawCycle color cycle@(Cycle strokes) =
-  path ! pathAttrs strokes ! stroke "black" ! (fill $ toHexString color) $ pure unit
+drawCycle :: Cycle -> HTML Event
+drawCycle cycle@(Cycle strokes) =
+  path ! pathAttrs strokes $ pure unit
 
 mapToList :: forall k v. Map k v -> List (Tuple k v)
 mapToList = toUnfoldable
@@ -101,7 +101,8 @@ drawCycles tool cycles =
   let handler cycle = case tool of ColorTool newColor -> onClick $ \_ -> ApplyColor cycle newColor
                                    SelectTool -> onClick $ \_ -> SelectCycle cycle
                                    _ -> onClick (const $ NoOp)
-   in g ! className "cycles" $ for_ (mapToList cycles) $ \(Tuple cycle color) -> (drawCycle color cycle) #! handler cycle
+      draw cycle color = (drawCycle cycle) ! stroke "black" ! (fill $ toHexString color)
+   in g ! className "cycles" $ for_ (mapToList cycles) $ \(Tuple cycle color) -> (draw cycle color) #! handler cycle
 
 drawPoint :: Point -> Number -> HTML Event
 drawPoint (Point x y) size =
@@ -113,17 +114,14 @@ drawSnapPoint :: Maybe Point -> HTML Event
 drawSnapPoint Nothing = g $ pure unit
 drawSnapPoint (Just p) = drawPoint p 3.0
 
-currentStrokeAttrs:: Attribute
-currentStrokeAttrs = stroke "black" <> strokeDasharray "5 5" <> fill "transparent"
-
 drawCurrentStroke :: Maybe Stroke -> HTML Event
 drawCurrentStroke Nothing = g $ pure unit
 drawCurrentStroke (Just s) =
-  drawStroke currentStrokeAttrs s
+  drawStroke s ! stroke "gray" ! strokeDasharray "5 5" ! fill "transparent"
 
 drawSelection :: List Cycle -> HTML Event
 drawSelection cycles =
-  g ! className "selected" $ for_ cycles $ drawCycle red
+  g ! className "selected" $ for_ cycles \cycle -> drawCycle cycle ! stroke "red" ! fill "transparent"
 
 readPageXY :: DOMEvent -> {clientX:: Number, clientY:: Number}
 readPageXY ev =
