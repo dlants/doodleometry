@@ -3,8 +3,8 @@ module Test.Fixtures where
 import Prelude
 import App.Cycle
 import App.Geometry
-import App.ColorScheme (ColorScheme(..))
 import App.Graph (addStroke, addStrokes, emptyGraph)
+import CSS.Color (red)
 import Data.List (List(..), (:))
 import Data.Map (empty, insert)
 
@@ -55,4 +55,4 @@ g4 = addStrokes (
     Nil
   ) emptyGraph
 
-cycles = insert c1234 Red $ empty
+cycles = insert c1234 red $ empty

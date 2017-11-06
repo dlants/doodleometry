@@ -27,18 +27,16 @@ instance graphShow :: Show Graph where
 emptyGraph :: Graph
 emptyGraph = Graph empty
 
--- this guarantees we only get one entry per edge
+-- we store two copies of each edge -- since we need to be able to traverse the edge in both directions.
+-- this guarantees we only get one copy of each edge
 edges :: Graph -> List Stroke
 edges (Graph g) =
-  let points = sort $ keys g
-   in do
-     point <- points
-     let strokes = case lookup point g of
-          Just strokes -> strokes
-          _ -> Nil
-     stroke <- strokes
-     guard $ secondPoint stroke >= point
-     pure stroke
+  let allEdges = do
+        point <- keys g
+        case lookup point g of
+             Just strokes -> strokes
+             _ -> Nil
+   in nubBy unorderedEq allEdges
 
 points :: Graph -> List Point
 points (Graph g) =
@@ -60,9 +58,7 @@ addStroke' s (Graph g) =
 
 -- push an unordered stroke into a graph
 addStroke :: Stroke -> Graph -> Graph
-addStroke s g =
-  let roundedStroke = roundStroke s
-   in addStroke' (flipStroke roundedStroke) $ addStroke' roundedStroke g
+addStroke s g = addStroke' (flipStroke s) $ addStroke' s g
 
 addStrokes :: List Stroke -> Graph -> Graph
 addStrokes strokes g =

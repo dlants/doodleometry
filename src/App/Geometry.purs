@@ -333,7 +333,7 @@ intersectMultiple stroke strokes =
     getPoints (Line p1 p2) = p1 : p2 : Nil
     getPoints (Arc c p q _) = c : p : q : Nil
 
-    -- we don't want slight inequalities in floating point arithmetic to cause multiple nearby points to be created
+    -- we don't want slight imprecision in floating point arithmetic to cause multiple nearby points to be created
     -- since we rely on point equality to do cycle detection.
     -- if an intersection point is near an existing point, or another intersection point, replace it
     allPoints = (concatMap getPoints strokes) <> concatMap snd intersectionTuples

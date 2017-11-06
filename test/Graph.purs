@@ -3,7 +3,6 @@ module Test.Graph where
 import Prelude
 import App.Graph
 import Test.Fixtures
-import App.ColorScheme (ColorScheme(..))
 import App.Cycle (Cycle(..), cut, joinCycles)
 import App.Geometry (Point(..), Stroke(..), flipStroke)
 import Data.List (List(..), singleton, (:))

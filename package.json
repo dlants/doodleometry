@@ -28,9 +28,6 @@
   "bugs": {
     "url": "https://github.com/dlants/doodleometry/issues"
   },
-  "engines": {
-    "node": "^4.0.0"
-  },
   "dependencies": {
     "bower": "^1.7.9",
     "preact": "^8.1.0",

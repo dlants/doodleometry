@@ -3,7 +3,6 @@ module Test.Cycle where
 import Prelude
 import Test.Fixtures
 import App.Cycle
-import App.ColorScheme (ColorScheme(..))
 import App.Geometry (Point(..), Stroke(..), angleDiff, findWrap, flipStroke)
 import App.Graph (addStroke, emptyGraph, getEdgesForPt, getNextEdge)
 import Data.List (List(..), singleton, (:))
@@ -45,7 +44,7 @@ spec = do
                  )
           )
 
-    describeOnly "simplifyCycle" do
+    describe "simplifyCycle" do
       it "should not simplifyCycle a cycle" do
         simplifyCycle ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil) `shouldEqual`
           ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil)
