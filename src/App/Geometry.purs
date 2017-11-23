@@ -4,7 +4,8 @@ import Prelude
 import Data.Function (on)
 import Data.Function.Uncurried (Fn2, runFn2)
 import Data.List (List(..), concatMap, filter, find, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
-import Data.Map (Map, empty, insert, values)
+import Data.Map (Map, empty, fromFoldable, insert)
+import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Math (Radians, abs, atan2, cos, pi, pow, round, sin, sqrt, trunc)
@@ -24,7 +25,7 @@ instance ptEq :: Eq Point where
   eq (Point x1 y1) (Point x2 y2) = x1 == x2 && y1 == y2
 
 instance ptShow :: Show Point where
-  show (Point x y) = "(" <> show x <> ", " <> show y <> ")"
+  show (Point x y) = "(Point " <> show x <> " " <> show y <> ")"
 
 instance ptRing :: Ring Point where
   sub (Point x1 y1) (Point x2 y2) = Point (x1 - x2) (y1 - y2)
@@ -97,10 +98,10 @@ unorderedEq s1 s2 = s1 == s2 || (flipStroke s1) == s2
 
 instance strokeShow :: Show Stroke where
   show (Line p1 p2) =
-    "[" <> show p1 <> " --- " <> show p2 <> "]"
+    "(Line " <> show p1 <> " " <> show p2 <> ")"
 
   show (Arc c p q ccw) =
-    "( center: " <> show c <> ", p: " <> show p <> ", q: " <> show q <> ", ccw: " <> show ccw <> ")"
+    "(Arc " <> show c <> " " <> show p <> " " <> show q <> " " <> show ccw <> ")"
 
 compareMap :: forall a. (Ord a) => List (Stroke -> a) -> Stroke -> Stroke -> Ordering
 compareMap (fn : rest) s1 s2 = case compare (fn s1) (fn s2) of
@@ -113,6 +114,24 @@ instance strokeOrd :: Ord Stroke where
           <> (compare `on` (outboundAngle >>> truncTo5))
           <> (compare `on` curvature)
           <> (compare `on` strokeLength)
+
+-- compares by outbound angle using an approximation.
+-- for acs, we step away along the arc by a small amount, and then compare based on the slopes of the resulting lines.
+-- this is done so that we are robust to small errors in computing the edge points and outbound angles.
+compareOutbound :: Stroke -> Stroke -> Ordering
+compareOutbound a b =
+  let
+    getTheta :: Stroke -> Number
+    getTheta (Line (Point x1 y1) (Point x2 y2)) = atan2 (y2 - y1) (x2 - x1)
+    getTheta (Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
+      let r = runFn2 distance c p1
+          startAngle = atan2 (p1y - cy) (p1x - cx)
+          adjustedAngle = startAngle + (if ccw then 0.001 else - 0.001)
+          endx = cx + r * cos adjustedAngle
+          endy = cy + r * sin adjustedAngle
+       in atan2 (endy - p1y) (endx - p1x)
+
+  in compare (getTheta a) (getTheta b)
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
@@ -321,8 +340,13 @@ roundPt (Point x y) =
   let acc = 1000.0
    in Point ((round $ x * acc) / acc) ((round $ y * acc) / acc)
 
-intersectMultiple :: Stroke -> List Stroke -> Intersections
-intersectMultiple stroke strokes =
+intersectMap :: Stroke -> List Stroke -> Map Stroke (List Point)
+intersectMap stroke strokes =
+  let makeTuple s =  Tuple s (intersect stroke s)
+   in fromFoldable $ makeTuple <$> strokes
+
+splitMap :: Stroke -> List Stroke -> Intersections
+splitMap stroke strokes =
   let
     intersectionTuples = do
       toIntersect <- strokes
@@ -342,14 +366,15 @@ intersectMultiple stroke strokes =
       let shrinkPoint pt = case find (\existingPoint -> (runFn2 distance pt existingPoint) < 0.05) allPoints of
                                 Just newPt -> newPt
                                 Nothing -> pt
-       in (\(Tuple edge intersections) -> (Tuple edge (shrinkPoint <$> intersections))) <$> intersectionTuples
+       in (\(Tuple edge intersections) -> (Tuple edge $ shrinkPoint <$> intersections)) <$> intersectionTuples
 
     insertPoints i (Tuple edge points) =
       insertPath i edge (split edge points)
 
-    intersections = foldl insertPoints empty intersectionTuples
+    strokeIntersections = foldl insertPoints empty shrunkTuples
+    filteredIntersections = Map.filter (\l -> length l > 1) strokeIntersections
   in
-    insertPath intersections stroke (split stroke (concatMap snd intersectionTuples))
+    insertPath filteredIntersections stroke (split stroke (concatMap snd shrunkTuples))
 
 nubAdjacent :: forall a. (Eq a) => List a -> List a
 nubAdjacent (a : b : rest) | a == b = (nubAdjacent $ a : rest)

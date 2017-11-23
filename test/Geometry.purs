@@ -41,65 +41,6 @@ spec = do
 
         sort ( l2 : l1 : a1 : a2 : a3 : Nil) `shouldEqual` (a3 : a2 : l1 : a1 : l2 : Nil)
 
-    describe "intersect" do
-      it "should find an intersection point" do
-        intersect (Line (Point 0.0 0.0) (Point 1.0 1.0)) (Line (Point 0.0 1.0) (Point 1.0 0.0))
-          `shouldEqual` ((Point 0.5 0.5) : Nil)
-
-      it "should not find an intersection point for parallel lines" do
-        intersect (Line (Point 0.0 0.0) (Point 0.0 1.0)) (Line (Point 1.0 0.0) (Point 1.0 1.0))
-          `shouldEqual` Nil
-
-      it "should find two intersections between a line and circle" do
-        intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
-          `shouldEqual` ((Point 20.0 10.0) : (Point 0.0 10.0) : Nil)
-
-      it "should find one intersection between arc and tangent" do
-        intersect (Line (Point 0.0 0.0) (Point 20.0 0.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
-          `shouldEqual` ((Point 10.0 0.0) : Nil)
-
-      it "should find one intersection between arc and vertical tangent" do
-        intersect (Line (Point 0.0 0.0) (Point 0.0 20.0)) (Arc (Point 10.0 10.0) (Point 0.0 10.0) (Point 0.0 10.0) true)
-          `shouldEqual` ((Point 0.0 10.0) : Nil)
-
-      it "should exclude intersections between a line and arc that are outside of the arc -- positive sweep" do
-        intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 20.0 10.0) (Point 10.0 20.0) true)
-          `shouldEqual` ((Point 20.0 10.0) : Nil)
-
-        intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 20.0 10.0) true)
-          `shouldEqual` ((Point 20.0 10.0) : (Point 0.0 10.0) : Nil)
-
-      it "should exclude intersections between a line and arc that are outside of the arc -- negative sweep" do
-        intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 20.0 10.0) (Point 10.0 20.0) false)
-          `shouldEqual` ((Point 20.0 10.0) : (Point 0.0 10.0) : Nil)
-
-        intersect (Line (Point 0.0 10.0) (Point 20.0 10.0)) (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 20.0 10.0) false)
-          `shouldEqual` ((Point 20.0 10.0) : Nil)
-
-      it "can find intersection between touching circles" do
-        let c0 = Point 0.0 5.0
-            c1 = Point 10.0 5.0
-            p1 = Point 5.0 5.0
-
-        intersect (Arc c0 p1 p1 true) (Arc c1 p1 p1 true) `shouldEqual` (p1 : Nil)
-
-      it "can find two intersections between two circles" do
-        let c0 = Point 0.0 5.0
-            c1 = Point 9.0 5.0
-            p1 = Point 4.0 2.0
-            p2 = Point 4.0 8.0
-
-        intersect (Arc c0 p1 p1 true) (Arc c1 p1 p1 true) `shouldEqual` (p2 : p1 : Nil)
-
-      it "checks for arc intersections to be within arc sweep" do
-        let c0 = Point 0.0 5.0
-            p1 = Point 4.0 2.0
-            p2 = Point (-4.0) 2.0
-            c1 = Point 9.0 5.0
-            p3 = Point 4.0 8.0
-
-        intersect (Arc c0 p1 p2 false) (Arc c1 p3 p3 true) `shouldEqual` (p1 : Nil)
-
     describe "split" do
       it "should split a line, in order" do
         split (Line (Point 0.0 0.0) (Point 1.0 1.0)) ((Point 0.2 0.2) : (Point 0.7 0.7) : (Point 0.5 0.5) : Nil)

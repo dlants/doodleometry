@@ -2,7 +2,7 @@ module App.Graph where
 
 import Prelude
 
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), findWrap, firstPoint, flipStroke, intersectMultiple, roundStroke, secondPoint, unorderedEq)
+import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareOutbound, findWrap, firstPoint, flipStroke, roundStroke, secondPoint, splitMap, unorderedEq)
 import App.Helpers (rotatePast)
 import Control.MonadPlus (guard)
 import Data.Foldable (fold, foldr)
@@ -36,7 +36,14 @@ edges (Graph g) =
         case lookup point g of
              Just strokes -> strokes
              _ -> Nil
-   in nubBy unorderedEq allEdges
+   in nubBy unorderedEq $ concat $ values g
+
+allEdges :: Graph -> List Stroke
+allEdges (Graph g) = do
+  point <- keys g
+  case lookup point g of
+       Just strokes -> strokes
+       _ -> Nil
 
 points :: Graph -> List Point
 points (Graph g) =
@@ -54,7 +61,7 @@ addStroke' s (Graph g) =
   Graph $ alter pushStrokeToPoint (firstPoint s) g
     where
       pushStrokeToPoint Nothing = Just (singleton s)
-      pushStrokeToPoint (Just list) = Just (nub $ insert s list)
+      pushStrokeToPoint (Just list) = Just (nub $ insertBy compareOutbound s list)
 
 -- push an unordered stroke into a graph
 addStroke :: Stroke -> Graph -> Graph
@@ -109,7 +116,7 @@ traverseLeftWall s g visited =
 
 findIntersections :: Stroke -> Graph -> Intersections
 findIntersections stroke g =
-  intersectMultiple stroke (edges g)
+  splitMap stroke (edges g)
 
 applyIntersections :: Intersections -> Graph -> Graph
 applyIntersections intersections g =
