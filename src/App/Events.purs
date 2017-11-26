@@ -1,7 +1,7 @@
 module App.Events where
 
 import App.Background (Background)
-import App.Cycle (Cycle, updateCycles, updateCyclesForRemove)
+import App.Cycle (Cycle, findCycles, updateCycles, updateCyclesForRemove)
 import App.Geometry (Point, Stroke(Line, Arc))
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)
@@ -31,7 +31,7 @@ data Event
 
 type AppEffects fx = (ajax :: AJAX | fx)
 
-foldp :: ∀ fx. Event -> State -> EffModel State Event (AppEffects fx)
+foldp :: forall fx. Event -> State -> EffModel State Event (AppEffects fx)
 foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State
@@ -69,7 +69,7 @@ update (Select tool) s
       }
 
 update (ApplyColor cycle color) s =
-  s {cycles = Map.update (\color -> (Just color)) cycle s.cycles}
+  s {cycles = Map.update (\c -> (Just color)) cycle s.cycles}
 
 update (EraserDown pt) s =
   let eraserPt = if s.tool == EraserTool then Just pt else Nothing
@@ -111,7 +111,7 @@ eraseLine s ptFrom ptTo =
   where
     intersections = findIntersections (Line ptFrom ptTo) s.graph
     newGraph = removeMultiple (keys intersections) s.graph
-    newCycles = updateCyclesForRemove s.cycles newGraph
+    newCycles = findCycles newGraph
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
@@ -124,4 +124,4 @@ updateForStroke s stroke
                        Just ss -> ss
                        _ -> singleton stroke
     newGraph = applyIntersections intersections s.graph
-    newCycles = updateCycles s.cycles newGraph intersections
+    newCycles = findCycles newGraph

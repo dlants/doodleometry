@@ -1,10 +1,11 @@
 module Test.Geometry where
 
-import Prelude
 import App.Geometry
+import Prelude
+
 import Data.List (List(..), sort, (:))
-import Math (pi)
-import Test.Spec (describe, it)
+import Math (atan2, pi)
+import Test.Spec (describe, describeOnly, it, itOnly)
 import Test.Spec.Assertions (shouldEqual)
 
 spec = do

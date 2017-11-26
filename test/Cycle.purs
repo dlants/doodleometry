@@ -137,35 +137,56 @@ spec = do
           c2 = Point 8.0 5.0
           p1 = Point 4.0 2.0
           p2 = Point 4.0 8.0
-          a1 = Arc c1 p1 p2 true
-          a2 = Arc c1 p2 p1 true
-          a3 = Arc c2 p1 p2 true
-          a4 = Arc c2 p2 p1 true
-          gTwoCircles = addStroke a1
-                      $ addStroke a2
-                      $ addStroke a3
-                      $ addStroke a4
+          ai1 = Arc c1 p1 p2 true -- inner arc around center 1
+          ao1 = Arc c1 p2 p1 true -- outer ...
+          ai2 = Arc c2 p2 p1 true
+          ao2 = Arc c2 p1 p2 true
+          gTwoCircles = addStroke ai1
+                      $ addStroke ao1
+                      $ addStroke ai2
+                      $ addStroke ao2
                       $ emptyGraph
 
-      it "should suggest a3 after a1 and a1 after a3" do
-        getNextEdge a1 gTwoCircles `shouldEqual` Just (flipStroke a3)
-        getNextEdge (flipStroke a3) gTwoCircles `shouldEqual` Just a1
+      describe "edge ordering around points" do
+        it "around p1" do
+          getEdgesForPt p1 gTwoCircles `shouldEqual` Just (ai1 : (flipStroke ai2) : (flipStroke ao1) : ao2: Nil)
 
-      it "should give negative angleDiff for a1 : a3 and a3 : a1" do
-        (angleDiff a1 (flipStroke a3) < 0.0) `shouldEqual` true
-        (angleDiff (flipStroke a3) a1 < 0.0) `shouldEqual` true
+      describe "nextEdge around p1" do
+        it "edge after ai2 should be ao1" do
+          getNextEdge ai2 gTwoCircles `shouldEqual` Just (flipStroke ao1)
+        it "edge after ao1 should be ao2" do
+          getNextEdge ao1 gTwoCircles `shouldEqual` Just ao2
+        it "edge after ao2 should be ai1" do
+          getNextEdge (flipStroke ao2) gTwoCircles `shouldEqual` Just ai1
+        it "edge after ai1 should be ai2" do
+          getNextEdge (flipStroke ai1) gTwoCircles `shouldEqual` Just (flipStroke ai2)
 
-      it "should give negative wrap for a1 : a3" do
-        (findWrap (a1 : (flipStroke a3) : Nil) < 0.0) `shouldEqual` true
+      describe "nextEdge around p2" do
+        it "edge after ai1 should be ao2" do
+          getNextEdge ai1 gTwoCircles `shouldEqual` Just (flipStroke ao2)
+        it "edge after ao2 should be ao1" do
+          getNextEdge ao2 gTwoCircles `shouldEqual` Just ao1
+        it "edge after ao1 should be ai2" do
+          getNextEdge (flipStroke ao1) gTwoCircles `shouldEqual` Just ai2
+        it "edge after ai2 should be ai1" do
+          getNextEdge (flipStroke ai2) gTwoCircles `shouldEqual` Just (flipStroke ai1)
 
-      it "should find three cycles in two intersecting circles" do
-        findCycle gTwoCircles a1 `shouldEqual` Just (Cycle $ a1 : (flipStroke a3) : Nil)
-        findCycle gTwoCircles (flipStroke a1) `shouldEqual` Just (Cycle $ a1 : a4 : Nil)
-        findCycle gTwoCircles a4 `shouldEqual` Just (Cycle $ a4 : (flipStroke a2) : Nil)
+      describe "findCycle" do
+        it "should find the right cycle when going up the inner arc around circle 1" do
+          findCycle gTwoCircles ai1 `shouldEqual` Just (Cycle $ ai1 : (flipStroke ao2) : Nil)
 
-      it "should not find the outside cycle for two circles" do
-        findCycle gTwoCircles a3 `shouldEqual` Nothing
-        findCycle gTwoCircles a2 `shouldEqual` Nothing
+        it "should find the center cycle when going down the inner arc around circle 1" do
+          findCycle gTwoCircles (flipStroke ai1) `shouldEqual` Just (Cycle $ (flipStroke ai1) : (flipStroke ai2) : Nil)
+
+        it "should find the left cycle when going up the outer arc around circle 1" do
+          findCycle gTwoCircles (flipStroke ao1) `shouldEqual` Just (Cycle $ (flipStroke ao1) : ai2 : Nil)
+
+        --it "should give negative wrap for a1 : a3" do
+        -- (findWrap (a1 : (flipStroke a3) : Nil) < 0.0) `shouldEqual` true
+
+        --it "should not find the outside cycle for two circles" do
+        --  findCycle gTwoCircles a3 `shouldEqual` Nothing
+        --  findCycle gTwoCircles a2 `shouldEqual` Nothing
 
     describe "twoCirclesVertical" do
       let c1 = Point 5.0 0.0
@@ -184,23 +205,23 @@ spec = do
 
       it "stroke order at p1" do
         getEdgesForPt p1 gTwoCircles `shouldEqual`
-          Just ( outer1
-               : inner2
-               : (flipStroke inner1)
+          Just ( (flipStroke inner1)
                : (flipStroke outer2)
+               : outer1
+               : inner2
                : Nil)
 
       it "stroke order at p2" do
         getEdgesForPt p2 gTwoCircles `shouldEqual`
-          Just ( (flipStroke inner2)
-               : (flipStroke outer1)
-               : outer2
+          Just ( outer2
                : inner1
+               : (flipStroke inner2)
+               : (flipStroke outer1)
                : Nil)
 
       it "getNextEdge order inner1" do
         getNextEdge inner1 gTwoCircles `shouldEqual` Just (flipStroke outer2)
-        --getNextEdge (flipStroke inner1) gTwoCircles `shouldEqual` Just (flipStroke inner2)
+        getNextEdge (flipStroke inner1) gTwoCircles `shouldEqual` Just (flipStroke inner2)
 
       it "getNextEdge order outer1" do
         getNextEdge outer1 gTwoCircles `shouldEqual` Just outer2

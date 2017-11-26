@@ -4,11 +4,12 @@ import Prelude
 
 import App.Events (Event(..), update)
 import App.Geometry (Point(..), Stroke(..), unorderedEq)
-import App.Graph (allEdges, edges, points)
+import App.Graph (allEdges, edges, getEdgesForPt, points)
 import App.State (Tool(..), init)
 import Data.Foldable (foldl, foldr)
 import Data.List (List(..), length, nubBy, sort, (:))
 import Data.Map (keys)
+import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
 import Test.Spec (describe, describeOnly, it)
 import Test.Spec.Assertions (shouldEqual)
@@ -93,3 +94,56 @@ spec = do
 
       it "has the right number of cycles" do
         (length $ keys s.cycles) `shouldEqual` 7
+
+    describe "touching circles" do
+      let s = foldl (flip update) init [ Select ArcTool
+                                       , Draw (Point 100.0 0.0) -- c1
+                                       , Draw (Point 0.0 0.0)
+                                       , Draw (Point 200.0 0.0) -- c2
+                                       , Draw (Point 0.0 0.0)
+                                       , Draw (Point 400.0 0.0) -- c3
+                                       , Draw (Point 0.0 0.0)
+                                       , Draw (Point 800.0 0.0) -- c4
+                                       , Draw (Point 0.0 0.0)
+                                       , Select LineTool
+                                       , Draw (Point 0.0 100.0) -- p1
+                                       , Draw (Point 0.0 (-100.0)) -- p2
+                                       ]
+      let strokes = edges s.graph
+
+      it "has the right number of strokes" do
+        (length $ strokes) `shouldEqual` 6
+
+      it "has the right strokes" do
+         (nubBy unorderedEq $ sort $ allEdges s.graph) `shouldEqual` (
+           (Line (Point 0.0 (-100.0)) (Point 0.0 0.0)) :
+           (Arc (Point 800.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 400.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 200.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 100.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Line (Point 0.0 0.0) (Point 0.0 100.0)) :
+           Nil
+         )
+
+      it "has the right ordering of strokes" do
+         (getEdgesForPt (Point 0.0 0.0) s.graph) `shouldEqual` Just (
+           (Arc (Point 100.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
+           (Arc (Point 200.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
+           (Arc (Point 400.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
+           (Arc (Point 800.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
+           (Line (Point 0.0 0.0) (Point 0.0 100.0)) :
+
+           (Line (Point 0.0 0.0) (Point 0.0 (-100.0))) :
+           (Arc (Point 800.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 400.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 200.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+           (Arc (Point 100.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
+
+           Nil
+         )
+
+      it "has the right number of points" do
+        (length $ points s.graph) `shouldEqual` 3
+
+      it "has the right number of cycles" do
+        (length $ keys s.cycles) `shouldEqual` 4

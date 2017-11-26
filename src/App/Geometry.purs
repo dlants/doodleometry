@@ -8,6 +8,7 @@ import Data.Map (Map, empty, fromFoldable, insert)
 import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
+import Debug.Trace (spy)
 import Math (Radians, abs, atan2, cos, pi, pow, round, sin, sqrt, trunc)
 
 data Point = Point Number Number
@@ -115,23 +116,31 @@ instance strokeOrd :: Ord Stroke where
           <> (compare `on` curvature)
           <> (compare `on` strokeLength)
 
--- compares by outbound angle using an approximation.
--- for acs, we step away along the arc by a small amount, and then compare based on the slopes of the resulting lines.
--- this is done so that we are robust to small errors in computing the edge points and outbound angles.
-compareOutbound :: Stroke -> Stroke -> Ordering
-compareOutbound a b =
-  let
-    getTheta :: Stroke -> Number
-    getTheta (Line (Point x1 y1) (Point x2 y2)) = atan2 (y2 - y1) (x2 - x1)
-    getTheta (Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
-      let r = runFn2 distance c p1
-          startAngle = atan2 (p1y - cy) (p1x - cx)
-          adjustedAngle = startAngle + (if ccw then 0.001 else - 0.001)
-          endx = cx + r * cos adjustedAngle
-          endy = cy + r * sin adjustedAngle
-       in atan2 (endy - p1y) (endx - p1x)
+-- constrain the given theta to the range [theta0, 2pi + theta0)
+clampTo2pi :: Number -> Number
+clampTo2pi theta | theta < 0.0 = clampTo2pi $ theta + 2.0 * pi
+                        | theta >= 2.0 * pi = clampTo2pi $ theta - 2.0 * pi
+                        | otherwise = theta
 
-  in compare (getTheta a) (getTheta b)
+-- compares by outbound angle using an approximation.
+-- the intuition here is to take a tiny step along the arc, and use the resulting angle in our calculations.
+-- this is done because due to floating point arithmetic, arcs which should have the same outbound slope will have
+-- slightly different slopes. So, when we should have resolved according to the curvature of the arc, we would get
+-- a random order.
+approxOutboundAngle :: Stroke -> Number
+approxOutboundAngle (Line (Point x1 y1) (Point x2 y2)) = clampTo2pi $ atan2 (y2 - y1) (x2 - x1)
+approxOutboundAngle arc@(Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
+  let r = runFn2 distance c p1
+      startAngle = atan2 (p1y - cy) (p1x - cx)
+      a0 = startAngle + (if ccw then pi / 2.0 else -pi / 2.0)
+
+      -- changing 0.1 here is analogous to changing how far along the arc we step
+      delta = 0.1 / (2.0 * pi * r)
+      out = a0 + (if ccw then delta else -delta)
+   in clampTo2pi out
+
+compareOutbound :: Stroke -> Stroke -> Ordering
+compareOutbound a b = compare (approxOutboundAngle a) (approxOutboundAngle b)
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
