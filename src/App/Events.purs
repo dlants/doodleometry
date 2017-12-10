@@ -1,7 +1,7 @@
 module App.Events where
 
 import App.Background (Background)
-import App.Cycle (Cycle, findCycles, updateCycles, updateCyclesForRemove)
+import App.Cycle (Cycle, findCycles)
 import App.Geometry (Point, Stroke(Line, Arc))
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint)

@@ -3,7 +3,7 @@ module Test.Cycle where
 import Prelude
 import Test.Fixtures
 import App.Cycle
-import App.Geometry (Point(..), Stroke(..), angleDiff, findWrap, flipStroke)
+import App.Geometry (Point(..), Stroke(..), flipStroke)
 import App.Graph (addStroke, emptyGraph, getEdgesForPt, getNextEdge)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, lookup)
@@ -40,56 +40,6 @@ spec = do
           (Cycle ( Line (Point 0.5 0.0) (Point 0.0 0.0)
                  : Line (Point 0.0 0.0) (Point 0.0 0.5)
                  : Line (Point 0.0 0.5) (Point 0.5 0.0)
-                 : Nil
-                 )
-          )
-
-    describe "simplifyCycle" do
-      it "should not simplifyCycle a cycle" do
-        simplifyCycle ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil) `shouldEqual`
-          ((Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil)
-
-      it "should return Nil for Nil" do
-        simplifyCycle Nil `shouldEqual` Nil
-
-      it "should return Nil for path that doubles back on itself" do
-        simplifyCycle ((Line p1 p2) : (Line p2 p3) : (Line p3 p2) : (Line p2 p1) : Nil) `shouldEqual` Nil
-
-      -- TODO: more here
-
-
-    describe "cutCycle" do
-      it "should cut the cycle and orient it the right way" do
-        cut c123 l13 `shouldEqual` (l32 : l21 : Nil)
-        cut c134 (flipStroke l13) `shouldEqual` (l14 : l43 : Nil)
-
-    describe "joinCycles" do
-      it "should join two cycles that share an edge" do
-        joinCycles c123 c134 l13 `shouldEqual` c1234
-        joinCycles c123 c134 l31 `shouldEqual` c1234
-
-      it "should join two cycles that form a triangle" do
-        joinCycles
-          (Cycle ( Line (Point 0.0 0.0) (Point 0.5 0.0)
-                 : Line (Point 0.5 0.0) (Point 0.0 0.5)
-                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
-                 : Nil
-                 )
-          )
-          (Cycle ( Line (Point 0.5 0.0) (Point 1.0 0.0)
-                 : Line (Point 1.0 0.0) (Point 0.0 1.0)
-                 : Line (Point 0.0 1.0) (Point 0.0 0.5)
-                 : Line (Point 0.0 0.5) (Point 0.5 0.0)
-                 : Nil
-                 )
-          )
-          (Line (Point 0.0 0.5) (Point 0.5 0.0))
-          `shouldEqual`
-          (Cycle ( Line (Point 0.5 0.0) (Point 1.0 0.0)
-                 : Line (Point 1.0 0.0) (Point 0.0 1.0)
-                 : Line (Point 0.0 1.0) (Point 0.0 0.5)
-                 : Line (Point 0.0 0.5) (Point 0.0 0.0)
-                 : Line (Point 0.0 0.0) (Point 0.5 0.0)
                  : Nil
                  )
           )

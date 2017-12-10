@@ -41,6 +41,7 @@ spec = do
 
       it "has the right number of arcs" do
         (length $ arcs) `shouldEqual` 6
+
       it "has the right arcs" do
          (nubBy unorderedEq $ sort $ allEdges s.graph) `shouldEqual`
          (
@@ -55,8 +56,9 @@ spec = do
 
       it "has the right number of points" do
         (length $ points s.graph) `shouldEqual` 4
+
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 3
+        (length $ keys s.cycles) `shouldEqual` 4
 
     describe "three circles" do
       let s = foldl (flip update) init [ Select ArcTool
@@ -93,7 +95,7 @@ spec = do
         (length $ points s.graph) `shouldEqual` 6
 
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 7
+        (length $ keys s.cycles) `shouldEqual` 8
 
     describe "touching circles" do
       let s = foldl (flip update) init [ Select ArcTool
@@ -146,4 +148,4 @@ spec = do
         (length $ points s.graph) `shouldEqual` 3
 
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 4
+        (length $ keys s.cycles) `shouldEqual` 5

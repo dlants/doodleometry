@@ -34,7 +34,7 @@ drawTool selected tool =
         if selected == tool then border solid (2.0 # px) black
                             else border solid (1.0 # px) gray
       $ div $ case tool of
-                   LineTool -> text "Line Test"
+                   LineTool -> text "Line"
                    ArcTool -> text "Arc"
                    ColorTool color -> text $ "Color: " <> show color
                    EraserTool -> text "Erase"

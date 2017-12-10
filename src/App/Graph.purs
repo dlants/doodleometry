@@ -2,7 +2,7 @@ module App.Graph where
 
 import Prelude
 
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareOutbound, findWrap, firstPoint, flipStroke, roundStroke, secondPoint, splitMap, unorderedEq)
+import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareOutbound, firstPoint, flipStroke, roundStroke, secondPoint, splitMap, unorderedEq)
 import App.Helpers (rotatePast)
 import Control.MonadPlus (guard)
 import Data.Foldable (fold, foldr)

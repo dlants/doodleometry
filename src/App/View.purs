@@ -4,7 +4,7 @@ import Prelude
 
 import App.Background.View (fillBackground)
 import App.Background.View (view) as BackgroundView
-import App.Cycle (Cycle(..))
+import App.Cycle (Cycle(..), compareSize)
 import App.Events (Event(..))
 import App.Geometry (Point(Point), Stroke(Arc, Line), distance, firstPoint, ptX, ptY, secondPoint, sweep)
 import App.Graph (Graph, edges)
@@ -17,13 +17,14 @@ import Control.Monad.Except (runExcept)
 import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
 import Data.Either (either)
 import Data.Foldable (elem, for_)
+import Data.Function (on)
 import Data.Function.Uncurried (runFn2)
 import Data.Int (toNumber)
-import Data.List (List, foldl, (:))
-import Data.Map (Map, toUnfoldable)
+import Data.List (List, foldl, reverse, sortBy, (:))
+import Data.Map (Map, keys, toAscUnfoldable, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
-import Data.Tuple (Tuple(..))
+import Data.Tuple (Tuple(..), fst)
 import Math (abs, pi)
 import Pux.DOM.Events (DOMEvent, onClick, onMouseDown, onMouseMove, onMouseUp)
 import Pux.DOM.HTML (HTML, memoize)
@@ -93,16 +94,13 @@ drawCycle :: Cycle -> HTML Event
 drawCycle cycle@(Cycle strokes) =
   path ! pathAttrs strokes $ pure unit
 
-mapToList :: forall k v. Map k v -> List (Tuple k v)
-mapToList = toUnfoldable
-
 drawCycles :: Tool -> Map Cycle Color -> HTML Event
 drawCycles tool cycles =
   let handler cycle = case tool of ColorTool newColor -> onClick $ \_ -> ApplyColor cycle newColor
                                    SelectTool -> onClick $ \_ -> SelectCycle cycle
                                    _ -> onClick (const $ NoOp)
       draw cycle color = (drawCycle cycle) ! stroke "black" ! (fill $ toHexString color)
-   in g ! className "cycles" $ for_ (mapToList cycles) $ \(Tuple cycle color) -> (draw cycle color) #! handler cycle
+   in g ! className "cycles" $ for_ (reverse $ sortBy (compareSize `on` fst) $ toUnfoldable cycles) $ \(Tuple cycle color) -> (draw cycle color) #! handler cycle
 
 drawPoint :: Point -> Number -> HTML Event
 drawPoint (Point x y) size =

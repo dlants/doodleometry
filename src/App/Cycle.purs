@@ -2,14 +2,17 @@ module App.Cycle where
 
 import Prelude
 
-import App.Geometry (Path, Stroke, Intersections, findWrap, firstPoint, flipStroke, secondPoint)
+import App.BoundingBox (BoundingBox(..))
+import App.BoundingBox as BoundingBox
+import App.Geometry (Intersections, Path, Stroke, firstPoint, flipStroke, secondPoint, toBoundingBox)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
 import CSS.Color (Color, white)
-import Data.List (List(Nil), all, drop, elem, elemLastIndex, filter, foldl, foldr, head, last, length, mapMaybe, nub, reverse, slice, sort, (:))
-import Data.Map (Map, alter, empty, fromFoldable, insert, lookup, member, toUnfoldable)
+import Data.Function (on)
+import Data.List (List(Nil), all, filter, foldl, head, last, mapMaybe, nub, reverse, sort, (:))
+import Data.Map (Map, alter, empty, fromFoldable, insert, member, toUnfoldable)
 import Data.Maybe (Maybe(..))
-import Data.Set (Set, empty, insert, member) as Set
+import Data.Set as Set
 import Data.Tuple (Tuple(..))
 
 newtype Cycle = Cycle Path
@@ -27,52 +30,22 @@ instance cycleEq :: Eq Cycle where
 instance cycleShow :: Show Cycle where
   show (Cycle edges) = show edges
 
+size :: Cycle -> Number
+size (Cycle p) =
+  case toBoundingBox <$> p of
+       Nil -> 0.0
+       (b: rest) -> BoundingBox.size $ foldl (<>) b rest
+
 instance cycleOrd :: Ord Cycle where
-  compare (Cycle p1) (Cycle p2) =
+  compare c1@(Cycle p1) c2@(Cycle p2) =
+    compare (size c1) (size c2) <>
     compare (sort $ sortOrder <$> p1) (sort $ sortOrder <$> p2)
       where
         sortOrder :: Stroke -> Stroke
         sortOrder s = min s (flipStroke s)
 
-cut :: Cycle -> Stroke -> Path
-cut (Cycle edges) edge =
-  let
-    hasEdge = elem edge edges
-  in
-    if hasEdge then drop 1 $ rotateList edge edges
-               else drop 1 $ rotateList edge (flipStroke <$> reverse edges)
-
--- when we traverse to find a cycle, we can end up visiting an edge and then going back along that same edge
--- like O--
--- simplifyCycle removes such edges from the cycle, leaving O
-simplifyCycle :: Path -> Path
-simplifyCycle path =
-  let simplifyTraverse :: Set.Set Stroke -> List Stroke -> Path -> Path
-      simplifyTraverse visitedSet history@(last : before) togo@(next : after)
-        | next == (flipStroke last) = simplifyTraverse visitedSet before after
-        | otherwise = if Set.member next visitedSet then extractPath (reverse history) next
-                                                    else simplifyTraverse (Set.insert next visitedSet) (next : history) after
-
-      simplifyTraverse _ _ _ = Nil -- should never happen unless input is Nil!
-
-      extractPath traversal edge = case elemLastIndex edge traversal of
-                                   Just index -> slice index (1 + (length traversal)) traversal
-                                   _ -> Nil -- should never happen unless input is Nil!
-
-   -- We want to treat path as a cycle - once we get to the end, we should be able to start from the beginning again.
-   -- We also want to be able to reverse and go back through history. We simulate this by pushing copies of path into
-   -- history and future. We will only ever need to go that far before re-visiting an edge, so it should be safe!
-   in simplifyTraverse Set.empty (reverse path) (path <> path)
-
--- TODO: make this work with multiple shared edges
--- for now, assumes a single shared edge
-joinCycles :: Cycle -> Cycle -> Stroke -> Cycle
-joinCycles c1 c2 stroke =
-  let
-    path1 = cut c1 stroke -- if stroke is p1p2, path1 takes from p2 to p1
-    path2 = cut c2 (flipStroke stroke) -- if stroke is p1p2, path2 takes from p1 to p2
-  in
-    Cycle (simplifyCycle $ path1 <> path2)
+compareSize :: Cycle -> Cycle -> Ordering
+compareSize = compare `on` size
 
 type CyclesMap = Map Cycle Color
 
@@ -89,17 +62,6 @@ copyColors oldMap newMap =
          in alter alterColor oldCycle cMap
   in foldl copyColor newMap (mapToList oldMap)
 
-updateCycles :: CyclesMap -> Graph -> Intersections -> CyclesMap
-updateCycles cycles g intersections =
-  let trimmedCycles = trimCycles cycles intersections
-   in foldl (\c s -> insertStroke s c g) trimmedCycles (edges g)
-
-updateCyclesForInsert :: CyclesMap -> Graph -> Intersections -> CyclesMap
-updateCyclesForInsert cycles g intersections =
-  let newCycles = findCycles g
-      oldCycles = splitCycles cycles intersections
-   in copyColors oldCycles newCycles
-
 updateCyclesForRemove :: CyclesMap -> Graph -> CyclesMap
 updateCyclesForRemove oldCycles g =
   let newCycles = findCycles g
@@ -113,23 +75,6 @@ trimCycles cMap intersections =
       unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (mapToList cMap)
    in fromFoldable unaffectedCycles
 
-splitCycles :: CyclesMap -> Intersections -> CyclesMap
-splitCycles cMap intersections =
-  let
-    insertCycle :: (Tuple Cycle Color) -> CyclesMap -> CyclesMap
-    insertCycle (Tuple c sch) cMap' =
-      insert (splitCycle intersections c) sch cMap'
-  in
-    foldr insertCycle empty (mapToList cMap)
-
-splitCycle :: Intersections -> Cycle -> Cycle
-splitCycle intersections (Cycle path) =
-  Cycle do
-    edge <- path
-    case lookup edge intersections of
-         Just newEdges -> newEdges
-         _ -> pure edge
-
 -- find new cycles in both directions, nub them
 -- if there is 1 cycle, we haven't split any existing cycles - just add it
 -- if there are 2 cycles, we split an existing cycle - we need to remove it.
@@ -138,27 +83,13 @@ insertStroke stroke cycles g =
   let
     newCycles = nub $ mapMaybe (findCycle g) $ stroke : (flipStroke stroke) : Nil
    in foldl (\m newCycle -> insert newCycle white m) cycles newCycles
-   {--
-    case newCycles of
-         Nil -> cycles -- no new cycles, just return old cycles
-         (c : Nil) -> insert c White cycles -- one new cycle - push it on the front
-         (c1 : c2 : _) -> -- two new cycles. They may have split an existing cycle
-            let
-              joined = joinCycles c1 c2 stroke
-            in
-              case pop joined cycles of
-                   Just (Tuple previousColor newCycles) ->
-                     insert c1 previousColor $ insert c2 previousColor $ newCycles
-                   _ -> insert c1 White $ insert c2 White $ cycles
-   --}
 
 findCycle :: Graph -> Stroke -> Maybe Cycle
 findCycle g stroke =
   case path of
        Nil -> Nothing
        strokes -> if firstPoint <$> head strokes == secondPoint <$> last strokes
-                     then if findWrap path < 0.0 then Just (Cycle path)
-                                                 else Nothing
-                     else Nothing
+                  then Just (Cycle path)
+                  else Nothing
   where
-    path = simplifyCycle $ traverseLeftWall stroke g Set.empty
+    path = traverseLeftWall stroke g Set.empty

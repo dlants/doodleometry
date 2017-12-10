@@ -68,43 +68,12 @@ spec = do
           : (Arc c i3 q true)
           : Nil)
 
-    describe "angleDiff" do
-      it "should have negative angleDiff when strokes are in ascending outboundAngle order" do
-        angleDiff (Line (Point 1.0 1.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 0.0 0.0))
-          `shouldEqual` (- pi / 2.0)
-
-      it "should have positive angleDiff when strokes are in descending outboundAngle order" do
-        angleDiff (Line (Point 0.0 0.0) (Point 1.0 0.0)) (Line (Point 1.0 0.0) (Point 1.0 1.0))
-          `shouldEqual` (pi / 2.0)
-
-    describe "findWrap" do
-      let p1 = Point 0.0 0.0
-          p2 = Point 1.0 0.0
-          p3 = Point 1.0 1.0
-
-      it "should have negative wrap when we take the inner angle (counterclockwise traversal)" do
-        (findWrap ( (Line p1 p3) : (Line p3 p2) : (Line p2 p1) : Nil ) < 0.0) `shouldEqual` true
-
-      it "should have positive wrap when we take the outer angle (clockwise traversal)" do
-        (findWrap ( (Line p1 p2) : (Line p2 p3) : (Line p3 p1) : Nil ) > 0.0) `shouldEqual` true
-
-      it "wrap when dealing with arcs" do
-        let c0 = Point 0.0 5.0
-            c1 = Point 9.0 5.0
-            p1 = Point 4.0 2.0
-            p2 = Point 4.0 8.0
-
-        (findWrap ( (Arc c0 p1 p2 true) : (Arc c1 p2 p1 true) : Nil) > 0.0) `shouldEqual` true
-        (findWrap ( (Arc c0 p2 p1 false) : (Arc c1 p1 p2 false) : Nil) < 0.0 ) `shouldEqual` true
-
-      it "wrap when dealing with 0 angleDiff arcs" do
-        let c0 = Point 5.0 5.0
-            c1 = Point 15.0 5.0
-            p1 = Point 10.0 5.0
-            p2 = Point 0.0 5.0
-            p3 = Point 20.0 5.0
-
-            a1 = Arc c0 p2 p1 true
-            a2 = Arc c1 p1 p3 true
-
-        angleDiff a1 a2 `shouldEqual` -pi
+    describe "withinBounds" do
+       it "90 degree arc point in arc" do
+        (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) true) (Point 5.0 5.0)) `shouldEqual` true
+       it "90 degree arc point out of arc" do
+        (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) true) (Point (-5.0) 5.0)) `shouldEqual` false
+       it "270 degree arc point out of arc" do
+        (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) false) (Point 5.0 5.0)) `shouldEqual` false
+       it "270 degree arc point in arc" do
+        (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) false) (Point (-5.0) 5.0)) `shouldEqual` true

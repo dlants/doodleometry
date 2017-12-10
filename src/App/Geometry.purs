@@ -3,21 +3,17 @@ module App.Geometry where
 import Prelude
 import Data.Function (on)
 import Data.Function.Uncurried (Fn2, runFn2)
+import Control.MonadPlus (guard)
 import Data.List (List(..), concatMap, filter, find, foldl, head, length, mapMaybe, nub, reverse, singleton, snoc, sort, sortBy, zipWith, (:))
 import Data.Map (Map, empty, fromFoldable, insert)
 import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
 import Debug.Trace (spy)
-import Math (Radians, abs, atan2, cos, pi, pow, round, sin, sqrt, trunc)
+import App.BoundingBox
+import Math (Radians, abs, asin, atan2, cos, pi, pow, round, sin, sqrt, trunc)
 
 data Point = Point Number Number
-
-{--
-approxEq :: Number -> Number -> Boolean
-approxEq a b =
-  abs (a - b) < 1.0
---}
 
 instance ptOrd :: Ord Point where
   compare (Point x1 y1) (Point x2 y2) = compare x1 x2 <> compare y1 y2
@@ -71,7 +67,6 @@ ptSweep c p q ccw =
 mapPt :: (Number -> Number) -> Point -> Point
 mapPt f (Point x y) = Point (f x) (f y)
 
-
 crossProduct :: Point -> Point -> Number
 crossProduct (Point x1 y1) (Point x2 y2) = x1 * y2 - x2 * y1
 
@@ -116,11 +111,38 @@ instance strokeOrd :: Ord Stroke where
           <> (compare `on` curvature)
           <> (compare `on` strokeLength)
 
+toBoundingBox :: Stroke -> BoundingBox
+toBoundingBox (Line (Point p1x p1y) (Point p2x p2y)) =
+  BoundingBox {
+    top: max p1y p2y,
+    left: min p1x p2x,
+    bottom: min p1y p2y,
+    right: max p1x p2x
+  }
+
+toBoundingBox arc@(Arc c p1@(Point p1x p1y) p2 _) =
+  let r = runFn2 distance c p1
+      extremes = [p1, p2] <> do
+         angle <- [0.0, pi/2.0, pi, 3.0 * pi / 2.0]
+         let p = c + (Point (r * cos angle) (r * sin angle))
+         guard $ withinBounds arc p
+         pure p
+   in BoundingBox {
+     top: foldl max p1y $ ptY <$> extremes,
+     bottom: foldl min p1y $ ptY <$> extremes,
+     left: foldl min p1x $ ptX <$> extremes,
+     right: foldl max p1x $ ptX <$> extremes
+   }
+
 -- constrain the given theta to the range [theta0, 2pi + theta0)
 clampTo2pi :: Number -> Number
-clampTo2pi theta | theta < 0.0 = clampTo2pi $ theta + 2.0 * pi
-                        | theta >= 2.0 * pi = clampTo2pi $ theta - 2.0 * pi
-                        | otherwise = theta
+clampTo2pi = clampToTheta 0.0
+
+clampToTheta :: Number -> Number -> Number
+clampToTheta theta0 theta
+  | theta < theta0 = clampToTheta theta0 $ theta + 2.0 * pi
+  | theta >= theta0 + 2.0 * pi = clampToTheta theta0 $ theta - 2.0 * pi
+  | otherwise = theta
 
 -- compares by outbound angle using an approximation.
 -- the intuition here is to take a tiny step along the arc, and use the resulting angle in our calculations.
@@ -140,7 +162,7 @@ approxOutboundAngle arc@(Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
    in clampTo2pi out
 
 compareOutbound :: Stroke -> Stroke -> Ordering
-compareOutbound a b = compare (approxOutboundAngle a) (approxOutboundAngle b)
+compareOutbound = compare `on` approxOutboundAngle
 
 firstPoint :: Stroke -> Point
 firstPoint (Line p1 _) = p1
@@ -184,30 +206,6 @@ curvature (Arc c p _ ccw) =
    in if ccw then 1.0 / r else - 1.0 / r
 
 foreign import strokeLength :: Stroke -> Number
--- strokeLength :: Stroke -> Number
--- strokeLength (Line (Point x1 y1) (Point x2 y2)) = (pow (x2 - x1) 2.0) + (pow (y2 - y1) 2.0)
--- strokeLength a@(Arc c p _ _) = (sweep a) * (runFn2 distance c p)
-
--- clockwise rotation -> positive angle
--- ->/ == negative
--- ->\ == positive
-angleDiff :: Stroke -> Stroke -> Radians
-angleDiff strokeIn strokeOut =
-  let a1 = outboundAngle strokeOut
-      a2 = inboundAngle strokeIn
-      diff = atan2Radians (a1 - a2)
-   in if (abs $ truncTo5 diff) == truncTo5 pi then case compare strokeOut (flipStroke strokeIn) of EQ -> -pi
-                                                                                                   LT -> pi
-                                                                                                   GT -> -pi
-                                       else diff
-
-findWrap :: Path -> Radians
-findWrap Nil = 0.0
-findWrap path@(s1 : rest) =
-  foldl (+) 0.0 (angles <> (sweep <$> path))
-  where
-    -- include the angle from the last to the first stroke as well
-    angles = zipWith angleDiff path (snoc rest s1)
 
 flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1
@@ -252,6 +250,13 @@ withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
 withinBounds arc@(Arc c p _ ccw) sol =
   let adiff = getAngleDiff (runFn2 ptAngle c p) (runFn2 ptAngle c sol) ccw
    in (abs adiff) <= (abs (sweep arc))
+
+-- withinBounds arc@(Arc _ _ _ false) pt = withinBounds (flipStroke arc) pt
+-- withinBounds arc@(Arc (Point cx cy) (Point x1 y1) (Point x2 y2) true) (Point x3 y3) =
+--   let a1 = atan2 (y1 - cy) (x1 - cx)
+--       a2 = clampToTheta a1 $ atan2 (y2 - cy) (x2 - cx)
+--       a3 = clampToTheta a1 $ atan2 (y3 - cy) (x3 - cx)
+--    in a3 <= a2
 
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =
