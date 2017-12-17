@@ -12,6 +12,8 @@ import Data.List (List(..), singleton)
 import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
+import Debug.Trace (traceAny)
+import KeyPress (KeyData)
 import Network.HTTP.Affjax (AJAX)
 import Prelude ((==))
 import Pux (EffModel, noEffects)
@@ -27,6 +29,7 @@ data Event
   | ApplyColor Cycle Color
   | WindowResize Int Int
   | ChangeBackground Background
+  | KeyPress KeyData
   | NoOp
 
 type AppEffects fx = (ajax :: AJAX | fx)
@@ -87,9 +90,11 @@ update (WindowResize w h) s =
 update (ChangeBackground b) s =
   s {background = b, snapPoint = Nothing}
 
-update NoOp s = s
+update (KeyPress k) s = traceAny k $ \_ -> s
 
 update (SelectCycle cycle) state = state {selection = singleton cycle}
+
+update NoOp s = s
 
 newStroke :: State -> Point -> Maybe Stroke
 newStroke s p =
