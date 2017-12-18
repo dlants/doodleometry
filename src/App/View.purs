@@ -31,7 +31,7 @@ import Pux.DOM.HTML (HTML, memoize)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
 import Text.Smolder.HTML.Attributes (className)
-import Text.Smolder.Markup (Attribute, Markup, (!), (#!))
+import Text.Smolder.Markup (Attribute, Markup, attribute, (!), (#!))
 import Text.Smolder.SVG (circle, g, line, path, svg)
 import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, strokeDasharray, x1, x2, y1, y2)
 
@@ -115,7 +115,7 @@ drawSnapPoint (Just p) = drawPoint p 3.0
 drawCurrentStroke :: Maybe Stroke -> HTML Event
 drawCurrentStroke Nothing = g $ pure unit
 drawCurrentStroke (Just s) =
-  drawStroke s ! stroke "gray" ! strokeDasharray "5 5" ! fill "transparent"
+  drawStroke s ! stroke "gray" ! attribute "strokeDasharray" "5 5" ! fill "transparent"
 
 drawSelection :: List Cycle -> HTML Event
 drawSelection cycles =

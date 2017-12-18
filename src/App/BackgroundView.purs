@@ -20,7 +20,7 @@ import Pux.DOM.Events (onClick)
 import Pux.DOM.HTML (HTML)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
-import Text.Smolder.Markup ((!), (#!))
+import Text.Smolder.Markup (attribute, (!), (#!))
 import Text.Smolder.SVG (g, line, svg)
 import Text.Smolder.SVG.Attributes (fill, fillOpacity, stroke, x1, x2, y1, y2)
 
@@ -40,7 +40,7 @@ fillBackground Square w h =
              ! (y2 $ show y)
              ! stroke "black"
              ! fill "transparent"
-             ! fillOpacity "0.25"
+             ! attribute "strokeOpacity" "0.25"
 
       verticalLine x =
         line ! (x1 $ show x)
@@ -49,7 +49,7 @@ fillBackground Square w h =
              ! (y2 $ show h)
              ! stroke "black"
              ! fill "transparent"
-             ! fillOpacity "0.25"
+             ! attribute "strokeOpacity" "0.25"
 
    in g $ do
      for_ (range 0 (h/gridSize)) \n -> horizontalLine $ gridSize * n
@@ -77,7 +77,7 @@ view currentBackground =
   div ! style do
           position absolute
           top (0.0 # px)
-          left (100.0 # px)
+          left (200.0 # px)
       $ do
         drawBgToggle currentBackground Clear
         drawBgToggle currentBackground Square
