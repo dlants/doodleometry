@@ -20,8 +20,11 @@ type WebApp = App (DOMEvent -> Event) Event State
 
 type ClientEffects = CoreEffects (history :: HISTORY, dom :: DOM)
 
-main :: Eff ClientEffects WebApp
-main = do
+initialState :: State
+initialState = init
+
+main :: State -> Eff ClientEffects WebApp
+main state = do
   -- | Create a signal of size changes.
   windowSizeSignal <- sampleWindowSize =<< window
 
@@ -33,7 +36,7 @@ main = do
 
   -- | Start the app.
   app <- start
-    { initialState: init
+    { initialState: state
     , view
     , foldp
     , inputs: [resizeEventSignal, keyEventSignal] }
