@@ -8,17 +8,8 @@
   "main": "support/index.js",
   "license": "BSD3",
   "dependencies": {
-    "purescript-pux": "dd6438e2b7dbfcaad13e77929383c29141559669",
-    "purescript-css": "^3.0.0",
-    "purescript-aff": "^3.1.0",
-    "purescript-affjax": "^4.0.0",
-    "purescript-tuples": "^4.1.0",
-    "purescript-sets": "^3.0.0",
-    "purescript-smolder": "^10.1.0"
+    "purescript-pux": "11.0"
   },
   "devDependencies": {
-    "purescript-spec": "^1.0.0",
-    "purescript-spec-discovery": "^0.6.0",
-    "purescript-debug": "^3.0.0"
   }
 }

@@ -2,7 +2,7 @@ module Main where
 
 import Prelude
 
-import App.Events (AppEffects, Event(..), foldp)
+import App.Events (Event(..), foldp)
 import App.State (State, init)
 import App.View (view)
 import Control.Monad.Eff (Eff)
@@ -18,7 +18,7 @@ import Signal ((~>))
 
 type WebApp = App (DOMEvent -> Event) Event State
 
-type ClientEffects = CoreEffects (AppEffects (history :: HISTORY, dom :: DOM))
+type ClientEffects = CoreEffects (history :: HISTORY, dom :: DOM)
 
 main :: Eff ClientEffects WebApp
 main = do

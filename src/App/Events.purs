@@ -13,7 +13,6 @@ import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import KeyDown (KeyData)
-import Network.HTTP.Affjax (AJAX)
 import Prelude ((==))
 import Pux (EffModel, noEffects)
 
@@ -31,9 +30,7 @@ data Event
   | Key KeyData
   | NoOp
 
-type AppEffects fx = (ajax :: AJAX | fx)
-
-foldp :: forall fx. Event -> State -> EffModel State Event (AppEffects fx)
+foldp :: forall fx. Event -> State -> EffModel State Event fx
 foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State

@@ -9,7 +9,6 @@ import Data.Map (Map, empty, fromFoldable, insert)
 import Data.Map as Map
 import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple(..), snd)
-import Debug.Trace (spy)
 import App.BoundingBox
 import Math (Radians, abs, asin, atan2, cos, pi, pow, round, sin, sqrt, trunc)
 
