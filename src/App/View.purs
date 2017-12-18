@@ -143,8 +143,8 @@ drawing state =
           height $ (toNumber state.windowHeight) # px
       $ do
         fillBackground state.background state.windowWidth state.windowHeight
-        drawStrokes state.graph
-        drawCycles state.tool state.cycles
+        drawStrokes state.drawing.graph
+        drawCycles state.tool state.drawing.cycles
         drawSnapPoint state.snapPoint
         drawCurrentStroke state.currentStroke
         drawSelection state.selection

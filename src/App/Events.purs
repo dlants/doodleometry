@@ -8,7 +8,7 @@ import App.Snap (snapToPoint)
 import App.State (State, Tool(LineTool, ArcTool, EraserTool))
 import CSS.Color (Color)
 import Data.Function (($))
-import Data.List (List(..), singleton)
+import Data.List (List(..), singleton, (:))
 import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
@@ -38,7 +38,7 @@ foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State
 update (Draw p) s =
-  let newPt = case snapToPoint p s.background (edges s.graph) of
+  let newPt = case snapToPoint p s.background (edges s.drawing.graph) of
                    Just sp -> sp
                    _ -> p
    in case s.click of
@@ -53,7 +53,7 @@ update (Draw p) s =
                                                         }
 
 update (Move p) s =
-  let sp = snapToPoint p s.background (edges s.graph)
+  let sp = snapToPoint p s.background (edges s.drawing.graph)
       newPt = case sp of Just sp' -> sp'
                          _ -> p
    in s { hover = Just p
@@ -71,7 +71,13 @@ update (Select tool) s
       }
 
 update (ApplyColor cycle color) s =
-  s {cycles = Map.update (\c -> (Just color)) cycle s.cycles}
+  s { drawing =
+      { cycles: Map.update (\c -> (Just color)) cycle s.drawing.cycles
+      , graph: s.drawing.graph
+      }
+    , undos = s.drawing : s.undos
+    , redos = Nil
+    }
 
 update (EraserDown pt) s =
   let eraserPt = if s.tool == EraserTool then Just pt else Nothing
@@ -89,7 +95,24 @@ update (WindowResize w h) s =
 update (ChangeBackground b) s =
   s {background = b, snapPoint = Nothing}
 
-update (Key k) s = s
+update (Key k) s =
+  let undoState = case s.undos of Nil -> s
+                                  lastDrawing : rest -> s { drawing = lastDrawing
+                                                          , undos = rest
+                                                          , redos = s.drawing : s.redos
+                                                          }
+
+      redoState = case s.redos of Nil -> s
+                                  nextDrawing : rest -> s { drawing = nextDrawing
+                                                          , undos = s.drawing : s.undos
+                                                          , redos = rest
+                                                          }
+
+   in case k of {code: "KeyZ", meta: true, shift: false} -> undoState
+                {code: "KeyZ", ctrl: true, shift: false} -> undoState
+                {code: "KeyZ", meta: true, shift: true} -> redoState
+                {code: "KeyZ", ctrl: true, shift: true} -> redoState
+                _ -> s
 
 update (SelectCycle cycle) state = state {selection = singleton cycle}
 
@@ -108,24 +131,32 @@ newStroke s p =
 
 eraseLine :: State -> Point -> Point -> State
 eraseLine s ptFrom ptTo =
-  s { graph = newGraph
-    , cycles = newCycles
+  s { drawing =
+      { graph: newGraph
+      , cycles: newCycles
+      }
     , lastEraserPoint = Just ptTo
+    , undos = s.drawing : s.undos
+    , redos = Nil
     }
   where
-    intersections = findIntersections (Line ptFrom ptTo) s.graph
-    newGraph = removeMultiple (keys intersections) s.graph
+    intersections = findIntersections (Line ptFrom ptTo) s.drawing.graph
+    newGraph = removeMultiple (keys intersections) s.drawing.graph
     newCycles = findCycles newGraph
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
-  = s { graph = newGraph
-      , cycles = newCycles
+  = s { drawing =
+        { graph: newGraph
+        , cycles: newCycles
+        }
+      , undos = s.drawing : s.undos
+      , redos = Nil
       }
   where
-    intersections = findIntersections stroke s.graph
+    intersections = findIntersections stroke s.drawing.graph
     splitStroke = case lookup stroke intersections of
                        Just ss -> ss
                        _ -> singleton stroke
-    newGraph = applyIntersections intersections s.graph
+    newGraph = applyIntersections intersections s.drawing.graph
     newCycles = findCycles newGraph

@@ -20,9 +20,15 @@ data Tool
 
 derive instance eqTool :: Eq Tool
 
-type State =
+type Drawing =
   { graph :: Graph
   , cycles :: Map Cycle Color
+  }
+
+type State =
+  { drawing :: Drawing
+  , undos :: List Drawing
+  , redos :: List Drawing
   , click :: Maybe Point
   , hover :: Maybe Point
   , snapPoint :: Maybe Point
@@ -38,8 +44,12 @@ type State =
 -- the actual width and height will be overwritten in index.js
 init :: State
 init =
-  { graph: emptyGraph
-  , cycles: empty
+  { drawing:
+    { graph: emptyGraph
+    , cycles: empty
+    }
+  , undos: Nil
+  , redos: Nil
   , click: Nothing
   , hover: Nothing
   , snapPoint: Nothing
