@@ -9,7 +9,7 @@ import Control.Monad.Eff (Eff)
 import DOM (DOM)
 import DOM.HTML (window)
 import DOM.HTML.Types (HISTORY)
-import KeyPress (sampleKeyPress)
+import KeyDown (sampleKeyDown)
 import Pux (CoreEffects, App, start)
 import Pux.DOM.Events (DOMEvent)
 import Pux.Renderer.React (renderToDOM)
@@ -26,10 +26,10 @@ main = do
   windowSizeSignal <- sampleWindowSize =<< window
 
   -- | Create a signal of key events
-  keySignal <- sampleKeyPress =<< window
+  keySignal <- sampleKeyDown =<< window
 
   let resizeEventSignal = windowSizeSignal ~> \{width, height} -> WindowResize width height
-  let keyEventSignal = keySignal ~> \keyData -> KeyPress keyData
+  let keyEventSignal = keySignal ~> \keyData -> Key keyData
 
   -- | Start the app.
   app <- start

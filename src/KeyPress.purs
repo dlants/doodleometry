@@ -1,4 +1,4 @@
-module KeyPress where
+module KeyDown where
 
 import Control.Alternative (pure)
 import Control.Bind (bind)
@@ -7,7 +7,7 @@ import Control.Monad.Except (runExcept)
 import DOM (DOM)
 import DOM.Event.EventTarget (addEventListener, eventListener)
 import DOM.Event.KeyboardEvent (altKey, code, ctrlKey, eventToKeyboardEvent, metaKey, shiftKey)
-import DOM.HTML.Event.EventTypes (keypress)
+import DOM.HTML.Event.EventTypes (keydown)
 import DOM.HTML.Types (Window, windowToEventTarget)
 import Data.Either (either)
 import Data.Maybe (Maybe(..))
@@ -24,8 +24,8 @@ type KeyData = {
 }
 
 -- | Returns a signal
-sampleKeyPress :: forall eff. Window -> Eff (channel :: CHANNEL, dom :: DOM | eff) (Signal KeyData)
-sampleKeyPress win = do
+sampleKeyDown :: forall eff. Window -> Eff (channel :: CHANNEL, dom :: DOM | eff) (Signal KeyData)
+sampleKeyDown win = do
   chan <- channel {code: "init", shift: false, ctrl: false, alt: false, meta: false}
   let listener = eventListener \ev ->
        let readKeyEvt evt = {
@@ -41,5 +41,5 @@ sampleKeyPress win = do
         in case key of (Just keyData) -> send chan keyData
                        _ -> pure unit
 
-  addEventListener keypress listener false (windowToEventTarget win)
+  addEventListener keydown listener false (windowToEventTarget win)
   pure $ subscribe chan
