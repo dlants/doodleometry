@@ -1,4 +1,3 @@
-![doodleometry logo](https://github.com/dlants/doodleometry/blob/master/static/image/doodleometry.svg "Doodleometry Logo")
-
+<img src="https://cdn.rawgit.com/dlants/doodleometry/master/static/image/doodleometry.svg" width="1000px" height="500px">
 
 a geometric doodling app
