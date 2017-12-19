@@ -156,7 +156,7 @@ approxOutboundAngle arc@(Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
       a0 = startAngle + (if ccw then pi / 2.0 else -pi / 2.0)
 
       -- changing 0.1 here is analogous to changing how far along the arc we step
-      delta = 0.1 / (2.0 * pi * r)
+      delta = 0.001 / (2.0 * pi * r)
       out = a0 + (if ccw then delta else -delta)
    in clampTo2pi out
 
