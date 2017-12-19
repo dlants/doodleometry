@@ -16344,7 +16344,7 @@ var approxOutboundAngle = function (v) {
     if (v instanceof Arc) {
         var startAngle = $$Math.atan2(v.value1.value1 - v.value0.value1)(v.value1.value0 - v.value0.value0);
         var r = $foreign.distance(v.value0, v.value1);
-        var delta = 0.1 / (2.0 * $$Math.pi * r);
+        var delta = 1.0e-3 / (2.0 * $$Math.pi * r);
         var a0 = startAngle + (function () {
             if (v.value3) {
                 return $$Math.pi / 2.0;
