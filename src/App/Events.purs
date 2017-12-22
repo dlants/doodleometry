@@ -15,7 +15,6 @@ import Data.Maybe (Maybe(..))
 import KeyDown (KeyData)
 import Prelude ((==))
 import Pux (EffModel, noEffects)
-import Util.Time (time)
 
 data Event
   = Draw Point
@@ -51,7 +50,7 @@ update (Draw p) s =
                                                         }
 
 update (Move p) s =
-  let sp = time "snapToPoint" \_ -> snapToPoint p s.background s.drawing.snapPoints
+  let sp = snapToPoint p s.background s.drawing.snapPoints
       newPt = case sp of Just sp' -> sp'
                          _ -> p
    in s { hover = Just p
@@ -142,7 +141,7 @@ eraseLine s ptFrom ptTo =
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
-  = time "updateForStroke" \_ -> s { drawing =
+  = s { drawing =
         { graph: newGraph
         , cycles: newCycles
         , snapPoints: snapPoints newGraph
