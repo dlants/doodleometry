@@ -21,14 +21,14 @@ spec = do
                                        , Draw (Point 100.0 100.0)
                                        , Draw (Point 200.0 100.0)
                                        ]
-      let arcs = edges s.graph
+      let arcs = edges s.drawing.graph
 
       it "has the right number of arcs" do
         (length $ arcs) `shouldEqual` 1
       it "has the right number of points" do
-        (length $ points s.graph) `shouldEqual` 1
+        (length $ points s.drawing.graph) `shouldEqual` 1
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 1
+        (length $ keys s.drawing.cycles) `shouldEqual` 1
 
     describe "two circles" do
       let s = foldl (flip update) init [ Select ArcTool
@@ -37,13 +37,13 @@ spec = do
                                        , Draw (Point 200.0 100.0)
                                        , Draw (Point 100.0 100.0)
                                        ]
-      let arcs = edges s.graph
+      let arcs = edges s.drawing.graph
 
       it "has the right number of arcs" do
         (length $ arcs) `shouldEqual` 6
 
       it "has the right arcs" do
-         (nubBy unorderedEq $ sort $ allEdges s.graph) `shouldEqual`
+         (nubBy unorderedEq $ sort $ allEdges s.drawing.graph) `shouldEqual`
          (
            (Arc (Point 200.0 100.0) (Point 100.0 100.0) (Point 150.0 13.397459621556138) true) :
            (Arc (Point 200.0 100.0) (Point 100.0 100.0) (Point 150.0 186.60254037844385) false) :
@@ -55,10 +55,10 @@ spec = do
          )
 
       it "has the right number of points" do
-        (length $ points s.graph) `shouldEqual` 4
+        (length $ points s.drawing.graph) `shouldEqual` 4
 
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 4
+        (length $ keys s.drawing.cycles) `shouldEqual` 4
 
     describe "three circles" do
       let s = foldl (flip update) init [ Select ArcTool
@@ -69,13 +69,13 @@ spec = do
                                        , Draw (Point 150.0 186.6) -- c3
                                        , Draw (Point 100.0 100.0) -- c1
                                        ]
-      let arcs = edges s.graph
+      let arcs = edges s.drawing.graph
 
       it "has the right number of arcs" do
         (length $ arcs) `shouldEqual` 12
 
       it "has the right arcs" do
-         (nubBy unorderedEq $ sort $ allEdges s.graph) `shouldEqual` (
+         (nubBy unorderedEq $ sort $ allEdges s.drawing.graph) `shouldEqual` (
            (Arc (Point 100.0 100.0) (Point 50.0 186.6025403784439) (Point 150.0 13.397459621556138) true) :
            (Arc (Point 150.0 186.60254037844385) (Point 50.0 186.6025403784439) (Point 100.0 100.0) true) :
            (Arc (Point 100.0 100.0) (Point 50.0 186.6025403784439) (Point 150.0 186.60254037844385) false) :
@@ -92,10 +92,10 @@ spec = do
          )
 
       it "has the right number of points" do
-        (length $ points s.graph) `shouldEqual` 6
+        (length $ points s.drawing.graph) `shouldEqual` 6
 
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 8
+        (length $ keys s.drawing.cycles) `shouldEqual` 8
 
     describe "touching circles" do
       let s = foldl (flip update) init [ Select ArcTool
@@ -111,13 +111,13 @@ spec = do
                                        , Draw (Point 0.0 100.0) -- p1
                                        , Draw (Point 0.0 (-100.0)) -- p2
                                        ]
-      let strokes = edges s.graph
+      let strokes = edges s.drawing.graph
 
       it "has the right number of strokes" do
         (length $ strokes) `shouldEqual` 6
 
       it "has the right strokes" do
-         (nubBy unorderedEq $ sort $ allEdges s.graph) `shouldEqual` (
+         (nubBy unorderedEq $ sort $ allEdges s.drawing.graph) `shouldEqual` (
            (Line (Point 0.0 (-100.0)) (Point 0.0 0.0)) :
            (Arc (Point 800.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
            (Arc (Point 400.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) true) :
@@ -128,7 +128,7 @@ spec = do
          )
 
       it "has the right ordering of strokes" do
-         (getEdgesForPt (Point 0.0 0.0) s.graph) `shouldEqual` Just (
+         (getEdgesForPt (Point 0.0 0.0) s.drawing.graph) `shouldEqual` Just (
            (Arc (Point 100.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
            (Arc (Point 200.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
            (Arc (Point 400.0 0.0) (Point 0.0 0.0) (Point 0.0 0.0) false) :
@@ -145,7 +145,7 @@ spec = do
          )
 
       it "has the right number of points" do
-        (length $ points s.graph) `shouldEqual` 3
+        (length $ points s.drawing.graph) `shouldEqual` 3
 
       it "has the right number of cycles" do
-        (length $ keys s.cycles) `shouldEqual` 5
+        (length $ keys s.drawing.cycles) `shouldEqual` 5

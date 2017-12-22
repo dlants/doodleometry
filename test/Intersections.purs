@@ -12,7 +12,7 @@ import Test.Spec (describe, describeOnly, it, itOnly)
 import Test.Spec.Assertions (shouldEqual)
 
 spec = do
-  describeOnly "intersect" do
+  describe "intersect" do
     it "intersecting lines" do
       intersect (Line (Point 0.0 0.0) (Point 1.0 1.0)) (Line (Point 0.0 1.0) (Point 1.0 0.0))
         `shouldEqual` ((Point 0.5 0.5) : Nil)
