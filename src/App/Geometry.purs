@@ -106,7 +106,7 @@ compareMap Nil _ _ = EQ
 
 instance strokeOrd :: Ord Stroke where
   compare =  (compare `on` firstPoint)
-          <> (compare `on` (outboundAngle >>> truncTo5))
+          <> (compare `on` outboundAngle)
           <> (compare `on` curvature)
           <> (compare `on` strokeLength)
 
@@ -171,14 +171,15 @@ secondPoint :: Stroke -> Point
 secondPoint (Line _ p2) = p2
 secondPoint (Arc _ _ q _) = q
 
+triangleArea :: Point -> Point -> Point -> Number
+triangleArea (Point x1 y1) (Point x2 y2) (Point x3 y3) =
+  0.5 * ((x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3))
+
 sweep :: Stroke -> Radians
 sweep (Line _ _) = 0.0
 sweep (Arc c p q ccw) =
   case ptSweep c p q ccw of s | s == 0.0 -> if ccw then 2.0 * pi else -2.0 * pi
                               | otherwise -> s
-
-truncTo5 :: Number -> Number
-truncTo5 num = (trunc (num * 100000.0)) / 100000.0
 
 outboundAngle :: Stroke -> Radians
 outboundAngle (Line (Point x1 y1) (Point x2 y2)) =
@@ -246,16 +247,8 @@ withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
   let between a a1 a2 = (a1 <= a && a <= a2) || (a1 >= a && a >= a2)
    in (between x x1 x2) && (between y y1 y2)
 
-withinBounds arc@(Arc c p _ ccw) sol =
-  let adiff = getAngleDiff (runFn2 ptAngle c p) (runFn2 ptAngle c sol) ccw
-   in (abs adiff) <= (abs (sweep arc))
-
--- withinBounds arc@(Arc _ _ _ false) pt = withinBounds (flipStroke arc) pt
--- withinBounds arc@(Arc (Point cx cy) (Point x1 y1) (Point x2 y2) true) (Point x3 y3) =
---   let a1 = atan2 (y1 - cy) (x1 - cx)
---       a2 = clampToTheta a1 $ atan2 (y2 - cy) (x2 - cx)
---       a3 = clampToTheta a1 $ atan2 (y3 - cy) (x3 - cx)
---    in a3 <= a2
+withinBounds arc@(Arc _ p1 p2 ccw) sol =
+  triangleArea p2 p1 sol >= 0.0 == ccw
 
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =

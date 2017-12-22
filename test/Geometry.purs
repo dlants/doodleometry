@@ -25,6 +25,16 @@ spec = do
         sweep (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 10.0 0.0) true) `shouldEqual` pi
         sweep (Arc (Point 10.0 10.0) (Point 10.0 20.0) (Point 10.0 0.0) false) `shouldEqual` (-pi)
 
+    describe "triangleArea" do
+       it "should produce a positive area when points are counter clockwise" do
+          triangleArea (Point 0.0 0.0) (Point 1.0 0.0) (Point 1.0 1.0) `shouldEqual` 0.5
+
+       it "should produce a negative area when points are counter clockwise" do
+          triangleArea (Point 0.0 0.0) (Point 1.0 1.0) (Point 1.0 0.0) `shouldEqual` -0.5
+
+       it "should produce zero area when points are colinear" do
+          triangleArea (Point 0.0 0.0) (Point 1.0 1.0) (Point 2.0 2.0) `shouldEqual` 0.0
+
     describe "outboundAngle" do
       it "should produce correct angles for arcs" do
         outboundAngle (Arc (Point 10.0 10.0) (Point 20.0 10.0) (Point 20.0 10.0) true) `shouldEqual` (pi/2.0)
