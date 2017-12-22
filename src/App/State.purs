@@ -23,6 +23,7 @@ derive instance eqTool :: Eq Tool
 type Drawing =
   { graph :: Graph
   , cycles :: Map Cycle Color
+  , snapPoints :: List Point
   }
 
 type State =
@@ -47,6 +48,7 @@ init =
   { drawing:
     { graph: emptyGraph
     , cycles: empty
+    , snapPoints: Nil
     }
   , undos: Nil
   , redos: Nil

@@ -34,6 +34,7 @@ import Text.Smolder.HTML.Attributes (className)
 import Text.Smolder.Markup (Attribute, Markup, attribute, (!), (#!))
 import Text.Smolder.SVG (circle, g, line, path, svg)
 import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, strokeDasharray, x1, x2, y1, y2)
+import Util.Time (time)
 
 drawLine :: Attribute -> Point -> Point -> HTML Event
 drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
@@ -151,7 +152,8 @@ drawing state =
 
 view :: State -> HTML Event
 view state =
-  div $ do
-    BackgroundView.view state.background
-    ToolView.view state.tool
-    drawing state
+  time "view" \_ ->
+    div $ do
+      BackgroundView.view state.background
+      ToolView.view state.tool
+      drawing state

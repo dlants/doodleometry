@@ -4,7 +4,7 @@ import App.Background (Background)
 import App.Cycle (Cycle, findCycles)
 import App.Geometry (Point, Stroke(Line, Arc))
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
-import App.Snap (snapToPoint)
+import App.Snap (snapToPoint, snapPoints)
 import App.State (State, Tool(LineTool, ArcTool, EraserTool))
 import CSS.Color (Color)
 import Data.Function (($))
@@ -15,6 +15,7 @@ import Data.Maybe (Maybe(..))
 import KeyDown (KeyData)
 import Prelude ((==))
 import Pux (EffModel, noEffects)
+import Util.Time (time)
 
 data Event
   = Draw Point
@@ -35,7 +36,7 @@ foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State
 update (Draw p) s =
-  let newPt = case snapToPoint p s.background (edges s.drawing.graph) of
+  let newPt = case snapToPoint p s.background s.drawing.snapPoints of
                    Just sp -> sp
                    _ -> p
    in case s.click of
@@ -50,7 +51,7 @@ update (Draw p) s =
                                                         }
 
 update (Move p) s =
-  let sp = snapToPoint p s.background (edges s.drawing.graph)
+  let sp = time "snapToPoint" \_ -> snapToPoint p s.background s.drawing.snapPoints
       newPt = case sp of Just sp' -> sp'
                          _ -> p
    in s { hover = Just p
@@ -68,10 +69,7 @@ update (Select tool) s
       }
 
 update (ApplyColor cycle color) s =
-  s { drawing =
-      { cycles: Map.update (\c -> (Just color)) cycle s.drawing.cycles
-      , graph: s.drawing.graph
-      }
+  s { drawing { cycles = Map.update (\c -> (Just color)) cycle s.drawing.cycles }
     , undos = s.drawing : s.undos
     , redos = Nil
     }
@@ -131,6 +129,7 @@ eraseLine s ptFrom ptTo =
   s { drawing =
       { graph: newGraph
       , cycles: newCycles
+      , snapPoints: snapPoints newGraph
       }
     , lastEraserPoint = Just ptTo
     , undos = s.drawing : s.undos
@@ -143,9 +142,10 @@ eraseLine s ptFrom ptTo =
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
-  = s { drawing =
+  = time "updateForStroke" \_ -> s { drawing =
         { graph: newGraph
         , cycles: newCycles
+        , snapPoints: snapPoints newGraph
         }
       , undos = s.drawing : s.undos
       , redos = Nil

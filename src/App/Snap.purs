@@ -1,25 +1,29 @@
 module App.Snap where
 
 import Prelude
+
 import App.Background (Background(..))
-import Data.Function.Uncurried (runFn2)
 import App.Geometry (Point(..), Stroke(..), distance, getNearestPoint)
+import App.Graph (Graph(..), edges)
+import Data.Function.Uncurried (runFn2)
 import Data.List (List(..), concatMap, nub, (:))
 import Data.Maybe (Maybe(..))
 import Math (floor)
 
-snapToPoint :: Point -> Background -> List Stroke -> Maybe Point
-snapToPoint p bg strokes =
+snapToPoint :: Point -> Background -> List Point -> Maybe Point
+snapToPoint p bg snapPoints =
   case nearestPoint of
        Just snapPoint -> if (runFn2 distance p snapPoint < 20.0) then Just snapPoint
                                                           else Nothing
        _ -> Nothing
-  where nearestPoint = getNearestPoint p $ nub $ ( concatMap (getSnapPoints p) strokes
-                                                 <> getGridPoints p bg)
+  where nearestPoint = getNearestPoint p $ snapPoints <> getGridPoints p bg
 
-getSnapPoints :: Point -> Stroke -> List Point
-getSnapPoints _ (Line p1 p2) = p1 : p2 : Nil
-getSnapPoints _ (Arc c p q _) = c : p : q : Nil
+snapPoints :: Graph -> List Point
+snapPoints g = nub $ concatMap strokeSnapPoints (edges g)
+
+strokeSnapPoints :: Stroke -> List Point
+strokeSnapPoints (Line p1 p2) = p1 : p2 : Nil
+strokeSnapPoints (Arc c p q _) = c : p : q : Nil
 
 getGridPoints :: Point -> Background -> List Point
 getGridPoints _ Clear = Nil

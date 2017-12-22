@@ -1,11 +1,12 @@
 "use strict";
 
-exports.timeAny = function () {
+exports.time = function () {
   return function (x) {
     return function (k) {
       console.time(x)
-      k({});
-      return console.timeEnd(x)
+      var out = k({});
+      console.timeEnd(x)
+      return out
     };
   };
 };
