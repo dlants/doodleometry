@@ -15,7 +15,7 @@ data Tool
   = LineTool
   | ArcTool
   | ColorTool Color
-  | EraserTool
+  | EraserTool {down :: Boolean, pt :: Point, size :: Number}
   | SelectTool
 
 derive instance eqTool :: Eq Tool
@@ -33,7 +33,6 @@ type State =
   , click :: Maybe Point
   , hover :: Maybe Point
   , snapPoint :: Maybe Point
-  , lastEraserPoint :: Maybe Point
   , currentStroke :: Maybe Stroke
   , tool :: Tool
   , windowWidth :: Int
@@ -55,7 +54,6 @@ init =
   , click: Nothing
   , hover: Nothing
   , snapPoint: Nothing
-  , lastEraserPoint: Nothing
   , currentStroke: Nothing
   , tool: LineTool
   , windowWidth: 1000

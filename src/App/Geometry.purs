@@ -137,6 +137,29 @@ toBoundingBox arc@(Arc c p1@(Point p1x p1y) p2 _) =
 clampTo2pi :: Number -> Number
 clampTo2pi = clampToTheta 0.0
 
+project :: Point -> Point -> Point -> Point
+project p p1@(Point x1 y1) p2 =
+  (Point (x1 + a * ptX vecl) (y1 + a * ptY vecl))
+  where
+    vecl = p2 - p1
+    vecp = p - p1
+    a = vecp `dotProduct` vecl / vecl `dotProduct` vecl
+
+-- is p within dist of stroke?
+closeToPoint :: Point -> Number -> Stroke -> Boolean
+closeToPoint p dist line@(Line p1 p2) =
+  (runFn2 distance p p1 <= dist) ||
+  (runFn2 distance p p2 <= dist) ||
+  (runFn2 distance p closest <= dist && withinBounds line closest)
+  where closest = project p p1 p2
+
+closeToPoint p dist arc@(Arc c p1 p2 ccw) =
+  (runFn2 distance p p1 <= dist) ||
+  (runFn2 distance p p2 <= dist) ||
+  abs ((runFn2 distance p c) - r) <= dist && withinBounds arc p
+  where
+    r = runFn2 distance c p1
+
 clampToTheta :: Number -> Number -> Number
 clampToTheta theta0 theta
   | theta < theta0 = clampToTheta theta0 $ theta + 2.0 * pi
@@ -211,10 +234,6 @@ flipStroke :: Stroke -> Stroke
 flipStroke (Line p1 p2) = Line p2 p1
 flipStroke (Arc c p q ccw) = Arc c q p (not ccw)
 
-roundStroke :: Stroke -> Stroke
-roundStroke (Line p1 p2) = Line (roundPt p1) (roundPt p2)
-roundStroke (Arc c p q ccw) = Arc (roundPt c) (roundPt p) (roundPt q) ccw
-
 positiveRadians :: Radians -> Radians
 positiveRadians a
   | a < 0.0 = a + 2.0 * pi
@@ -248,7 +267,8 @@ withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
    in (between x x1 x2) && (between y y1 y2)
 
 withinBounds arc@(Arc _ p1 p2 ccw) sol =
-  triangleArea p2 p1 sol >= 0.0 == ccw
+  if area == 0.0 then true else area > 0.0 == ccw
+  where area = triangleArea p2 p1 sol
 
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =
@@ -340,11 +360,6 @@ intersect a@(Arc _ _ _ _) l@(Line _ _) = intersect l a
 insertPath ::  Intersections -> Stroke -> Path -> Intersections
 insertPath intersections stroke splitStroke =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
-
-roundPt :: Point -> Point
-roundPt (Point x y) =
-  let acc = 1000.0
-   in Point ((round $ x * acc) / acc) ((round $ y * acc) / acc)
 
 intersectMap :: Stroke -> List Stroke -> Map Stroke (List Point)
 intersectMap stroke strokes =

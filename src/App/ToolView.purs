@@ -3,6 +3,7 @@ module App.Tool.View where
 import Prelude
 
 import App.Events (Event(..))
+import App.Geometry (Point(..))
 import App.State (Tool(..))
 import CSS.Border (border, solid)
 import CSS.Color (black, gray, red, green, blue)
@@ -23,7 +24,7 @@ toolBelt =
   , ColorTool red
   , ColorTool green
   , ColorTool blue
-  , EraserTool
+  , EraserTool {down: false, pt: (Point 0.0 0.0), size: 20.0}
   , SelectTool
   ]
 
@@ -37,7 +38,7 @@ drawTool selected tool =
                    LineTool -> text "Line"
                    ArcTool -> text "Arc"
                    ColorTool color -> text $ "Color: " <> show color
-                   EraserTool -> text "Erase"
+                   EraserTool _ -> text "Erase"
                    SelectTool -> text "Select"
 
 view :: Tool -> HTML Event

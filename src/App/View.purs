@@ -10,6 +10,7 @@ import App.Geometry (Point(Point), Stroke(Arc, Line), distance, firstPoint, ptX,
 import App.Graph (Graph, edges)
 import App.State (State, Tool(..))
 import App.Tool.View (view) as ToolView
+import CSS (CSS, fromString, key)
 import CSS.Color (Color, red, toHexString)
 import CSS.Geometry (height, width)
 import CSS.Size (px)
@@ -121,6 +122,11 @@ drawSelection :: List Cycle -> HTML Event
 drawSelection cycles =
   g ! className "selected" $ for_ cycles \cycle -> drawCycle cycle ! stroke "red" ! fill "transparent"
 
+drawTool :: Tool -> HTML Event
+drawTool (EraserTool {pt, size}) =
+  drawStroke (Arc pt (pt - (Point size 0.0)) (pt - (Point size 0.0)) true) ! stroke "black" ! fill "transparent"
+drawTool _ = pure unit
+
 readPageXY :: DOMEvent -> {clientX:: Number, clientY:: Number}
 readPageXY ev =
   let readXY mouseEv = {clientX: toNumber $ clientX mouseEv, clientY: toNumber $ clientY mouseEv}
@@ -130,7 +136,7 @@ withListeners :: Tool -> HTML Event -> HTML Event
 withListeners tool html =
   case tool of _ | elem tool [LineTool, ArcTool] -> html #! (onClick (readPageXY >>> \{clientX, clientY} -> Draw (Point clientX clientY)))
                                                          #! (onMouseMove (readPageXY >>> \{clientX, clientY} -> Move (Point clientX clientY)))
-               EraserTool -> html #! (onMouseDown $ readPageXY >>> \{clientX, clientY} -> EraserDown (Point clientX clientY))
+               EraserTool _ -> html #! (onMouseDown $ readPageXY >>> \{clientX, clientY} -> EraserDown (Point clientX clientY))
                                   #! (onMouseUp $ readPageXY >>> \{clientX, clientY} -> EraserUp (Point clientX clientY))
                                   #! (onMouseMove $ readPageXY >>> \{clientX, clientY} -> EraserMove (Point clientX clientY))
                _ -> html
@@ -148,6 +154,7 @@ drawing state =
         drawSnapPoint state.snapPoint
         drawCurrentStroke state.currentStroke
         drawSelection state.selection
+        drawTool state.tool
 
 view :: State -> HTML Event
 view state =

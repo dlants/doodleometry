@@ -78,6 +78,42 @@ spec = do
           : (Arc c i3 q true)
           : Nil)
 
+    describe "project" do
+      it "project a point onto a line" do
+        project (Point 1.0 1.0) (Point 0.0 0.0) (Point 1.0 0.0) `shouldEqual` (Point 1.0 0.0)
+        project (Point 1.0 1.0) (Point 0.0 0.0) (Point 0.0 1.0) `shouldEqual` (Point 0.0 1.0)
+
+    describe "closeToPoint" do
+      it "horizontal line close to point" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Line (Point 0.0 0.0) (Point 2.0 0.0)) `shouldEqual` true
+      it "horizontal line far from point" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Line (Point 1.5 0.0) (Point 2.0 0.0)) `shouldEqual` false
+      it "horizontal line endpoint closest" do
+        closeToPoint (Point 1.0 1.0) 1.2 (Line (Point 1.1 0.0) (Point 2.0 0.0)) `shouldEqual` true
+
+      it "circle close to point ccw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 3.0 1.0) (Point 3.0 1.0) true) `shouldEqual` true
+      it "circle close to point cw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 3.0 1.0) (Point 3.0 1.0) false) `shouldEqual` true
+
+      it "circle center" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 1.0 1.0) (Point 3.0 1.0) (Point 3.0 1.0) true) `shouldEqual` false
+
+      it "halfCircle away from point ccw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 2.0 0.0) (Point 2.0 2.0) true) `shouldEqual` false
+
+      it "halfCircle away from point cw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 2.0 2.0) (Point 2.0 0.0) false) `shouldEqual` false
+
+      it "halfCircle close to point ccw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 2.0 2.0) (Point 2.0 0.0) true) `shouldEqual` true
+
+      it "halfCircle close to point cw" do
+        closeToPoint (Point 1.0 1.0) 1.0 (Arc (Point 2.0 1.0) (Point 2.0 0.0) (Point 2.0 2.0) false) `shouldEqual` true
+
+      it "endpoint behavior" do
+        closeToPoint (Point 1.0 1.0) 1.2 (Arc (Point 2.0 1.0) (Point 1.1 1.1) (Point 2.0 2.0) true) `shouldEqual` true
+
     describe "withinBounds" do
        it "90 degree arc point in arc" do
         (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) true) (Point 5.0 5.0)) `shouldEqual` true

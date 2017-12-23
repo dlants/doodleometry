@@ -2,13 +2,13 @@ module App.Events where
 
 import App.Background (Background)
 import App.Cycle (Cycle, findCycles)
-import App.Geometry (Point, Stroke(Line, Arc))
+import App.Geometry (Point, Stroke(Line, Arc), closeToPoint)
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint, snapPoints)
 import App.State (State, Tool(LineTool, ArcTool, EraserTool))
 import CSS.Color (Color)
 import Data.Function (($))
-import Data.List (List(..), singleton, (:))
+import Data.List (List(..), filter, singleton, (:))
 import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
@@ -74,14 +74,15 @@ update (ApplyColor cycle color) s =
     }
 
 update (EraserDown pt) s =
-  let eraserPt = if s.tool == EraserTool then Just pt else Nothing
-   in s {lastEraserPoint = eraserPt}
+  case s.tool of EraserTool opts -> erase s {tool = EraserTool opts {down=true, pt=pt}}
+                 _ -> s
 
-update (EraserUp pt) s = s {lastEraserPoint = Nothing}
-
+update (EraserUp pt) s = s {tool = newTool}
+  where newTool = case s.tool of EraserTool opts -> (EraserTool opts {down=false, pt=pt})
+                                 _ -> s.tool
 update (EraserMove pt) s =
-  case s.lastEraserPoint of Nothing -> s
-                            Just eraserPt -> eraseLine s eraserPt pt
+  case s.tool of EraserTool opts -> erase s {tool = EraserTool opts {pt=pt}}
+                 _ -> s
 
 update (WindowResize w h) s =
   s {windowWidth = w, windowHeight = h}
@@ -123,21 +124,22 @@ newStroke s p =
 
        Nothing -> Nothing
 
-eraseLine :: State -> Point -> Point -> State
-eraseLine s ptFrom ptTo =
+-- erase around the given point
+erase :: State -> State
+erase s@{tool: EraserTool {down: true, pt}} =
   s { drawing =
       { graph: newGraph
       , cycles: newCycles
       , snapPoints: snapPoints newGraph
       }
-    , lastEraserPoint = Just ptTo
     , undos = s.drawing : s.undos
     , redos = Nil
     }
   where
-    intersections = findIntersections (Line ptFrom ptTo) s.drawing.graph
-    newGraph = removeMultiple (keys intersections) s.drawing.graph
-    newCycles = findCycles newGraph
+    erasedStrokes = filter (closeToPoint pt 20.0) $ edges s.drawing.graph
+    newGraph = if erasedStrokes == Nil then s.drawing.graph else removeMultiple erasedStrokes s.drawing.graph
+    newCycles = if erasedStrokes == Nil then s.drawing.cycles else findCycles newGraph
+erase s = s
 
 updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
