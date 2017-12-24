@@ -32,7 +32,7 @@ import Text.Smolder.HTML (div)
 import Text.Smolder.HTML.Attributes (className)
 import Text.Smolder.Markup (Attribute, attribute, (!), (#!))
 import Text.Smolder.SVG (circle, g, line, path, svg)
-import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, x1, x2, y1, y2)
+import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, strokeWidth, x1, x2, y1, y2)
 
 drawLine :: Attribute -> Point -> Point -> HTML Event
 drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
@@ -51,7 +51,7 @@ drawStrokes :: Graph -> HTML Event
 drawStrokes = memoize \graph ->
   let
       strokeStyle :: Attribute
-      strokeStyle = stroke "black" <> fill "transparent" <> className "stroke"
+      strokeStyle = stroke "black" <> fill "transparent" <> className "stroke" <> strokeWidth "2px"
    in g ! className "strokes" $ for_ (edges graph) \stroke -> drawStroke stroke ! strokeStyle
 
 pathAttrs :: List Stroke -> Attribute
