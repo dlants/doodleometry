@@ -141,18 +141,21 @@ newStroke s p =
 -- erase around the given point
 erase :: State -> State
 erase s@{tool: EraserTool {down: true, pt, size}} =
-  s { drawing =
-      { graph: newGraph
-      , cycles: newCycles
-      , snapPoints: snapPoints newGraph
-      }
-    , undos = s.drawing : s.undos
-    , redos = Nil
-    }
-  where
-    erasedStrokes = filter (closeToPoint pt size) $ edges s.drawing.graph
-    newGraph = if erasedStrokes == Nil then s.drawing.graph else removeMultiple erasedStrokes s.drawing.graph
-    newCycles = if erasedStrokes == Nil then s.drawing.cycles else findCycles newGraph
+  case filter (closeToPoint pt size) $ edges s.drawing.graph of
+       Nil -> s
+       erasedStrokes ->
+         let newGraph = if erasedStrokes == Nil then s.drawing.graph else removeMultiple erasedStrokes s.drawing.graph
+             newCycles = if erasedStrokes == Nil then s.drawing.cycles else findCycles newGraph
+
+          in s { drawing =
+              { graph: newGraph
+              , cycles: newCycles
+              , snapPoints: snapPoints newGraph
+              }
+            , undos = s.drawing : s.undos
+            , redos = Nil
+            }
+
 erase s = s
 
 updateForStroke :: State -> Stroke -> State
