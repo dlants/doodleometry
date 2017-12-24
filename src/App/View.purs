@@ -10,32 +10,29 @@ import App.Geometry (Point(Point), Stroke(Arc, Line), distance, firstPoint, ptX,
 import App.Graph (Graph, edges)
 import App.State (State, Tool(..))
 import App.Tool.View (view) as ToolView
-import CSS (CSS, absolute, bottom, fromString, key, left, position, right, top)
-import CSS.Color (Color, red, toHexString)
+import CSS (absolute, bottom, left, position, right, top)
+import CSS.Color (Color, toHexString)
 import CSS.Geometry (height, width)
 import CSS.Overflow (hidden, overflow)
 import CSS.Size (px)
-import Control.Monad.Except (runExcept)
-import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
-import Data.Either (either)
-import Data.Foldable (elem, for_)
+import Data.Foldable (for_)
 import Data.Function (on)
 import Data.Function.Uncurried (runFn2)
 import Data.Int (toNumber)
 import Data.List (List, foldl, reverse, sortBy, (:))
-import Data.Map (Map, keys, toAscUnfoldable, toUnfoldable)
+import Data.Map (Map, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
 import Data.Tuple (Tuple(..), fst)
 import Math (abs, pi)
-import Pux.DOM.Events (DOMEvent, onClick, onMouseDown, onMouseMove, onMouseUp)
+import Pux.DOM.Events (onClick)
 import Pux.DOM.HTML (HTML, memoize)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
 import Text.Smolder.HTML.Attributes (className)
-import Text.Smolder.Markup (Attribute, Markup, attribute, (!), (#!))
+import Text.Smolder.Markup (Attribute, attribute, (!), (#!))
 import Text.Smolder.SVG (circle, g, line, path, svg)
-import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, strokeDasharray, x1, x2, y1, y2)
+import Text.Smolder.SVG.Attributes (cx, cy, d, fill, r, stroke, x1, x2, y1, y2)
 
 drawLine :: Attribute -> Point -> Point -> HTML Event
 drawLine strokeStyle (Point px1 py1) (Point px2 py2) =
@@ -128,23 +125,8 @@ drawTool (EraserTool {pt, size}) =
   drawStroke (Arc pt (pt - (Point size 0.0)) (pt - (Point size 0.0)) true) ! stroke "black" ! fill "transparent"
 drawTool _ = pure unit
 
-readPageXY :: DOMEvent -> {clientX:: Number, clientY:: Number}
-readPageXY ev =
-  let readXY mouseEv = {clientX: toNumber $ clientX mouseEv, clientY: toNumber $ clientY mouseEv}
-   in either (const {clientX: 0.0, clientY: 0.0}) readXY $ runExcept $ eventToMouseEvent ev
-
-withListeners :: Tool -> HTML Event -> HTML Event
-withListeners tool html =
-  case tool of _ | elem tool [LineTool, ArcTool] -> html #! (onClick (readPageXY >>> \{clientX, clientY} -> Draw (Point clientX clientY)))
-                                                         #! (onMouseMove (readPageXY >>> \{clientX, clientY} -> Move (Point clientX clientY)))
-               EraserTool _ -> html #! (onMouseDown $ readPageXY >>> \{clientX, clientY} -> EraserDown (Point clientX clientY))
-                                  #! (onMouseUp $ readPageXY >>> \{clientX, clientY} -> EraserUp (Point clientX clientY))
-                                  #! (onMouseMove $ readPageXY >>> \{clientX, clientY} -> EraserMove (Point clientX clientY))
-               _ -> html
-
 drawing :: State -> HTML Event
 drawing state =
-  withListeners state.tool $
   svg ! style do
           width $ (toNumber state.windowWidth) # px
           height $ (toNumber state.windowHeight) # px

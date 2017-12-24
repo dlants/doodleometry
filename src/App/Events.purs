@@ -5,7 +5,7 @@ import App.Cycle (Cycle, findCycles)
 import App.Geometry (Point, Stroke(Line, Arc), closeToPoint)
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint, snapPoints)
-import App.State (State, Tool(LineTool, ArcTool, EraserTool))
+import App.State (State, Tool(..))
 import CSS.Color (Color)
 import Data.Function (($))
 import Data.List (List(..), filter, singleton, (:))
@@ -13,50 +13,41 @@ import Data.Map (keys, lookup)
 import Data.Map (update) as Map
 import Data.Maybe (Maybe(..))
 import KeyDown (KeyData)
+import Mouse (MouseData(..))
 import Prelude ((==))
 import Pux (EffModel, noEffects)
 
 data Event
-  = Draw Point
-  | EraserDown Point
-  | EraserMove Point
-  | EraserUp Point
-  | Move Point
-  | Select Tool
+  = Select Tool
   | SelectCycle Cycle
   | ApplyColor Cycle Color
   | WindowResize Int Int
   | ChangeBackground Background
   | Key KeyData
+  | Mouse MouseData
   | NoOp
 
 foldp :: forall fx. Event -> State -> EffModel State Event fx
 foldp evt st = noEffects $ update evt st
 
-update :: Event -> State -> State
-update (Draw p) s =
-  let newPt = case snapToPoint p s.background s.drawing.snapPoints of
-                   Just sp -> sp
-                   _ -> p
-   in case s.click of
-       Nothing -> s { click = Just newPt }
-       Just c ->
-         case newStroke s newPt of
-              Nothing -> s
-              Just stroke -> (updateForStroke s stroke) { click = Nothing
-                                                        , currentStroke = Nothing
-                                                        , hover = Nothing
-                                                        , snapPoint = Nothing
-                                                        }
 
-update (Move p) s =
-  let sp = snapToPoint p s.background s.drawing.snapPoints
-      newPt = case sp of Just sp' -> sp'
-                         _ -> p
-   in s { hover = Just p
-        , currentStroke = newStroke s newPt
-        , snapPoint = sp
-        }
+
+update :: Event -> State -> State
+update (Mouse (MouseDown p)) s =
+  case s.tool of LineTool -> drawPoint s p
+                 ArcTool -> drawPoint s p
+                 EraserTool opts -> erase s {tool = EraserTool opts {down=true, pt=p}}
+                 _ -> s
+
+update (Mouse (MouseMove p)) s =
+  case s.tool of LineTool -> updateSnapPoint s p
+                 ArcTool -> updateSnapPoint s p
+                 EraserTool opts -> erase s {tool = EraserTool opts {pt=p}}
+                 _ -> s
+
+update (Mouse (MouseUp pt)) s =
+  case s.tool of EraserTool opts -> s {tool = EraserTool opts {down=false, pt=pt}}
+                 _ -> s
 
 update (Select tool) s
   = s { tool = tool
@@ -72,17 +63,6 @@ update (ApplyColor cycle color) s =
     , undos = s.drawing : s.undos
     , redos = Nil
     }
-
-update (EraserDown pt) s =
-  case s.tool of EraserTool opts -> erase s {tool = EraserTool opts {down=true, pt=pt}}
-                 _ -> s
-
-update (EraserUp pt) s = s {tool = newTool}
-  where newTool = case s.tool of EraserTool opts -> (EraserTool opts {down=false, pt=pt})
-                                 _ -> s.tool
-update (EraserMove pt) s =
-  case s.tool of EraserTool opts -> erase s {tool = EraserTool opts {pt=pt}}
-                 _ -> s
 
 update (WindowResize w h) s =
   s {windowWidth = w, windowHeight = h}
@@ -112,6 +92,33 @@ update (Key k) s =
 update (SelectCycle cycle) state = state {selection = singleton cycle}
 
 update NoOp s = s
+
+drawPoint :: State -> Point -> State
+drawPoint s p =
+  let newPt = case snapToPoint p s.background s.drawing.snapPoints of
+                   Just sp -> sp
+                   _ -> p
+   in case s.click of
+       Nothing -> s { click = Just newPt }
+       Just c ->
+         case newStroke s newPt of
+              Nothing -> s
+              Just stroke -> (updateForStroke s stroke) { click = Nothing
+                                                        , currentStroke = Nothing
+                                                        , hover = Nothing
+                                                        , snapPoint = Nothing
+                                                        }
+
+updateSnapPoint :: State -> Point -> State
+updateSnapPoint s p =
+  let sp = snapToPoint p s.background s.drawing.snapPoints
+      newPt = case sp of Just sp' -> sp'
+                         _ -> p
+   in s { hover = Just p
+        , currentStroke = newStroke s newPt
+        , snapPoint = sp
+        }
+
 
 newStroke :: State -> Point -> Maybe Stroke
 newStroke s p =

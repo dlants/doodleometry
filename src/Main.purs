@@ -10,6 +10,7 @@ import DOM (DOM)
 import DOM.HTML (window)
 import DOM.HTML.Types (HISTORY)
 import KeyDown (sampleKeyDown)
+import Mouse (sampleMouse)
 import Pux (CoreEffects, App, start)
 import Pux.DOM.Events (DOMEvent)
 import Pux.Renderer.React (renderToDOM)
@@ -31,15 +32,19 @@ main state = do
   -- | Create a signal of key events
   keySignal <- sampleKeyDown =<< window
 
+  -- | Create a signal of mouse events
+  mouseSignal <- sampleMouse =<< window
+
   let resizeEventSignal = windowSizeSignal ~> \{width, height} -> WindowResize width height
   let keyEventSignal = keySignal ~> \keyData -> Key keyData
+  let mouseEventSignal = mouseSignal ~> \mouseEvt -> Mouse mouseEvt
 
   -- | Start the app.
   app <- start
     { initialState: state
     , view
     , foldp
-    , inputs: [resizeEventSignal, keyEventSignal] }
+    , inputs: [resizeEventSignal, keyEventSignal, mouseEventSignal] }
 
   -- | Render to the DOM
   renderToDOM "#app" app.markup app.input
