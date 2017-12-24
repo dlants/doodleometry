@@ -1,5 +1,6 @@
 module App.Events where
 
+import Prelude
 import App.Background (Background)
 import App.Cycle (Cycle, findCycles)
 import App.Geometry (Point, Stroke(Line, Arc), closeToPoint)
@@ -7,7 +8,6 @@ import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint, snapPoints)
 import App.State (State, Tool(..))
 import CSS.Color (Color)
-import Data.Function (($))
 import Data.List (List(..), filter, singleton, (:))
 import Data.Map (keys, lookup)
 import Data.Map (update) as Map
@@ -48,6 +48,13 @@ update (Mouse (MouseMove p)) s =
 update (Mouse (MouseUp pt)) s =
   case s.tool of EraserTool opts -> s {tool = EraserTool opts {down=false, pt=pt}}
                  _ -> s
+
+update (Mouse (Wheel delta)) s =
+  case s.tool of
+    EraserTool opts -> s {
+      tool = EraserTool opts {size = clamp 5.0 405.0 (opts.size + if delta < 0.0 then 10.0 else -10.0)}
+    }
+    _ -> s
 
 update (Select tool) s
   = s { tool = tool
@@ -133,7 +140,7 @@ newStroke s p =
 
 -- erase around the given point
 erase :: State -> State
-erase s@{tool: EraserTool {down: true, pt}} =
+erase s@{tool: EraserTool {down: true, pt, size}} =
   s { drawing =
       { graph: newGraph
       , cycles: newCycles
@@ -143,7 +150,7 @@ erase s@{tool: EraserTool {down: true, pt}} =
     , redos = Nil
     }
   where
-    erasedStrokes = filter (closeToPoint pt 20.0) $ edges s.drawing.graph
+    erasedStrokes = filter (closeToPoint pt size) $ edges s.drawing.graph
     newGraph = if erasedStrokes == Nil then s.drawing.graph else removeMultiple erasedStrokes s.drawing.graph
     newCycles = if erasedStrokes == Nil then s.drawing.cycles else findCycles newGraph
 erase s = s

@@ -24,7 +24,7 @@ toolBelt =
   , ColorTool red
   , ColorTool green
   , ColorTool blue
-  , EraserTool {down: false, pt: (Point 0.0 0.0), size: 20.0}
+  , EraserTool {down: false, pt: (Point 0.0 0.0), size: 25.0}
   , SelectTool
   ]
 

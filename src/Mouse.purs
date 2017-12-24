@@ -8,14 +8,15 @@ import Control.Monad.Except (runExcept)
 import DOM (DOM)
 import DOM.Event.EventTarget (addEventListener, eventListener)
 import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
-import DOM.HTML.Event.EventTypes (mousedown, mousemove, mouseup)
+import DOM.Event.WheelEvent (deltaY, eventToWheelEvent)
+import DOM.HTML.Event.EventTypes (mousedown, mousemove, mouseup, wheel)
 import DOM.HTML.Types (Window, windowToEventTarget)
 import Data.Either (Either(Right, Left))
 import Data.Int (toNumber)
 import Signal (Signal)
 import Signal.Channel (CHANNEL, channel, send, subscribe)
 
-data MouseData = MouseUp Point | MouseDown Point | MouseMove Point
+data MouseData = MouseUp Point | MouseDown Point | MouseMove Point | Wheel Number
 
 -- | Returns a signal that fires off MouseData on window
 sampleMouse :: forall eff. Window -> Eff (channel :: CHANNEL, dom :: DOM | eff) (Signal MouseData)
@@ -33,4 +34,15 @@ sampleMouse win = do
   addEventListener mousedown (listener MouseDown) false (windowToEventTarget win)
   addEventListener mouseup (listener MouseUp) false (windowToEventTarget win)
   addEventListener mousemove (listener MouseMove) false (windowToEventTarget win)
+
+  let wheelListener = eventListener \evt ->
+       let res = do
+            wheelEv <- runExcept $ eventToWheelEvent evt
+            let delta = deltaY wheelEv
+            pure $ delta
+       in case res of (Left _) -> pure unit
+                      (Right delta) -> send chan (Wheel delta)
+
+  addEventListener wheel wheelListener false (windowToEventTarget win)
+
   pure $ subscribe chan
