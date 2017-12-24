@@ -10,9 +10,10 @@ import App.Geometry (Point(Point), Stroke(Arc, Line), distance, firstPoint, ptX,
 import App.Graph (Graph, edges)
 import App.State (State, Tool(..))
 import App.Tool.View (view) as ToolView
-import CSS (CSS, fromString, key)
+import CSS (CSS, absolute, bottom, fromString, key, left, position, right, top)
 import CSS.Color (Color, red, toHexString)
 import CSS.Geometry (height, width)
+import CSS.Overflow (hidden, overflow)
 import CSS.Size (px)
 import Control.Monad.Except (runExcept)
 import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
@@ -158,7 +159,14 @@ drawing state =
 
 view :: State -> HTML Event
 view state =
-  div $ do
-    BackgroundView.view state.background
-    ToolView.view state.tool
-    drawing state
+  div ! style do
+          position absolute
+          top $ 0.0 # px
+          left $ 0.0 # px
+          bottom $ 0.0 # px
+          right $ 0.0 # px
+          overflow hidden
+     $ do
+      drawing state
+      BackgroundView.view state.background
+      ToolView.view state.tool
