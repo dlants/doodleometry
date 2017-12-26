@@ -266,9 +266,14 @@ withinBounds (Line (Point x1 y1) (Point x2 y2)) (Point x y) =
   let between a a1 a2 = (a1 <= a && a <= a2) || (a1 >= a && a >= a2)
    in (between x x1 x2) && (between y y1 y2)
 
-withinBounds arc@(Arc _ p1 p2 ccw) sol =
-  if area == 0.0 then true else area > 0.0 == ccw
-  where area = triangleArea p2 p1 sol
+withinBounds arc@(Arc c p1 p2 ccw) sol
+  | sol == c = true
+  | otherwise =
+    if area == 0.0 then true else area > 0.0 == ccw
+    where norm1 = normalize (p1 - c)
+          norm2 = normalize (p2 - c)
+          normsol = normalize (sol - c)
+          area = triangleArea norm2 norm1 normsol
 
 intersect :: Stroke -> Stroke -> (List Point)
 intersect (Line p p') (Line q q') =

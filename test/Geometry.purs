@@ -115,11 +115,18 @@ spec = do
         closeToPoint (Point 1.0 1.0) 1.2 (Arc (Point 2.0 1.0) (Point 1.1 1.1) (Point 2.0 2.0) true) `shouldEqual` true
 
     describe "withinBounds" do
-       it "90 degree arc point in arc" do
+      it "90 degree arc point in arc" do
         (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) true) (Point 5.0 5.0)) `shouldEqual` true
-       it "90 degree arc point out of arc" do
+
+      it "90 degree arc point out of arc" do
         (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) true) (Point (-5.0) 5.0)) `shouldEqual` false
-       it "270 degree arc point out of arc" do
+
+      it "270 degree arc point out of arc (colinear)" do
         (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) false) (Point 5.0 5.0)) `shouldEqual` false
-       it "270 degree arc point in arc" do
+
+      it "270 degree arc point in arc (colinear)" do
         (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) false) (Point (-5.0) 5.0)) `shouldEqual` true
+
+      it "circle center" do
+        (withinBounds (Arc (Point 0.0 0.0) (Point 10.0 0.0) (Point 0.0 10.0) false) (Point 0.0 0.0)) `shouldEqual` true
+

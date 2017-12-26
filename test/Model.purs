@@ -11,6 +11,7 @@ import Data.List (List(..), length, nubBy, sort, (:))
 import Data.Map (keys)
 import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
+import Mouse (MouseData(..))
 import Test.Spec (describe, describeOnly, it)
 import Test.Spec.Assertions (shouldEqual)
 
@@ -18,8 +19,8 @@ spec = do
   describe "Integration" do
     describe "one circle" do
       let s = foldl (flip update) init [ Select ArcTool
-                                       , Draw (Point 100.0 100.0)
-                                       , Draw (Point 200.0 100.0)
+                                       , Mouse $ MouseDown (Point 100.0 100.0)
+                                       , Mouse $ MouseDown (Point 200.0 100.0)
                                        ]
       let arcs = edges s.drawing.graph
 
@@ -32,10 +33,10 @@ spec = do
 
     describe "two circles" do
       let s = foldl (flip update) init [ Select ArcTool
-                                       , Draw (Point 100.0 100.0)
-                                       , Draw (Point 200.0 100.0)
-                                       , Draw (Point 200.0 100.0)
-                                       , Draw (Point 100.0 100.0)
+                                       , Mouse $ MouseDown (Point 100.0 100.0)
+                                       , Mouse $ MouseDown (Point 200.0 100.0)
+                                       , Mouse $ MouseDown (Point 200.0 100.0)
+                                       , Mouse $ MouseDown (Point 100.0 100.0)
                                        ]
       let arcs = edges s.drawing.graph
 
@@ -62,12 +63,12 @@ spec = do
 
     describe "three circles" do
       let s = foldl (flip update) init [ Select ArcTool
-                                       , Draw (Point 100.0 100.0) -- c1
-                                       , Draw (Point 200.0 100.0) -- c2
-                                       , Draw (Point 200.0 100.0) -- c2
-                                       , Draw (Point 100.0 100.0) -- c1
-                                       , Draw (Point 150.0 186.6) -- c3
-                                       , Draw (Point 100.0 100.0) -- c1
+                                       , Mouse $ MouseDown (Point 100.0 100.0) -- c1
+                                       , Mouse $ MouseDown (Point 200.0 100.0) -- c2
+                                       , Mouse $ MouseDown (Point 200.0 100.0) -- c2
+                                       , Mouse $ MouseDown (Point 100.0 100.0) -- c1
+                                       , Mouse $ MouseDown (Point 150.0 186.6) -- c3
+                                       , Mouse $ MouseDown (Point 100.0 100.0) -- c1
                                        ]
       let arcs = edges s.drawing.graph
 
@@ -99,17 +100,17 @@ spec = do
 
     describe "touching circles" do
       let s = foldl (flip update) init [ Select ArcTool
-                                       , Draw (Point 100.0 0.0) -- c1
-                                       , Draw (Point 0.0 0.0)
-                                       , Draw (Point 200.0 0.0) -- c2
-                                       , Draw (Point 0.0 0.0)
-                                       , Draw (Point 400.0 0.0) -- c3
-                                       , Draw (Point 0.0 0.0)
-                                       , Draw (Point 800.0 0.0) -- c4
-                                       , Draw (Point 0.0 0.0)
+                                       , Mouse $ MouseDown (Point 100.0 0.0) -- c1
+                                       , Mouse $ MouseDown (Point 0.0 0.0)
+                                       , Mouse $ MouseDown (Point 200.0 0.0) -- c2
+                                       , Mouse $ MouseDown (Point 0.0 0.0)
+                                       , Mouse $ MouseDown (Point 400.0 0.0) -- c3
+                                       , Mouse $ MouseDown (Point 0.0 0.0)
+                                       , Mouse $ MouseDown (Point 800.0 0.0) -- c4
+                                       , Mouse $ MouseDown (Point 0.0 0.0)
                                        , Select LineTool
-                                       , Draw (Point 0.0 100.0) -- p1
-                                       , Draw (Point 0.0 (-100.0)) -- p2
+                                       , Mouse $ MouseDown (Point 0.0 100.0) -- p1
+                                       , Mouse $ MouseDown (Point 0.0 (-100.0)) -- p2
                                        ]
       let strokes = edges s.drawing.graph
 
