@@ -4,7 +4,7 @@ import Prelude
 
 import App.BoundingBox (BoundingBox(..))
 import App.BoundingBox as BoundingBox
-import App.Geometry (Intersections, Path, Stroke, firstPoint, flipStroke, secondPoint, toBoundingBox)
+import App.Geometry (SplitMap, Path, Stroke, firstPoint, flipStroke, secondPoint, toBoundingBox)
 import App.Graph (Graph, edges, traverseLeftWall)
 import App.Helpers (rotateList)
 import CSS.Color (Color, white)
@@ -68,9 +68,9 @@ updateCyclesForRemove oldCycles g =
    in copyColors oldCycles newCycles
 
 -- remove any cycle affected by an intersection
-trimCycles :: CyclesMap -> Intersections -> CyclesMap
-trimCycles cMap intersections =
-  let unaffected stroke = not (member stroke intersections)
+trimCycles :: CyclesMap -> SplitMap -> CyclesMap
+trimCycles cMap SplitMap =
+  let unaffected stroke = not (member stroke SplitMap)
       unaffectedCycle cycle@(Cycle edges) = all unaffected edges
       unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (mapToList cMap)
    in fromFoldable unaffectedCycles

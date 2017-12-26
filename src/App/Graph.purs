@@ -2,7 +2,7 @@ module App.Graph where
 
 import Prelude
 
-import App.Geometry (Intersections, Path, Point(..), Stroke(..), compareOutbound, firstPoint, flipStroke, secondPoint, splitMap, unorderedEq)
+import App.Geometry (SplitMap, Path, Point(..), Stroke(..), compareOutbound, firstPoint, flipStroke, secondPoint, splitMap, unorderedEq)
 import App.Helpers (rotatePast)
 import Control.MonadPlus (guard)
 import Data.Foldable (fold, foldr)
@@ -114,11 +114,11 @@ traverseLeftWall s g visited =
                         case getNextEdge s g of Just nextEdge -> traverseLeftWall nextEdge g (Set.insert s visited)
                                                 _ -> Nil
 
-findIntersections :: Stroke -> Graph -> Intersections
+findIntersections :: Stroke -> Graph -> SplitMap
 findIntersections stroke g =
   splitMap stroke (edges g)
 
-applyIntersections :: Intersections -> Graph -> Graph
+applyIntersections :: SplitMap -> Graph -> Graph
 applyIntersections intersections g =
   cleanGraph $ foldr applyIntersection g $ mapToList intersections
   where

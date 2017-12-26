@@ -247,7 +247,7 @@ atan2Radians a
   | otherwise = a
 
 type Path = List Stroke
-type Intersections = Map Stroke (List Stroke)
+type SplitMap = Map Stroke (List Stroke)
 
 reversePath :: Path -> Path
 reversePath path =
@@ -362,7 +362,7 @@ intersect arc1@(Arc c1 p1 q1 ccw1) arc2@(Arc c2 p2 q2 ccw2) =
 
 intersect a@(Arc _ _ _ _) l@(Line _ _) = intersect l a
 
-insertPath ::  Intersections -> Stroke -> Path -> Intersections
+insertPath ::  SplitMap -> Stroke -> Path -> SplitMap
 insertPath intersections stroke splitStroke =
   insert stroke splitStroke $ insert (flipStroke stroke) (reversePath splitStroke) intersections
 
@@ -371,7 +371,7 @@ intersectMap stroke strokes =
   let makeTuple s =  Tuple s (intersect stroke s)
    in fromFoldable $ makeTuple <$> strokes
 
-splitMap :: Stroke -> List Stroke -> Intersections
+splitMap :: Stroke -> List Stroke -> SplitMap
 splitMap stroke strokes =
   let
     intersectionTuples = do
