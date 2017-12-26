@@ -178,8 +178,8 @@ approxOutboundAngle arc@(Arc c@(Point cx cy) p1@(Point p1x p1y) _ ccw) =
       startAngle = atan2 (p1y - cy) (p1x - cx)
       a0 = startAngle + (if ccw then pi / 2.0 else -pi / 2.0)
 
-      -- changing 0.1 here is analogous to changing how far along the arc we step
-      delta = 0.001 / (2.0 * pi * r)
+      -- the first number changes how far along the arc we move for the approximation
+      delta = 0.01 / (2.0 * pi * r)
       out = a0 + (if ccw then delta else -delta)
    in clampTo2pi out
 
@@ -399,8 +399,7 @@ splitMap stroke strokes =
 
     strokeIntersections = foldl insertPoints empty shrunkTuples
     filteredIntersections = Map.filter (\l -> length l > 1) strokeIntersections
-  in
-    insertPath filteredIntersections stroke (split stroke (concatMap snd shrunkTuples))
+  in insertPath filteredIntersections stroke (split stroke (concatMap snd shrunkTuples))
 
 nubAdjacent :: forall a. (Eq a) => List a -> List a
 nubAdjacent (a : b : rest) | a == b = (nubAdjacent $ a : rest)
@@ -411,31 +410,30 @@ nubAdjacent Nil = Nil
 
 -- given a stroke and a list of intersections, return a list of strokes
 split :: Stroke -> List Point -> List Stroke
+split a Nil = a : Nil
+
 split (Line p1 p2) points =
   case head lines of -- ensure we still go from p1 to p2
        Just (Line p _) | p == p1 -> lines
        _ -> reversePath lines
   where
-    sortedPoints = sort $ nub $ p1 : p2 : points
+    sortedPoints = nubAdjacent $ sort $ p1 : p2 : points
     zipPointPairs (p : q : rest) = (Line p q) : (zipPointPairs (q : rest))
     zipPointPairs _ = Nil
     lines = zipPointPairs sortedPoints
 
 split arc@(Arc c p q ccw) points =
-  let
-      intersectionSweep i = ptSweep c p i ccw
+  let intersectionSweep i = (if ccw then 1.0 else -1.0) * ptSweep c p i ccw
+      sorted
+        = nubAdjacent
+        $ sortBy (compare `on` intersectionSweep)
+        $ filter (\pt -> pt /= p || pt /= q)
+        points
 
-      -- remove p and q from intersections since we will add them back later
-      intersections = sortBy (compare `on` intersectionSweep) $
-                      (filter (\pt -> pt /= p && pt /= q) points)
+      endpoints = p : sorted `snoc` q
 
-      -- sandwich the intersections, in the right order, between p and q
-      orderedIntersections = nubAdjacent $
-         p : (snoc (if ccw then intersections else reverse intersections) q)
-
-      zipAnglePairs (p1 : p2 : rest) =
-        (Arc c p1 p2 ccw) : zipAnglePairs (p2 : rest)
+      zipAnglePairs (p1 : p2 : rest) = newStroke : zipAnglePairs (p2 : rest)
+        where newStroke = if (runFn2 distance p1 p2) < 0.005 then (Line p1 p2) else (Arc c p1 p2 ccw)
       zipAnglePairs _ = Nil
 
-   in if (length orderedIntersections > 2) then (zipAnglePairs orderedIntersections)
-                                           else (singleton arc)
+   in if length endpoints == 2 then singleton arc else zipAnglePairs endpoints

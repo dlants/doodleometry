@@ -69,8 +69,8 @@ updateCyclesForRemove oldCycles g =
 
 -- remove any cycle affected by an intersection
 trimCycles :: CyclesMap -> SplitMap -> CyclesMap
-trimCycles cMap SplitMap =
-  let unaffected stroke = not (member stroke SplitMap)
+trimCycles cMap splitMap =
+  let unaffected stroke = not (member stroke splitMap)
       unaffectedCycle cycle@(Cycle edges) = all unaffected edges
       unaffectedCycles = filter (\(Tuple cycle _) -> unaffectedCycle cycle) (mapToList cMap)
    in fromFoldable unaffectedCycles
