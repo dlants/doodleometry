@@ -6,6 +6,7 @@ import App.Geometry (Point(..))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Except (runExcept)
 import DOM (DOM)
+import DOM.Event.Event (Event)
 import DOM.Event.EventTarget (addEventListener, eventListener)
 import DOM.Event.MouseEvent (clientX, clientY, eventToMouseEvent)
 import DOM.Event.WheelEvent (deltaY, eventToWheelEvent)
@@ -18,22 +19,21 @@ import Signal.Channel (CHANNEL, channel, send, subscribe)
 
 data MouseData = MouseUp Point | MouseDown Point | MouseMove Point | Wheel Number
 
+evtToPoint :: Event -> Point
+evtToPoint evt =
+  let res = do
+        mouseEv <- runExcept $ eventToMouseEvent evt
+        let x = toNumber $ clientX mouseEv
+        let y = toNumber $ clientY mouseEv
+        pure $ Point x y
+   in case res of (Left _ ) -> Point 0.0 0.0
+                  (Right pt) -> pt
+
 -- | Returns a signal that fires off MouseData on window
 sampleMouse :: forall eff. Window -> Eff (channel :: CHANNEL, dom :: DOM | eff) (Signal MouseData)
 sampleMouse win = do
   chan <- channel $ MouseMove (Point 0.0 0.0)
-  let listener constructor = eventListener \evt ->
-       let res = do
-            mouseEv <- runExcept $ eventToMouseEvent evt
-            let x = toNumber $ clientX mouseEv
-            let y = toNumber $ clientY mouseEv
-            pure $ Point x y
-       in case res of (Left _) -> pure unit
-                      (Right pt) -> send chan (constructor pt)
-
-  addEventListener mousedown (listener MouseDown) false (windowToEventTarget win)
-  addEventListener mouseup (listener MouseUp) false (windowToEventTarget win)
-  addEventListener mousemove (listener MouseMove) false (windowToEventTarget win)
+  let listener constructor = eventListener \evt -> send chan $ constructor $ evtToPoint evt
 
   let wheelListener = eventListener \evt ->
        let res = do

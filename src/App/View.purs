@@ -25,7 +25,8 @@ import Data.Maybe (Maybe(..))
 import Data.Monoid (mempty)
 import Data.Tuple (Tuple(..), fst)
 import Math (abs, pi)
-import Pux.DOM.Events (onClick)
+import Mouse (MouseData(..), evtToPoint)
+import Pux.DOM.Events (onClick, onMouseDown, onMouseMove, onMouseUp)
 import Pux.DOM.HTML (HTML, memoize)
 import Pux.DOM.HTML.Attributes (style)
 import Text.Smolder.HTML (div)
@@ -130,6 +131,11 @@ drawing state =
   svg ! style do
           width $ (toNumber state.windowWidth) # px
           height $ (toNumber state.windowHeight) # px
+
+      #! onMouseDown (\evt -> Mouse $ MouseDown $ evtToPoint evt)
+      #! onMouseUp (\evt -> Mouse $ MouseUp $ evtToPoint evt)
+      #! onMouseMove (\evt -> Mouse $ MouseMove $ evtToPoint evt)
+
       $ do
         drawCycles state.tool state.drawing.cycles
         fillBackground state.background state.windowWidth state.windowHeight
@@ -148,7 +154,7 @@ view state =
           bottom $ 0.0 # px
           right $ 0.0 # px
           overflow hidden
-     $ do
-      drawing state
-      BackgroundView.view state.background
-      ToolView.view state.tool
+      $ do
+        drawing state
+        BackgroundView.view state.background
+        ToolView.view state.tool
