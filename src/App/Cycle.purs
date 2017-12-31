@@ -2,7 +2,6 @@ module App.Cycle where
 
 import Prelude
 
-import App.BoundingBox (BoundingBox(..))
 import App.BoundingBox as BoundingBox
 import App.Geometry (SplitMap, Path, Stroke, firstPoint, flipStroke, secondPoint, toBoundingBox)
 import App.Graph (Graph, edges, traverseLeftWall)
@@ -10,7 +9,7 @@ import App.Helpers (rotateList)
 import CSS.Color (Color, white)
 import Data.Function (on)
 import Data.List (List(Nil), all, filter, foldl, head, last, mapMaybe, nub, reverse, sort, (:))
-import Data.Map (Map, alter, empty, fromFoldable, insert, member, toUnfoldable)
+import Data.Map (Map, empty, fromFoldable, insert, lookup, member, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Set as Set
 import Data.Tuple (Tuple(..))
@@ -54,13 +53,18 @@ findCycles g =
   foldl (\c s -> insertStroke s c g) empty (edges g)
 
 copyColors :: CyclesMap -> CyclesMap -> CyclesMap
-copyColors oldMap newMap =
-  let copyColor :: CyclesMap -> (Tuple Cycle Color) -> CyclesMap
-      copyColor cMap (Tuple oldCycle oldColor) =
-        let alterColor (Just _) = Just oldColor
-            alterColor Nothing = Nothing
-         in alter alterColor oldCycle cMap
-  in foldl copyColor newMap (mapToList oldMap)
+copyColors fromMap toMap =
+  fromFoldable $ do
+    (Tuple cycle@(Cycle strokes) toColor) <- toUnfoldable toMap
+    stroke <- strokes
+    case lookup stroke fromColors of Just fromColor -> pure $ Tuple cycle fromColor
+                                     Nothing -> pure $ Tuple cycle toColor
+
+  where
+    fromColors = fromFoldable $ do
+      (Tuple (Cycle cycle) color) <- toUnfoldable fromMap
+      stroke <- cycle
+      pure $ Tuple stroke color
 
 updateCyclesForRemove :: CyclesMap -> Graph -> CyclesMap
 updateCyclesForRemove oldCycles g =

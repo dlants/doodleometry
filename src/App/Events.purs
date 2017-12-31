@@ -30,8 +30,6 @@ data Event
 foldp :: forall fx. Event -> State -> EffModel State Event fx
 foldp evt st = noEffects $ update evt st
 
-
-
 update :: Event -> State -> State
 update (Mouse (MouseDown p)) s =
   case s.tool of LineTool -> drawPoint s p

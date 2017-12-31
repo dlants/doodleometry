@@ -5,6 +5,7 @@ import Test.Fixtures
 import App.Cycle
 import App.Geometry (Point(..), Stroke(..), flipStroke)
 import App.Graph (addStroke, emptyGraph, getEdgesForPt, getNextEdge)
+import CSS.Color (black, white)
 import Data.List (List(..), singleton, (:))
 import Data.Map (empty, insert, lookup)
 import Data.Maybe (Maybe(..))
@@ -184,3 +185,36 @@ spec = do
       it "getNextEdge order outer2" do
         getNextEdge outer2 gTwoCircles `shouldEqual` Just outer1
         getNextEdge (flipStroke outer2) gTwoCircles `shouldEqual` Just inner1
+
+    describe "copyColors" do
+      it "should respect stroke order" do
+        ( copyColors
+          ( insert (Cycle $ (Line (Point 0.0 0.0) (Point 0.0 1.0)) : Nil) black
+          $ empty
+          )
+          ( insert (Cycle $ (Line (Point 1.0 0.0) (Point 0.0 0.0)) : Nil) white
+          $ empty
+          )
+        ) `shouldEqual` (
+          insert (Cycle $ (Line (Point 1.0 0.0) (Point 0.0 0.0)) : Nil) white
+          $ empty
+        )
+
+      it "should match any stroke" do
+        ( copyColors
+          ( insert (Cycle $ (Line (Point 0.0 0.0) (Point 0.0 1.0)) : Nil) black
+          $ empty
+          )
+          ( insert (Cycle $ ( Line (Point 1.0 0.0) (Point 0.0 0.0))
+                            : Line (Point 0.0 0.0) (Point 0.0 1.0)
+                            : Nil
+                            ) white
+          $ empty
+          )
+        ) `shouldEqual` (
+          insert (Cycle $ ( Line (Point 1.0 0.0) (Point 0.0 0.0))
+                            : Line (Point 0.0 0.0) (Point 0.0 1.0)
+                            : Nil
+                            ) black
+          $ empty
+        )
