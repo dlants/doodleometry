@@ -5,7 +5,7 @@ import Prelude
 import App.Events (Event(..))
 import App.Geometry (Point(..))
 import App.State (Tool(..))
-import CSS (Color, backgroundColor, height, px, rgba, width)
+import CSS (Color, backgroundColor, height, px, rgba, white, width)
 import CSS.Border (border, solid)
 import CSS.Color (black, gray, red, green, blue)
 import CSS.Display (absolute, position)
@@ -19,10 +19,11 @@ import Text.Smolder.Markup (text, (!), (#!))
 
 toolBelt :: Array Tool
 toolBelt =
-  [ LineTool
+  [ SegmentTool
   , ArcTool
   , EraserTool {down: false, pt: (Point 0.0 0.0), size: 25.0}
   , SelectTool
+  , ColorTool $ white
   , ColorTool $ rgba 199 68 64 1.0
   , ColorTool $ rgba 45 112 179 1.0
   , ColorTool $ rgba 250 126 25 1.0
@@ -47,7 +48,7 @@ drawTool selected tool =
         if selected == tool then border solid (2.0 # px) black
                             else border solid (1.0 # px) gray
       $ div $ case tool of
-                   LineTool -> text "Segment"
+                   SegmentTool -> text "Segment"
                    ArcTool -> text "Circle"
                    ColorTool color -> colorTool color
                    EraserTool _ -> text "Erase"

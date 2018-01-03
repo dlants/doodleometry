@@ -3,16 +3,16 @@ module App.State where
 import Prelude
 
 import App.Background (Background(..))
-import App.Cycle (Cycle)
+import App.Cycle (Cycle, findCycles)
 import App.Geometry (Point, Stroke)
-import App.Graph (Graph, emptyGraph)
+import App.Graph (Graph, initGraph)
 import CSS.Color (Color)
 import Data.List (List(..))
 import Data.Map (Map, empty)
 import Data.Maybe (Maybe(..))
 
 data Tool
-  = LineTool
+  = SegmentTool
   | ArcTool
   | ColorTool Color
   | EraserTool {down :: Boolean, pt :: Point, size :: Number}
@@ -45,8 +45,8 @@ type State =
 init :: State
 init =
   { drawing:
-    { graph: emptyGraph
-    , cycles: empty
+    { graph: initGraph
+    , cycles: findCycles initGraph
     , snapPoints: Nil
     }
   , undos: Nil
@@ -55,7 +55,7 @@ init =
   , hover: Nothing
   , snapPoint: Nothing
   , currentStroke: Nothing
-  , tool: LineTool
+  , tool: SegmentTool
   , windowWidth: 1000
   , windowHeight: 1000
   , background: Square

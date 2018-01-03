@@ -33,13 +33,13 @@ foldp evt st = noEffects $ update evt st
 
 update :: Event -> State -> State
 update (Mouse (MouseDown p)) s =
-  case s.tool of LineTool -> drawPoint s p
+  case s.tool of SegmentTool -> drawPoint s p
                  ArcTool -> drawPoint s p
                  EraserTool opts -> erase s {tool = EraserTool opts {down=true, pt=p}}
                  _ -> s
 
 update (Mouse (MouseMove p)) s =
-  case s.tool of LineTool -> updateSnapPoint s p
+  case s.tool of SegmentTool -> updateSnapPoint s p
                  ArcTool -> updateSnapPoint s p
                  EraserTool opts -> erase s {tool = EraserTool opts {pt=p}}
                  _ -> s
@@ -132,7 +132,7 @@ newStroke s p =
        Just c ->
           case s.tool of
                ArcTool -> Just $ (Arc c p p true)
-               LineTool -> Just $ Line c p
+               SegmentTool -> Just $ Line c p
                _ -> Nothing
 
        Nothing -> Nothing

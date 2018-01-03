@@ -108,7 +108,7 @@ spec = do
                                        , Mouse $ MouseDown (Point 0.0 0.0)
                                        , Mouse $ MouseDown (Point 800.0 0.0) -- c4
                                        , Mouse $ MouseDown (Point 0.0 0.0)
-                                       , Select LineTool
+                                       , Select SegmentTool
                                        , Mouse $ MouseDown (Point 0.0 100.0) -- p1
                                        , Mouse $ MouseDown (Point 0.0 (-100.0)) -- p2
                                        ]
