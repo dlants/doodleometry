@@ -28,7 +28,7 @@ emptyGraph :: Graph
 emptyGraph = Graph empty
 
 initGraph :: Graph
-initGraph = addStroke (Arc (Point 0.0 0.0) (Point 10000.0 10000.0) (Point 10000.0 10000.0) true) emptyGraph
+initGraph = addStroke (Arc (Point 1000.0 1000.0) (Point 0.0 0.0) (Point 0.0 0.0) true) emptyGraph
 
 -- we store two copies of each edge -- since we need to be able to traverse the edge in both directions.
 -- this guarantees we only get one copy of each edge

@@ -20,6 +20,7 @@ import Text.Smolder.Markup (text, (!), (#!))
 toolBelt :: Array Tool
 toolBelt =
   [ SegmentTool
+  , LineTool
   , ArcTool
   , EraserTool {down: false, pt: (Point 0.0 0.0), size: 25.0}
   , SelectTool
@@ -49,6 +50,7 @@ drawTool selected tool =
                             else border solid (1.0 # px) gray
       $ div $ case tool of
                    SegmentTool -> text "Segment"
+                   LineTool -> text "Line"
                    ArcTool -> text "Circle"
                    ColorTool color -> colorTool color
                    EraserTool _ -> text "Erase"

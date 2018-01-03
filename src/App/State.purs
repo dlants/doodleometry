@@ -13,6 +13,7 @@ import Data.Maybe (Maybe(..))
 
 data Tool
   = SegmentTool
+  | LineTool
   | ArcTool
   | ColorTool Color
   | EraserTool {down :: Boolean, pt :: Point, size :: Number}

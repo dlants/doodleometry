@@ -4,7 +4,7 @@ import Prelude
 
 import App.Background (Background)
 import App.Cycle (Cycle, applySplitMap, copyColors, findCycles)
-import App.Geometry (Point, Stroke(Line, Arc), closeToPoint)
+import App.Geometry (Point, Stroke(Line, Arc), closeToPoint, normalize, scalePt)
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint, snapPoints)
 import App.State (State, Tool(..))
@@ -34,12 +34,14 @@ foldp evt st = noEffects $ update evt st
 update :: Event -> State -> State
 update (Mouse (MouseDown p)) s =
   case s.tool of SegmentTool -> drawPoint s p
+                 LineTool -> drawPoint s p
                  ArcTool -> drawPoint s p
                  EraserTool opts -> erase s {tool = EraserTool opts {down=true, pt=p}}
                  _ -> s
 
 update (Mouse (MouseMove p)) s =
   case s.tool of SegmentTool -> updateSnapPoint s p
+                 LineTool -> updateSnapPoint s p
                  ArcTool -> updateSnapPoint s p
                  EraserTool opts -> erase s {tool = EraserTool opts {pt=p}}
                  _ -> s
@@ -133,6 +135,10 @@ newStroke s p =
           case s.tool of
                ArcTool -> Just $ (Arc c p p true)
                SegmentTool -> Just $ Line c p
+               LineTool ->
+                 let p1 = c + scalePt (normalize $ c - p) 3000.0
+                     p2 = c - scalePt (normalize $ c - p) 3000.0
+                  in Just $ Line p1 p2
                _ -> Nothing
 
        Nothing -> Nothing
