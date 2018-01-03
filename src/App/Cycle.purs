@@ -13,6 +13,7 @@ import Data.Map (Map, empty, fromFoldable, insert, lookup, member, toUnfoldable)
 import Data.Maybe (Maybe(..))
 import Data.Set as Set
 import Data.Tuple (Tuple(..))
+import App.Lib (first)
 
 newtype Cycle = Cycle Path
 
@@ -54,17 +55,17 @@ findCycles g =
 
 copyColors :: CyclesMap -> CyclesMap -> CyclesMap
 copyColors fromMap toMap =
-  fromFoldable $ do
-    (Tuple cycle@(Cycle strokes) toColor) <- toUnfoldable toMap
-    stroke <- strokes
-    case lookup stroke fromColors of Just fromColor -> pure $ Tuple cycle fromColor
-                                     Nothing -> pure $ Tuple cycle toColor
-
+  fromFoldable tuples
   where
     fromColors = fromFoldable $ do
       (Tuple (Cycle cycle) color) <- toUnfoldable fromMap
       stroke <- cycle
       pure $ Tuple stroke color
+    tuples :: List (Tuple Cycle Color)
+    tuples = do
+      (Tuple cycle@(Cycle strokes) toColor) <- toUnfoldable toMap
+      case first (\stroke -> lookup stroke fromColors) strokes of Just fromColor -> pure $ Tuple cycle fromColor
+                                                                  Nothing -> pure $ Tuple cycle toColor
 
 updateCyclesForRemove :: CyclesMap -> Graph -> CyclesMap
 updateCyclesForRemove oldCycles g =
@@ -97,3 +98,16 @@ findCycle g stroke =
                   else Nothing
   where
     path = traverseLeftWall stroke g Set.empty
+
+applySplitMap :: CyclesMap -> SplitMap -> CyclesMap
+applySplitMap cycles splitMap =
+  fromFoldable tuples
+  where tuples :: List (Tuple Cycle Color)
+        tuples = do
+           Tuple (Cycle strokes) color <- toUnfoldable cycles
+           let newStrokes = do
+                 stroke <- strokes
+                 case lookup stroke splitMap of Just splitStroke -> splitStroke
+                                                Nothing -> pure stroke
+
+           pure $ Tuple (Cycle newStrokes) color

@@ -1,8 +1,9 @@
 module App.Events where
 
 import Prelude
+
 import App.Background (Background)
-import App.Cycle (Cycle, findCycles)
+import App.Cycle (Cycle, applySplitMap, copyColors, findCycles)
 import App.Geometry (Point, Stroke(Line, Arc), closeToPoint)
 import App.Graph (applyIntersections, edges, findIntersections, removeMultiple)
 import App.Snap (snapToPoint, snapPoints)
@@ -147,7 +148,7 @@ erase s@{tool: EraserTool {down: true, pt, size}} =
 
           in s { drawing =
               { graph: newGraph
-              , cycles: newCycles
+              , cycles: copyColors s.drawing.cycles newCycles
               , snapPoints: snapPoints newGraph
               }
             , undos = s.drawing : s.undos
@@ -160,16 +161,16 @@ updateForStroke :: State -> Stroke -> State
 updateForStroke s stroke
   = s { drawing =
         { graph: newGraph
-        , cycles: newCycles
+        , cycles: copyColors (applySplitMap s.drawing.cycles splitMap) newCycles
         , snapPoints: snapPoints newGraph
         }
       , undos = s.drawing : s.undos
       , redos = Nil
       }
   where
-    intersections = findIntersections stroke s.drawing.graph
-    splitStroke = case lookup stroke intersections of
+    splitMap = findIntersections stroke s.drawing.graph
+    splitStroke = case lookup stroke splitMap of
                        Just ss -> ss
                        _ -> singleton stroke
-    newGraph = applyIntersections intersections s.drawing.graph
+    newGraph = applyIntersections splitMap s.drawing.graph
     newCycles = findCycles newGraph
